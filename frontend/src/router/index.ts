@@ -95,6 +95,34 @@ const router = createRouter({
     component: () => import('../views/AddGalleryView.vue'), // Naya view file import
     // Yahan par aapko admin authentication guard lagana chahiye future mein.
 }, 
+{
+    path: '/admin/manage-gallery', // Naya path
+    name: 'AdminManageGallery',
+    component: () => import('../views/AdminGalleryListView.vue'),
+},
+{
+    path: '/admin/submissions', // Naya path
+    name: 'AdminContactSubmissions',
+    component: () => import('../views/AdminContactListView.vue'),
+},
+{
+    path: '/admin/add-project', 
+    name: 'AdminAddProject',
+    component: () => import('../views/AdminAddProjectView.vue'),
+},
+
+{
+    path: '/admin/manage-projects', 
+    name: 'AdminManageProjects',
+    component: () => import('../views/AdminManageProjectsView.vue'),
+},
+
+{
+    // :id dynamic parameter hai
+    path: '/admin/edit-project/:id', 
+    name: 'AdminEditProject',
+    component: () => import('../views/AdminEditProjectView.vue'),
+},
    
   ],
   // Scroll to top on route change

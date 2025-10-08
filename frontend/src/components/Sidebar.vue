@@ -14,8 +14,18 @@
       <router-link v-if="isAdmin" :class="linkClass('/admin')" to="/admin">Overview</router-link>
       <router-link v-if="isAdmin" :class="linkClass('/admin/users')" to="/admin/users">Users</router-link>
       <router-link v-if="isAdmin" :class="linkClass('/admin/donations')" to="/admin/donations">Donations</router-link>
+
+      <router-link v-if="isAdmin" :class="linkClass('/admin/add-gallery')" to="/admin/add-gallery">Add Gallery
+        Photo</router-link>
+
+      <router-link v-if="isAdmin" :class="linkClass('/admin/manage-gallery')" to="/admin/manage-gallery">Manage Gallery</router-link>
+
+      <router-link v-if="isAdmin" :class="linkClass('/admin/submissions')" to="/admin/submissions">Contact Submissions</router-link>
+
+      <router-link v-if="isAdmin" :class="linkClass('/admin/add-project')" to="/admin/add-project">Add Project</router-link>
       
-      <router-link v-if="isAdmin" :class="linkClass('/admin/add-gallery')" to="/admin/add-gallery">Add Gallery Photo</router-link>
+      <router-link v-if="isAdmin" :class="linkClass('/admin/manage-projects')" to="/admin/manage-projects">Manage Projects</router-link>
+     
 
       <slot />
     </nav>
@@ -39,7 +49,9 @@ function linkClass(path: string) {
 }
 
 function isActive(path: string) {
-  return route.path === path || route.path.startsWith(path + '/');
+  // Normalize trailing slashes for fair comparison
+  const normalize = (p: string) => p.replace(/\/+$|\/$/g, '') || '/';
+  return normalize(route.path) === normalize(path);
 }
 </script>
 
@@ -48,6 +60,7 @@ function isActive(path: string) {
 .active-link {
   position: relative;
 }
+
 .active-link::after {
   content: '';
   position: absolute;
@@ -55,14 +68,19 @@ function isActive(path: string) {
   right: 12px;
   bottom: 6px;
   height: 3px;
-  background: linear-gradient(90deg,#6366f1,#10b981);
+  background: linear-gradient(90deg, #6366f1, #10b981);
   border-radius: 2px;
   transform-origin: left center;
   animation: underline 0.4s ease forwards;
 }
 
 @keyframes underline {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
 }
 </style>

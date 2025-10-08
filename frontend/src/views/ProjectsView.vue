@@ -1,88 +1,38 @@
 <template>
-  <div class="py-16 bg-indigo-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <SectionTitle >Our Work</SectionTitle>
+  <div class="min-h-screen bg-gray-50 py-12">
+    <div class="container mx-auto px-4">
+      <h1 class="text-4xl font-extrabold text-center mb-10 text-indigo-800">Our Works & Causes</h1>
+      
+      <div v-if="isLoading" class="text-center p-10">
+        <p class="text-xl text-gray-600">Loading our latest projects...</p>
+      </div>
+      
+      <div v-else-if="projects.length === 0" class="text-center p-10">
+        <p class="text-xl text-gray-500">Currently, there are no active projects to display.</p>
+      </div>
 
-      <div class="mt-12 space-y-16">
-        <div class="flex flex-col md:flex-row items-center bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-[1.01] transition duration-300">
-          <div class="md:w-1/2">
-            <img src="/images/children.jpg" alt="Education Project" class="w-full h-64 md:h-full object-cover" />
+      <div v-else class="space-y-16"> 
+        <div v-for="(project, index) in projects" :key="project.id" 
+             class="flex flex-col md:flex-row bg-white rounded-xl shadow-2xl overflow-hidden"
+             :class="{'md:flex-row-reverse': index % 2 !== 0}"> <div class="md:w-1/2 h-64 md:h-auto overflow-hidden">
+            <img :src="project.full_image_src" :alt="project.title" 
+                 class="w-full h-full object-cover" 
+                 @error="handleImageError" 
+                 loading="lazy">
           </div>
-          <div class="md:w-1/2 p-8">
-            <h3 class="text-3xl font-bold text-indigo-700 mb-4">Ray of Education</h3>
-            <p class="text-gray-700 text-lg mb-4 leading-relaxed">
-              Through this flagship project, we offer **free, quality education** to underprivileged children. We cover school fees, books, and uniforms, ensuring that financial constraints do not hinder their learning. To date, we have supported over 1500+ students.
-            </p>
-            <ul class="list-disc list-inside text-gray-600 mb-4">
-              <li>Computer Shiksha</li>
-              <li>Extra Coaching Classes</li>
-              <li>Educational Excursions</li>
-            </ul>
-            <a href="#" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-semibold transition duration-150">
-              Learn More <i class="fas fa-arrow-right ml-2"></i>
-            </a>
+          
+          <div class="md:w-1/2 p-8 flex flex-col justify-center">
+            
+            <span :class="getStatusClass(project.status)" class="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-3 self-start">
+              {{ project.status }}
+            </span>
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ project.title }}</h2>
+            <p class="text-gray-600 mb-6">{{ project.description }}</p>
+            
+            <router-link to="#" class="text-indigo-600 font-semibold hover:text-indigo-800 transition duration-150 self-start">
+              Read More & Donate →
+            </router-link>
           </div>
-        </div>
-
-        <div class="flex flex-col md:flex-row-reverse items-center bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-[1.01] transition duration-300">
-          <div class="md:w-1/2">
-            <img src="/images/healthcamp.jpg" alt="Health Camp" class="w-full h-64 md:h-full object-cover" />
-          </div>
-          <div class="md:w-1/2 p-8">
-            <h3 class="text-3xl font-bold text-indigo-700 mb-4">Health Service Campaign</h3>
-            <p class="text-gray-700 text-lg mb-4 leading-relaxed">
-              Our trust organizes **free health camps** in remote and underserved areas, providing essential medical check-ups, distributing necessary medicines, and conducting health awareness programs to promote community well-being.
-            </p>
-            <ul class="list-disc list-inside text-gray-600 mb-4">
-              <li>General Health Check-ups</li>
-              <li>Eye Check-up Camps</li>
-              <li>Awareness Programs on Hygiene</li>
-            </ul>
-            <a href="#" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-semibold transition duration-150">
-              Learn More <i class="fas fa-arrow-right ml-2"></i>
-            </a>
-          </div>
-        </div>
-
-        
-        <div class="flex flex-col md:flex-row items-center bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-[1.01] transition duration-300">
-          <div class="md:w-1/2">
-            <img src="/images/plantation.avif" alt="Plantation Project" class="w-full h-64 md:h-full object-cover" />
-          </div>
-          <div class="md:w-1/2 p-8">
-            <h3 class="text-3xl font-bold text-indigo-700 mb-4">Tree Plantation</h3>
-            <p class="text-gray-700 text-lg mb-4 leading-relaxed">
-              As part of our commitment to the environment, we conduct large-scale **tree plantation drives** in both urban and rural settings. Our goal is to combat climate change, improve air quality, and promote ecological sustainability.
-            </p>
-            <ul class="list-disc list-inside text-gray-600 mb-4">
-              <li>Community Involvement</li>
-              <li>Awareness Campaigns</li>
-              <li>Collaboration with Local NGOs</li>
-            </ul>
-            <a href="#" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-semibold transition duration-150">
-              Learn More <i class="fas fa-arrow-right ml-2"></i>
-            </a>
-          </div>
-        </div>
-
-        <div class="mt-20">
-          <h3 class="text-3xl font-bold text-center text-gray-900 mb-8">Our Past Successes</h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition duration-300">
-              <img src="/images/plantation1.avif" alt="Tree Plantation" class="rounded-md mb-4 w-full object-cover h-48" />
-              <h4 class="text-xl font-bold text-gray-900 mb-2">Environment Conservation Campaign</h4>
-              <p class="text-gray-600 text-sm">
-                Planted 5000+ trees and raised environmental awareness in the community.
-              </p>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition duration-300">
-              <img src="/images/plantation1.avif" alt="Skill Development" class="rounded-md mb-4 w-full object-cover h-48" />
-              <h4 class="text-xl font-bold text-gray-900 mb-2">Skill Development Program</h4>
-              <p class="text-gray-600 text-sm">
-                Trained 100+ youth in computer and vocational skills.
-              </p>
-            </div>
-            </div>
         </div>
       </div>
     </div>
@@ -90,5 +40,63 @@
 </template>
 
 <script setup lang="ts">
-import SectionTitle from '@/components/SectionTitle.vue';
+import { ref, onMounted } from 'vue';
+
+// --- Interface for Projects (Optional but good practice) ---
+interface Project {
+    id: number;
+    title: string;
+    description: string;
+    image_src: string;
+    full_image_src: string; // Frontend ke liye
+    status: 'Active' | 'Completed' | 'Upcoming';
+}
+
+const projects = ref<Project[]>([]);
+const isLoading = ref(false);
+
+const fetchProjects = async () => {
+    isLoading.value = true;
+    try {
+        // Backend GET API ko call karein
+        const response = await fetch('http://localhost:3000/api/projects');
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch projects data.');
+        }
+
+        const data = await response.json();
+        
+        // Image source mein base URL jodna
+        projects.value = data.map((item: any) => ({
+            ...item,
+            full_image_src: item.image_src.startsWith('http') 
+                            ? item.image_src 
+                            : `http://localhost:3000${item.image_src}`,
+        }));
+
+    } catch (error) {
+        console.error("Error fetching projects:", error);
+        alert('Could not load projects. Check the server connection (port 3000).');
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+const getStatusClass = (status: string) => {
+    switch (status) {
+        case 'Active': return 'bg-green-100 text-green-800';
+        case 'Upcoming': return 'bg-yellow-100 text-yellow-800';
+        case 'Completed': return 'bg-blue-100 text-blue-800';
+        default: return 'bg-gray-100 text-gray-800';
+    }
+};
+
+const handleImageError = (event: Event) => {
+    // Agar image load nahi hoti hai, toh placeholder dikhao
+    (event.target as HTMLImageElement).src = 'https://via.placeholder.com/400x200?text=Project+Image+Missing';
+    (event.target as HTMLImageElement).classList.add('p-10'); 
+};
+
+onMounted(fetchProjects);
 </script>

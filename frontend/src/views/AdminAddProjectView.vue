@@ -1,0 +1,102 @@
+<template>
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-6 text-indigo-700">Add New Project / Cause</h1>
+    
+    <form @submit.prevent="submitForm" class="bg-white p-8 shadow-lg rounded-lg max-w-2xl mx-auto">
+      
+      <div class="mb-4">
+        <label for="title" class="block text-sm font-medium text-gray-700">Project Title</label>
+        <input type="text" id="title" v-model="formData.title" required
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2">
+      </div>
+
+      <div class="mb-4">
+        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+        <textarea id="description" v-model="formData.description" rows="4" required
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2"></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+        <select id="status" v-model="formData.status"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2">
+            <option value="Active">Active</option>
+            <option value="Upcoming">Upcoming</option>
+            <option value="Completed">Completed</option>
+        </select>
+      </div>
+
+      <div class="mb-6">
+        <label for="image" class="block text-sm font-medium text-gray-700">Project Image (JPG/PNG)</label>
+        <input type="file" id="image" @change="handleFileUpload" required
+               class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 p-2">
+        <p v-if="formData.imageFile" class="mt-1 text-sm text-green-600">File selected: {{ formData.imageFile.name }}</p>
+      </div>
+
+      <button type="submit" :disabled="isLoading"
+              class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50">
+        {{ isLoading ? 'Creating Project...' : 'Create Project' }}
+      </button>
+
+    </form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const formData = ref({
+    title: '',
+    description: '',
+    status: 'Active',
+    imageFile: null as File | null
+});
+const isLoading = ref(false);
+
+const handleFileUpload = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+        formData.value.imageFile = target.files[0] ?? null;
+    } else {
+        formData.value.imageFile = null;
+    }
+};
+
+const submitForm = async () => {
+    if (!formData.value.title || !formData.value.description || !formData.value.imageFile) {
+        alert('Please fill all fields and select an image.');
+        return;
+    }
+
+    isLoading.value = true;
+    
+    // FormData object banaya jaata hai (non-JSON data jaise files ke liye zaroori)
+    const data = new FormData();
+    data.append('title', formData.value.title);
+    data.append('description', formData.value.description);
+    data.append('status', formData.value.status);
+    data.append('projectImage', formData.value.imageFile); // 'projectImage' is the field name used in server.js multer setup
+
+    try {
+        const response = await fetch('http://localhost:3000/api/admin/projects', {
+            method: 'POST',
+            body: data, // Headers automatically set ho jaate hain for FormData
+        });
+
+        if (response.ok) {
+            alert('Project created successfully!');
+            // Form ko reset karein
+            formData.value = { title: '', description: '', status: 'Active', imageFile: null };
+            // Optional: Page ko refresh ya redirect kar sakte hain
+        } else {
+            const errorData = await response.json();
+            alert(`Project creation failed: ${errorData.message}`);
+        }
+    } catch (error) {
+        console.error('Upload error:', error);
+        alert('An unexpected error occurred during project creation.');
+    } finally {
+        isLoading.value = false;
+    }
+};
+</script>

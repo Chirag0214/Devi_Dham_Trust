@@ -16,12 +16,12 @@
           <div class="space-y-4">
             <div class="relative">
               <label for="login-email-address" class="sr-only">Email address</label>
-              <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <i class="fas fa-envelope absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
               <input v-model="loginForm.email" id="login-email-address" name="email" type="email" autocomplete="email" required class="w-full pl-1 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Email address" />
             </div>
             <div class="relative">
               <label for="login-password" class="sr-only">Password</label>
-              <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <i class="fas fa-lock absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
               <input v-model="loginForm.password" id="login-password" name="password" type="password" autocomplete="current-password" required class="w-full pl-1 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Password" />
             </div>
           </div>
