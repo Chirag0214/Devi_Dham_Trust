@@ -1,6 +1,8 @@
 <template>
-  <div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6 text-indigo-700">Add New Project / Cause</h1>
+<div class="min-h-screen flex bg-gray-50">
+    <Sidebar :user="user" :is-admin="isAdmin" />
+  <main class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-6 text-indigo-700 text-center">Add New Project</h1>
     
     <form @submit.prevent="submitForm" class="bg-white p-8 shadow-lg rounded-lg max-w-2xl mx-auto">
       
@@ -39,11 +41,21 @@
       </button>
 
     </form>
-  </div>
+  </main>
+</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+import Sidebar from '@/components/Sidebar.vue';
+import auth from '@/stores/auth';
+import { computed } from 'vue';
+
+const user = auth;
+const isAdmin = computed(() => {
+  return !!(user.value && (user.value.role === 'admin' || user.value.email === 'admin@devidhaam.org'));
+});
 
 const formData = ref({
     title: '',

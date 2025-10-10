@@ -56,39 +56,64 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import PrimaryButton from '@/components/PrimaryButton.vue';
+import PrimaryButton from '@/components/PrimaryButton.vue'; // Assuming this component exists
 
 const router = useRouter();
 const signupForm = ref({ name: '', email: '', password: '', confirmPassword: '' });
 const error = ref('');
 const success = ref('');
 
-const signup = () => {
-  error.value = '';
-  success.value = '';
-  if (signupForm.value.password !== signupForm.value.confirmPassword) {
-    error.value = 'Passwords do not match!';
-    return;
-  }
+// IMPORTANT: Backend API URL
+const API_URL = 'http://localhost:3000/api/register';
 
-  const usersJson = localStorage.getItem('users') || '[]';
-  const users = JSON.parse(usersJson);
-  const exists = users.some((u: any) => u.email === signupForm.value.email);
-  if (exists) {
-    error.value = 'A user with this email already exists';
-    return;
-  }
+const signup = async () => { // 👈 Ab async function use karenge
+  error.value = '';
+  success.value = '';
 
-  const newUser = { name: signupForm.value.name, email: signupForm.value.email, password: signupForm.value.password };
-  users.push(newUser);
-  localStorage.setItem('users', JSON.stringify(users));
-  success.value = 'Account created successfully. Redirecting to login...';
-  setTimeout(() => {
-    router.push('/login');
-    window.dispatchEvent(new Event('auth-action'));
-  }, 1000);
+  if (signupForm.value.password !== signupForm.value.confirmPassword) {
+    error.value = 'Passwords do not match!';
+    return;
+  }
+
+  try {
+    // 🛑 OLD localStorage logic removed 🛑
+    
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Zaroori: Server ko batana ki hum JSON bhej rahe hain
+      },
+      body: JSON.stringify({ // Data ko JSON string mein convert karke bhejna
+        name: signupForm.value.name,
+        email: signupForm.value.email,
+        password: signupForm.value.password,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Status 201 Created aane par success
+      success.value = data.message || 'Account created successfully. Redirecting to login...';
+      
+      // Success hone par user ko login page par redirect karein
+      setTimeout(() => {
+        router.push('/login');
+        window.dispatchEvent(new Event('auth-action'));
+      }, 1000);
+
+    } else {
+      // Status 400, 409 (Duplicate email), ya 500 aane par error dikhaayen
+      error.value = data.message || `Registration failed with status: ${response.status}`;
+    }
+
+  } catch (err) {
+    console.error('Registration API Error:', err);
+    error.value = 'Network error or server connection failed.';
+  }
 };
 </script>
+
 
 <style scoped>
 .fade-enter-active,

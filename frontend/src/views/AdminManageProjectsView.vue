@@ -1,47 +1,61 @@
 <template>
-    <div class="container mx-auto p-4">
-        <h1 class="text-3xl font-bold mb-6 text-indigo-700">Manage Projects</h1>
+    <div class="min-h-screen flex bg-gray-50">
+        <Sidebar :user="user" :is-admin="isAdmin" />
+        <main class="container mx-auto p-4">
+            <h1 class="text-3xl font-bold mb-6 text-indigo-700">Manage Projects</h1>
 
-        <div v-if="isLoading" class="text-center text-xl text-gray-500">Loading projects...</div>
-        <div v-else-if="projects.length === 0" class="text-center text-xl text-gray-500 p-8 border rounded-lg">
-            No projects found. Add one from the "Add New Project" page.
-        </div>
+            <div v-if="isLoading" class="text-center text-xl text-gray-500">Loading projects...</div>
+            <div v-else-if="projects.length === 0" class="text-center text-xl text-gray-500 p-8 border rounded-lg">
+                No projects found. Add one from the "Add New Project" page.
+            </div>
 
-        <div v-else class="space-y-6">
-            <div v-for="project in projects" :key="project.id"
-                class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col md:flex-row">
+            <div v-else class="space-y-6">
+                <div v-for="project in projects" :key="project.id"
+                    class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col md:flex-row">
 
-                <div class="md:w-1/4 h-32 overflow-hidden">
-                    <img :src="project.full_image_src" :alt="project.title" class="w-full h-full object-cover">
-                </div>
-
-                <div class="md:w-3/4 p-4 flex flex-col justify-between">
-                    <div>
-                        <span :class="getStatusClass(project.status)" class="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1">{{ project.status }}</span>
-                        <h2 class="text-xl font-bold text-gray-900 truncate">{{ project.title }}</h2>
-                        <p class="text-sm text-gray-600 line-clamp-2">{{ project.description }}</p>
-                        <p class="text-xs text-gray-400 mt-1">Created: {{ formatDate(project.created_at) }}</p>
+                    <div class="md:w-1/4 h-32 overflow-hidden">
+                        <img :src="project.full_image_src" :alt="project.title" class="w-full h-full object-cover">
                     </div>
 
-                    <div class="mt-3 flex space-x-3">
-                        <router-link :to="`/admin/edit-project/${project.id}`"
-                            class="px-4 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-150">
-                            Edit
-                        </router-link>
-                        <button @click="deleteProject(project.id)"
-                            class="px-4 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition duration-150"
-                            :disabled="isDeleting[project.id]">
-                            {{ isDeleting[project.id] ? 'Deleting...' : 'Delete Project' }}
-                        </button>
+                    <div class="md:w-3/4 p-4 flex flex-col justify-between">
+                        <div>
+                            <span :class="getStatusClass(project.status)"
+                                class="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1">{{
+                                project.status }}</span>
+                            <h2 class="text-xl font-bold text-gray-900 truncate">{{ project.title }}</h2>
+                            <p class="text-sm text-gray-600 line-clamp-2">{{ project.description }}</p>
+                            <p class="text-xs text-gray-400 mt-1">Created: {{ formatDate(project.created_at) }}</p>
+                        </div>
+
+                        <div class="mt-3 flex space-x-3">
+                            <router-link :to="`/admin/edit-project/${project.id}`"
+                                class="px-4 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-150">
+                                Edit
+                            </router-link>
+                            <button @click="deleteProject(project.id)"
+                                class="px-4 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition duration-150"
+                                :disabled="isDeleting[project.id]">
+                                {{ isDeleting[project.id] ? 'Deleting...' : 'Delete Project' }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+
+import Sidebar from '@/components/Sidebar.vue';
+import auth from '@/stores/auth';
+import { computed } from 'vue';
+
+const user = auth;
+const isAdmin = computed(() => {
+    return !!(user.value && (user.value.role === 'admin' || user.value.email === 'admin@devidhaam.org'));
+});
 
 const projects = ref<any[]>([]);
 const isLoading = ref(false);

@@ -1,18 +1,29 @@
 <template>
-  <div class="py-10 bg-gray-100 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-6">Admin: Add New Gallery Item</h1>
-      
-      <PhotoUploader />
-      
-      <p class="mt-8 text-sm text-gray-600">
-        Note: Upload ke baad photo automatic Gallery page ke slider mein dikh jaani chahiye. Agar nahi dikhti, toh Gallery page ko hard refresh (Ctrl+Shift+R) karein.
-      </p>
-    </div>
+  <div class="min-h-screen flex bg-gray-50">
+    <Sidebar :user="user" :is-admin="isAdmin" />
+
+    <main class="flex-1 p-8">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">Add New Gallery Item</h1>
+            
+            <PhotoUploader />
+            
+            <p class="mt-8 text-sm text-gray-600">
+                Note: Upload ke baad photo automatic Gallery page ke slider mein dikh jaani chahiye. Agar nahi dikhti, toh Gallery page ko hard refresh (Ctrl+Shift+R) karein.
+            </p>
+        </div>
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
-// Import the actual form logic component
+import Sidebar from '@/components/Sidebar.vue';
+import auth from '@/stores/auth';
+import { computed } from 'vue';
 import PhotoUploader from '@/components/PhotoUploader.vue'; 
+
+const user = auth;
+const isAdmin = computed(() => {
+  return !!(user.value && (user.value.role === 'admin' || user.value.email === 'admin@devidhaam.org'));
+});
 </script>

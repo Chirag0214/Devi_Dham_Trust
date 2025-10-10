@@ -1,5 +1,8 @@
 <template>
-  <div class="container mx-auto p-4">
+<div class="min-h-screen flex bg-gray-50">
+    <Sidebar :user="user" :is-admin="isAdmin" />
+
+  <main class="container mx-auto p-4">
     <h1 class="text-3xl font-bold mb-6">Manage Gallery Photos</h1>
     
     <div v-if="isLoading" class="text-center">Loading photos...</div>
@@ -25,11 +28,21 @@
         </div>
       </div>
     </div>
-  </div>
+  </main>
+</div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+
+import Sidebar from '@/components/Sidebar.vue';
+import auth from '@/stores/auth';
+import { computed } from 'vue';
+
+const user = auth;
+const isAdmin = computed(() => {
+  return !!(user.value && (user.value.role === 'admin' || user.value.email === 'admin@devidhaam.org'));
+});
 
 const photos = ref<any[]>([]);
 const isLoading = ref(false);
