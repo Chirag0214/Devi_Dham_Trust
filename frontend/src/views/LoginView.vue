@@ -2,7 +2,9 @@
   <div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 p-10 bg-white rounded-2xl shadow-2xl">
       <div class="flex justify-center">
-        <i class="fas fa-user-circle text-5xl text-indigo-600"></i>
+        <div class="h-20 w-20 rounded-full bg-indigo-50 flex items-center justify-center">
+          <i class="fas fa-user-circle text-5xl text-indigo-600"></i>
+        </div>
       </div>
       <transition name="fade" mode="out-in">
         <div key="login">
@@ -10,24 +12,35 @@
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
               Sign in to your account
             </h2>
+            <p class="mt-2 text-center text-sm text-gray-500">Welcome back — please enter your credentials to continue.</p>
           </div>
           <form class="mt-8 space-y-6" @submit.prevent="login">
             <div class="space-y-4">
               <div class="relative">
                 <label for="login-email-address" class="sr-only">Email address</label>
+                <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <input v-model="loginForm.email" id="login-email-address" name="email" type="email" autocomplete="email" required 
-                       class="w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                       class="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-md placeholder-gray-500 text-gray-900 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
                        placeholder="Email address" />
               </div>
               <div class="relative">
                 <label for="login-password" class="sr-only">Password</label>
-                <input v-model="loginForm.password" id="login-password" name="password" type="password" autocomplete="current-password" required 
-                       class="w-full pl-3 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                <input v-model="loginForm.password" id="login-password" name="password" :type="showPassword ? 'text' : 'password'" autocomplete="current-password" required 
+                       class="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-md placeholder-gray-500 text-gray-900 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
                        placeholder="Password" />
+              </div>
+              <div class="flex items-center mt-2">
+                <input id="show-password" type="checkbox" v-model="showPassword" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                <label for="show-password" class="ml-2 text-sm text-gray-600">Show password</label>
               </div>
             </div>
 
             <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <input id="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                <label for="remember-me" class="ml-2 block text-sm text-gray-600">Remember me</label>
+              </div>
               <div class="text-sm">
                 <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
                   Forgot your password?
@@ -36,7 +49,8 @@
             </div>
 
             <div>
-              <PrimaryButton type="submit" class="w-full">
+              <PrimaryButton type="submit" class="w-full py-3 primary-gradient focus-ring" aria-label="Sign in">
+                <span class="inline-block mr-2">🔐</span>
                 Sign in
               </PrimaryButton>
             </div>
@@ -63,6 +77,7 @@ import { setAuth } from '@/stores/auth';
 const router = useRouter();
 const loginForm = ref({ email: '', password: '' });
 const error = ref('');
+const showPassword = ref(false);
 
 // ✅ API URL is correct!
 const API_URL = 'http://localhost:3000/api/login'; 
@@ -146,8 +161,18 @@ const login = async () => {
 .fade-leave-to {
   opacity: 0;
 }
-/* For better input alignment, removing left padding/icon */
-input.w-full {
-  padding-left: 1rem !important; /* Default padding for cleaner look */
+/* Note: inputs use explicit padding classes (pl-10) so no global override is needed here. */
+
+.primary-gradient {
+  background: linear-gradient(90deg,#6366f1,#06b6d4);
+}
+
+.primary-gradient:hover {
+  filter: brightness(0.98);
+}
+
+.focus-ring:focus {
+  outline: 2px solid rgba(99,102,241,0.18);
+  outline-offset: 2px;
 }
 </style>

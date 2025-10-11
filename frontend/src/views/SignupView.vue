@@ -2,7 +2,9 @@
   <div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 p-10 bg-white rounded-2xl shadow-2xl">
       <div class="flex justify-center">
-        <i class="fas fa-user-circle text-5xl text-indigo-600"></i>
+        <div class="h-20 w-20 rounded-full bg-indigo-50 flex items-center justify-center">
+          <i class="fas fa-user-circle text-5xl text-indigo-600"></i>
+        </div>
       </div>
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -14,22 +16,26 @@
            <div class="relative">
             <label for="signup-name" class="sr-only">Full Name</label>
             <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input v-model="signupForm.name" id="signup-name" name="name" type="text" autocomplete="name" required class="w-full pl-1 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Full Name" />
+            <input v-model="signupForm.name" id="signup-name" name="name" type="text" autocomplete="name" required class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Full Name" />
           </div>
           <div class="relative">
             <label for="signup-email-address" class="sr-only">Email address</label>
             <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input v-model="signupForm.email" id="signup-email-address" name="email" type="email" autocomplete="email" required class="w-full pl-1 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Email address" />
+            <input v-model="signupForm.email" id="signup-email-address" name="email" type="email" autocomplete="email" required class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Email address" />
           </div>
           <div class="relative">
             <label for="signup-password" class="sr-only">Password</label>
             <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input v-model="signupForm.password" id="signup-password" name="password" type="password" autocomplete="new-password" required class="w-full pl-1 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Password" />
+            <input v-model="signupForm.password" id="signup-password" name="password" :type="showPassword ? 'text' : 'password'" autocomplete="new-password" required class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Password" />
           </div>
            <div class="relative">
             <label for="confirm-password" class="sr-only">Confirm Password</label>
             <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-            <input v-model="signupForm.confirmPassword" id="confirm-password" name="confirm-password" type="password" autocomplete="new-password" required class="w-full pl-1 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Confirm Password" />
+            <input v-model="signupForm.confirmPassword" id="confirm-password" name="confirm-password" :type="showPassword ? 'text' : 'password'" autocomplete="new-password" required class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Confirm Password" />
+          </div>
+          <div class="flex items-center mt-2">
+            <input id="show-password-signup" type="checkbox" v-model="showPassword" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+            <label for="show-password-signup" class="ml-2 text-sm text-gray-600">Show password</label>
           </div>
         </div>
 
@@ -62,6 +68,7 @@ const router = useRouter();
 const signupForm = ref({ name: '', email: '', password: '', confirmPassword: '' });
 const error = ref('');
 const success = ref('');
+const showPassword = ref(false);
 
 // IMPORTANT: Backend API URL
 const API_URL = 'http://localhost:3000/api/register';

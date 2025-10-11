@@ -11,8 +11,9 @@
         
         <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/about') ? 'nav-active' : '']" to="/about">About Us</router-link>
         <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/projects') ? 'nav-active' : '']" to="/projects">Our Work</router-link>
-        <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/gallery') ? 'nav-active' : '']" to="/gallery">Gallery</router-link>
-        <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/contact') ? 'nav-active' : '']" to="/contact">Contact</router-link>
+  <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/gallery') ? 'nav-active' : '']" to="/gallery">Gallery</router-link>
+  <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/certifications') ? 'nav-active' : '']" to="/certifications">Certifications</router-link>
+  <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/contact') ? 'nav-active' : '']" to="/contact">Contact</router-link>
         <router-link v-if="user" :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/dashboard') ? 'nav-active' : '']" to="/dashboard">Dashboard</router-link>
       </nav>
 

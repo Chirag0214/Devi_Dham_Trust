@@ -64,8 +64,8 @@ const router = createRouter({
       component: () => import('@/views/AdminActiveMembersView.vue')
     },
     {
-      path: '/certificate',
-      name: 'certificate',
+      path: '/certifications',
+      name: 'certifications',
       component: () => import('../views/CertificateView.vue')
     },
     {
