@@ -64,6 +64,10 @@ const route = useRoute();
 const isActive = (path: string) => {
   // treat root specially
   if (path === '/') return route.path === '/';
+  // Special case: treat '/dashboard' as active when admin routes (/admin) are active
+  if (path === '/dashboard') {
+    return route.path === '/dashboard' || route.path === '/admin' || route.path.startsWith('/admin/');
+  }
   return route.path === path || route.path.startsWith(path + '/');
 };
 const showToast = ref(false);

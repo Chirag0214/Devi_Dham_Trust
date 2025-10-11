@@ -47,6 +47,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import auth from '@/stores/auth';
 
 const route = useRoute();
 const router = useRouter();
@@ -92,11 +93,18 @@ const fetchProject = async () => {
 const submitUpdate = async () => {
     isSubmitting.value = true;
     try {
-        const response = await fetch(`http://localhost:3000/api/admin/projects/${projectId}`, {
+    const tokenFromStore = auth.value?.token;
+
+        const defaultBackend = 'http://localhost:3000';
+        const currentOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+        const backendOrigin = currentOrigin.includes(':3000') ? currentOrigin : defaultBackend;
+
+        const headers: any = { 'Content-Type': 'application/json' };
+        if (tokenFromStore) headers['Authorization'] = `Bearer ${tokenFromStore}`;
+
+        const response = await fetch(`${backendOrigin}/api/admin/projects/${projectId}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers,
             body: JSON.stringify({
                 title: formData.value.title,
                 description: formData.value.description,

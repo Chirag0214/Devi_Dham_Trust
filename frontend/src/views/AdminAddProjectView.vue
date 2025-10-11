@@ -47,10 +47,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import Sidebar from '@/components/Sidebar.vue';
 import auth from '@/stores/auth';
 import { computed } from 'vue';
+
+const router = useRouter();
 
 const user = auth;
 const isAdmin = computed(() => {
@@ -90,17 +93,28 @@ const submitForm = async () => {
     data.append('projectImage', formData.value.imageFile); // 'projectImage' is the field name used in server.js multer setup
 
     try {
-        const response = await fetch('http://localhost:3000/api/admin/projects', {
-            method: 'POST',
-            body: data, // Headers automatically set ho jaate hain for FormData
+        const token = user.value?.token;
+        const headers: any = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    // Determine backend origin (development default: localhost:3000)
+    const defaultBackend = 'http://localhost:3000';
+    const currentOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+    const backendOrigin = currentOrigin.includes(':3000') ? currentOrigin : defaultBackend;
+
+    const response = await fetch(`${backendOrigin}/api/admin/projects`, {
+          method: 'POST',
+          headers,
+          body: data, // Headers automatically set for FormData (don't set Content-Type)
         });
 
-        if (response.ok) {
-            alert('Project created successfully!');
-            // Form ko reset karein
-            formData.value = { title: '', description: '', status: 'Active', imageFile: null };
-            // Optional: Page ko refresh ya redirect kar sakte hain
-        } else {
+    if (response.ok) {
+      alert('Project created successfully!');
+      // Form ko reset karein
+      formData.value = { title: '', description: '', status: 'Active', imageFile: null };
+      // Redirect to Our Works page so admin sees the new project
+      router.push('/projects');
+    } else {
             const errorData = await response.json();
             alert(`Project creation failed: ${errorData.message}`);
         }

@@ -57,23 +57,27 @@ const isLoading = ref(false);
 
 const fetchProjects = async () => {
     isLoading.value = true;
-    try {
-        // Backend GET API ko call karein
-        const response = await fetch('http://localhost:3000/api/projects');
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch projects data.');
-        }
+  try {
+    // Determine backend origin. If running dev frontend on a different port, default to localhost:3000
+    const defaultBackend = 'http://localhost:3000';
+    const currentOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+    const backendOrigin = currentOrigin.includes(':3000') ? currentOrigin : defaultBackend;
 
-        const data = await response.json();
-        
-        // Image source mein base URL jodna
-        projects.value = data.map((item: any) => ({
-            ...item,
-            full_image_src: item.image_src.startsWith('http') 
-                            ? item.image_src 
-                            : `http://localhost:3000${item.image_src}`,
-        }));
+    const response = await fetch(`${backendOrigin}/api/projects`);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch projects data.');
+    }
+
+    const data = await response.json();
+
+    // Build full image URL using backend origin when necessary
+    projects.value = data.map((item: any) => ({
+      ...item,
+      full_image_src: item.image_src && item.image_src.startsWith('http')
+              ? item.image_src
+              : `${backendOrigin}${item.image_src}`,
+    }));
 
     } catch (error) {
         console.error("Error fetching projects:", error);
@@ -93,8 +97,8 @@ const getStatusClass = (status: string) => {
 };
 
 const handleImageError = (event: Event) => {
-    // Agar image load nahi hoti hai, toh placeholder dikhao
-    (event.target as HTMLImageElement).src = 'https://via.placeholder.com/400x200?text=Project+Image+Missing';
+  // If image fails to load, use a local fallback image from public/images
+  (event.target as HTMLImageElement).src = '/images/plantation.avif';
     (event.target as HTMLImageElement).classList.add('p-10'); 
 };
 

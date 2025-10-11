@@ -57,6 +57,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import auth from '@/stores/auth';
 
 const file = ref<File | null>(null);
 const caption = ref('');
@@ -93,8 +94,23 @@ const handleSubmit = async () => {
   formData.append('category', category.value);
 
   try {
-    const response = await fetch('http://localhost:3000/api/admin/gallery', {
+    const token = auth.value?.token;
+    if (!token) {
+      message.value = 'Authentication required: please log in as admin to upload gallery photos.';
+      isError.value = true;
+      isUploading.value = false;
+      return;
+    }
+
+    const defaultBackend = 'http://localhost:3000';
+    const currentOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+    const backendOrigin = currentOrigin.includes(':3000') ? currentOrigin : defaultBackend;
+
+    const response = await fetch(`${backendOrigin}/api/admin/gallery`, {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
       body: formData,
     });
 

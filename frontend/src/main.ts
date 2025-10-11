@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router' // Router import kiya
 
 import './assets/main.css' // Tailwind CSS import kiya
+import '@/bootstrap/fetch-block-guard';
 
 const app = createApp(App)
 

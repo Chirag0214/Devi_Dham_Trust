@@ -96,6 +96,29 @@ const signup = async () => { // 👈 Ab async function use karenge
       // Status 201 Created aane par success
       success.value = data.message || 'Account created successfully. Redirecting to login...';
       
+      // Also add the newly registered user into localStorage 'users' so admin New Members view
+      // can show the recent signup immediately (without requiring login).
+      try {
+        const rawUsers = JSON.parse(localStorage.getItem('users') || '[]') as any[];
+        const email = signupForm.value.email && signupForm.value.email.toLowerCase();
+        const exists = rawUsers.findIndex(u => (u.email || '').toLowerCase() === email) !== -1;
+        if (!exists) {
+          const now = Date.now();
+          rawUsers.unshift({
+            id: data.user?.id || undefined,
+            name: signupForm.value.name,
+            email: signupForm.value.email,
+            createdAt: now,
+            membershipRequested: true,
+          });
+          localStorage.setItem('users', JSON.stringify(rawUsers));
+          // notify other parts of app if they listen
+          window.dispatchEvent(new Event('auth-action'));
+        }
+      } catch (e) {
+        console.error('Failed to add new signup to local users list', e);
+      }
+
       // Success hone par user ko login page par redirect karein
       setTimeout(() => {
         router.push('/login');

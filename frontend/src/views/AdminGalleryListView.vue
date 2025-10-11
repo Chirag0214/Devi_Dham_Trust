@@ -50,22 +50,26 @@ const isDeleting = ref<Record<number, boolean>>({}); // To disable button during
 
 // --- Fetch all photos (same as GalleryView) ---
 const fetchPhotos = async () => {
-    isLoading.value = true;
-    try {
-        const response = await fetch('http://localhost:3000/api/gallery');
-        const data = await response.json();
-        
-        photos.value = data.map((item: any) => ({
-            ...item,
-            // Prefix the URL for display
-            src: item.src.startsWith('http') ? item.src : `http://localhost:3000${item.src}`,
-        }));
+  isLoading.value = true;
+  try {
+    const defaultBackend = 'http://localhost:3000';
+    const currentOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+    const backendOrigin = currentOrigin.includes(':3000') ? currentOrigin : defaultBackend;
 
-    } catch (error) {
-        console.error("Error fetching photos:", error);
-    } finally {
-        isLoading.value = false;
-    }
+    const response = await fetch(`${backendOrigin}/api/gallery`);
+    const data = await response.json();
+
+    photos.value = data.map((item: any) => ({
+      ...item,
+      // Prefix the URL for display
+      src: item.src && item.src.startsWith('http') ? item.src : `${backendOrigin}${item.src}`,
+    }));
+
+  } catch (error) {
+    console.error("Error fetching photos:", error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 // --- DELETE Photo Logic ---
@@ -76,25 +80,39 @@ const deletePhoto = async (id: number) => {
     
     isDeleting.value[id] = true;
 
-    try {
-        const response = await fetch(`http://localhost:3000/api/admin/gallery/${id}`, {
-            method: 'DELETE',
-        });
-
-        if (response.ok) {
-            // Frontend se photo ko hatao (instant UI update)
-            photos.value = photos.value.filter(p => p.id !== id);
-            alert('Photo deleted successfully!');
-        } else {
-            const errorData = await response.json();
-            alert(`Failed to delete photo: ${errorData.message}`);
-        }
-    } catch (error) {
-        console.error('Delete error:', error);
-        alert('An unexpected error occurred during deletion.');
-    } finally {
-        isDeleting.value[id] = false;
+  try {
+    const token = auth.value?.token;
+    if (!token) {
+      alert('Authentication required: please log in as admin to delete photos.');
+      isDeleting.value[id] = false;
+      return;
     }
+
+    const defaultBackend = 'http://localhost:3000';
+    const currentOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+    const backendOrigin = currentOrigin.includes(':3000') ? currentOrigin : defaultBackend;
+
+    const response = await fetch(`${backendOrigin}/api/admin/gallery/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      // Frontend se photo ko hatao (instant UI update)
+      photos.value = photos.value.filter(p => p.id !== id);
+      alert('Photo deleted successfully!');
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to delete photo: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error('Delete error:', error);
+    alert('An unexpected error occurred during deletion.');
+  } finally {
+    isDeleting.value[id] = false;
+  }
 };
 
 onMounted(fetchPhotos);

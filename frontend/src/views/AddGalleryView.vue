@@ -8,9 +8,7 @@
             
             <PhotoUploader />
             
-            <p class="mt-8 text-sm text-gray-600">
-                Note: Upload ke baad photo automatic Gallery page ke slider mein dikh jaani chahiye. Agar nahi dikhti, toh Gallery page ko hard refresh (Ctrl+Shift+R) karein.
-            </p>
+            
         </div>
     </main>
   </div>

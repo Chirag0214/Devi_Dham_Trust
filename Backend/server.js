@@ -102,28 +102,37 @@ const uploadProject = multer({ storage: projectStorage });
 
 // --- AUTHENTICATION MIDDLEWARE --- 
 // Har protected route se pehle token check karega
-const authenticateToken = (req, res, next) => {
-    // 1. Header se token nikalna
+const authenticateToken = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    // Format: 'Bearer TOKEN_STRING'
     const token = authHeader && authHeader.split(' ')[1];
 
-    if (token == null) {
-        // Token missing (401 Unauthorized)
-        return res.status(401).json({ message: 'Authentication token missing. Please log in.' });
-    }
+    if (!token) return res.status(401).json({ message: 'Authentication token missing. Please log in.' });
 
-    // 2. Token Verify karna
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) {
-            // Token invalid ya expired (403 Forbidden)
-            console.log('Token verification failed:', err.message);
-            return res.status(403).json({ message: 'Invalid or expired token. Please log in again.' });
+    try {
+        const payload = jwt.verify(token, JWT_SECRET);
+        req.user = payload;
+
+        // Defensive: check DB for blocked/status if user id present
+        try {
+            if (payload && payload.id) {
+                const [rows] = await dbPool.query('SELECT IFNULL(blocked,0) AS blocked, IFNULL(status, "") AS status FROM users WHERE id = ?', [payload.id]);
+                if (rows && rows.length > 0) {
+                    const dbUser = rows[0];
+                    if (dbUser.blocked === 1 || (dbUser.status && dbUser.status.toString().toLowerCase() === 'blocked')) {
+                        return res.status(403).json({ message: 'Account blocked. Access denied.' });
+                    }
+                }
+            }
+        } catch (dbCheckErr) {
+            console.warn('Warning: could not verify user blocked status from DB', dbCheckErr);
+            // continue; don't fail authentication due to DB check error
         }
-        // Token valid, user details ko request object mein store karna
-        req.user = user; 
-        next(); // Agle route handler function par jaana
-    });
+
+        next();
+    } catch (err) {
+        console.log('Token verification failed:', err && err.message ? err.message : err);
+        return res.status(403).json({ message: 'Invalid or expired token. Please log in again.' });
+    }
 };
 
 
@@ -177,9 +186,9 @@ app.post('/api/login', async (req, res) => {
     }
 
     try {
-        // 1. Database se user ko fetch karo
-        const sql = 'SELECT id, name, email, password, role FROM users WHERE email = ?';
-        const [rows] = await dbPool.query(sql, [email]);
+    // 1. Database se user ko fetch karo (include blocked/status if present)
+    const sql = 'SELECT id, name, email, password, role, IFNULL(blocked,0) AS blocked, IFNULL(status,"") AS status FROM users WHERE email = ?';
+    const [rows] = await dbPool.query(sql, [email]);
 
         if (rows.length === 0) {
             return res.status(401).json({ message: 'Invalid email or password.' });
@@ -192,6 +201,11 @@ app.post('/api/login', async (req, res) => {
 
         if (!passwordMatch) {
             return res.status(401).json({ message: 'Invalid email or password.' });
+        }
+
+        // Blocked users cannot login
+        if (user.blocked === 1 || (user.status && user.status.toString().toLowerCase() === 'blocked')) {
+            return res.status(403).json({ message: 'Account is blocked. Contact administrator.' });
         }
 
         // 3. Success: JWT Token Generate karo
@@ -285,15 +299,17 @@ app.put('/api/admin/users/:id', authenticateToken, async (req, res) => {
     }
 
     const userId = req.params.id;
-    const { name, email, role, password } = req.body;
+    const { name, email, role, password, blocked, status } = req.body;
 
     try {
         // If password provided, hash it
         let updateFields = [];
         let params = [];
-        if (name !== undefined) { updateFields.push('name = ?'); params.push(name); }
-        if (email !== undefined) { updateFields.push('email = ?'); params.push(email); }
-        if (role !== undefined) { updateFields.push('role = ?'); params.push(role); }
+    if (name !== undefined) { updateFields.push('name = ?'); params.push(name); }
+    if (email !== undefined) { updateFields.push('email = ?'); params.push(email); }
+    if (role !== undefined) { updateFields.push('role = ?'); params.push(role); }
+    if (blocked !== undefined) { updateFields.push('blocked = ?'); params.push(blocked ? 1 : 0); }
+    if (status !== undefined) { updateFields.push('status = ?'); params.push(status); }
         if (password) {
             const hashed = await bcrypt.hash(password, saltRounds);
             updateFields.push('password = ?'); params.push(hashed);
@@ -310,7 +326,9 @@ app.put('/api/admin/users/:id', authenticateToken, async (req, res) => {
 
         if (result.affectedRows === 0) return res.status(404).json({ message: 'User not found or no changes made.' });
 
-        res.json({ message: 'User updated successfully.' });
+        // return updated user for client to sync
+        const [rows] = await dbPool.query('SELECT id, name, email, role, IFNULL(blocked,0) AS blocked, IFNULL(status,"") AS status FROM users WHERE id = ?', [userId]);
+        return res.json({ message: 'User updated successfully.', user: rows && rows[0] ? rows[0] : null });
     } catch (error) {
         console.error('❌ Error updating user:', error);
         res.status(500).json({ message: 'Error updating user.' });
@@ -613,6 +631,57 @@ app.put('/api/admin/projects/:id', authenticateToken, async (req, res) => {
 // Saare routes check hone ke baad, agar koi match nahi hota toh yeh chalta hai
 app.use((req, res) => {
     res.status(404).json({ message: 'API Route Not Found.' });
+});
+
+// ==========================================================
+//        GET All Donations (Admin Dashboard) - 💡 PROTECTED
+// ==========================================================
+// Returns donations from the DB if table exists, otherwise falls back to a local JSON file (data/donations.json) if present.
+app.get('/api/admin/donations', authenticateToken, async (req, res) => {
+    // Admin-only
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ message: 'Forbidden. Admin access required.' });
+    }
+
+    try {
+        // Support optional filtering via query param, e.g. ?source=user
+        const source = req.query.source ? String(req.query.source).toLowerCase() : null;
+
+        let sql = 'SELECT id, name, email, receipt_id, transaction_id, amount, mode, purpose, created_at AS date, `type`, `from` FROM donations';
+        const params = [];
+
+        if (source === 'user') {
+            // Filter heuristics: prefer explicit type/from values, otherwise treat rows with email as user donations
+            sql += " WHERE type = 'user' OR `from` = 'user' OR (email IS NOT NULL AND email <> '')";
+        }
+
+        sql += ' ORDER BY created_at DESC';
+
+        const [rows] = await dbPool.query(sql, params);
+        return res.json({ donations: rows });
+    } catch (error) {
+        console.warn('[WARN] Could not fetch donations from DB, attempting fallback file. Error:', error && error.code ? error.code : error);
+
+        // If table missing or other DB error, try reading a local JSON fallback file
+        try {
+            const dataPath = path.join(__dirname, 'data', 'donations.json');
+            if (fs.existsSync(dataPath)) {
+                const content = fs.readFileSync(dataPath, 'utf8');
+                let parsed = JSON.parse(content || '[]');
+                // apply query filter to fallback data as well
+                const source = req.query.source ? String(req.query.source).toLowerCase() : null;
+                if (source === 'user') {
+                    parsed = parsed.filter(d => d.type === 'user' || d.from === 'user' || (d.email && d.email.length > 0));
+                }
+                return res.json({ donations: parsed });
+            }
+        } catch (fileErr) {
+            console.warn('[WARN] donations fallback file read failed:', fileErr);
+        }
+
+        // As a last resort, return an empty list with a non-200 status to indicate the DB read failed
+        return res.status(200).json({ donations: [] });
+    }
 });
 
 // ==========================================================

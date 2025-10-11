@@ -59,6 +59,11 @@ const router = createRouter({
       component: () => import('../views/AdminDashboardView.vue')
     },
     {
+      path: '/admin/active-members',
+      name: 'admin-active-members',
+      component: () => import('@/views/AdminActiveMembersView.vue')
+    },
+    {
       path: '/certificate',
       name: 'certificate',
       component: () => import('../views/CertificateView.vue')
@@ -81,10 +86,34 @@ const router = createRouter({
     name: 'admin-users',
     component: () => import('@/views/AdminUsersView.vue'), // Yeh component file aapko banani padegi
 },
+
 {
-    path: '/admin/donations', // Donations ka path
-    name: 'admin-donations',
-    component: () => import('@/views/AdminDonationsView.vue'), // Yeh component file aapko banani padegi
+  path: '/admin/new-members',
+  name: 'admin-new-members',
+  component: () => import('@/views/NewMemberView.vue'),
+},
+
+{
+  path: '/admin/all-users',
+  name: 'admin-all-users',
+  component: () => import('@/views/AllUserView.vue'),
+},
+
+{
+  path: '/admin/blocked-users',
+  name: 'admin-blocked-users',
+  component: () => import('@/views/BlockedUsersView.vue'),
+},
+{
+  path: '/admin/all-receipts',
+  name: 'admin-all-receipts',
+  component: () => import('@/views/AllReceiptsView.vue'),
+},
+
+{
+  path: '/admin/donations', // Donations ka path
+  name: 'admin-donations',
+  component: () => import('@/views/TotalDonationView.vue'),
 },
 
    // src/router/index.ts ke 'routes' array mein
@@ -98,7 +127,7 @@ const router = createRouter({
 {
     path: '/admin/manage-gallery', // Naya path
     name: 'AdminManageGallery',
-    component: () => import('../views/AdminGalleryListView.vue'),
+  component: () => import('../views/ManageGalleryView.vue'),
 },
 {
     path: '/admin/submissions', // Naya path
@@ -140,7 +169,10 @@ export default router
 // Global guard: ensure admin users land on /admin and non-admins can't access /admin
 router.beforeEach((to, from, next) => {
   const user = auth.value;
-  const isAdmin = !!(user && (user.role === 'admin' || user.email === 'admin@devidhaam.org'));
+  // Normalize checks: role or email may be undefined, ensure lowercase comparison
+  const role = user && (user as any).role ? String((user as any).role).toLowerCase() : undefined;
+  const email = user && (user as any).email ? String((user as any).email).toLowerCase() : undefined;
+  const isAdmin = !!(user && (role === 'admin' || email === 'admin@devidhaam.org'));
 
   // If admin is logged in but tries to visit /dashboard (or root after login), send to /admin
   if (isAdmin && to.path === '/dashboard') {

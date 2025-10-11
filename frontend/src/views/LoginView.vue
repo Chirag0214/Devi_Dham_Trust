@@ -99,11 +99,15 @@ const login = async () => {
       const user = data.user;
       const token = data.token;
 
+      // Normalize role and email to avoid case-sensitivity issues
+      const normalizedRole = user.role ? String(user.role).toLowerCase() : undefined;
+      const normalizedEmail = user.email ? String(user.email).toLowerCase() : undefined;
+
       const authObj = {
-        email: user.email,
+        email: normalizedEmail,
         name: user.name,
         loggedAt: Date.now(),
-        role: user.role,
+        role: normalizedRole,
         id: user.id,
         token: token, // store token so API calls can use it
       };
@@ -111,7 +115,9 @@ const login = async () => {
       setAuth(authObj as any);
       
       // Admin ya user ke hisaab se redirect karo
-      const redirectPath = user.role === 'admin' ? '/admin' : '/dashboard';
+  // Redirect admins to /admin. Accept either role === 'admin' (case-insensitive) or the admin email.
+  const isAdmin = (normalizedRole === 'admin') || (normalizedEmail === 'admin@devidhaam.org');
+  const redirectPath = isAdmin ? '/admin' : '/dashboard';
       router.push(redirectPath);
       
       window.dispatchEvent(new Event('auth-action'));

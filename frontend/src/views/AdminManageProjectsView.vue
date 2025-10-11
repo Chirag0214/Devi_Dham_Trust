@@ -46,11 +46,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 import Sidebar from '@/components/Sidebar.vue';
 import auth from '@/stores/auth';
-import { computed } from 'vue';
+
 
 const user = auth;
 const isAdmin = computed(() => {
@@ -65,14 +65,18 @@ const isDeleting = ref<Record<number, boolean>>({});
 const fetchProjects = async () => {
     isLoading.value = true;
     try {
-        const response = await fetch('http://localhost:3000/api/projects');
+        const defaultBackend = 'http://localhost:3000';
+        const currentOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+        const backendOrigin = currentOrigin.includes(':3000') ? currentOrigin : defaultBackend;
+
+        const response = await fetch(`${backendOrigin}/api/projects`);
         const data = await response.json();
 
         projects.value = data.map((item: any) => ({
             ...item,
-            full_image_src: item.image_src.startsWith('http')
+            full_image_src: item.image_src && item.image_src.startsWith('http')
                 ? item.image_src
-                : `http://localhost:3000${item.image_src}`,
+                : `${backendOrigin}${item.image_src}`,
         }));
 
     } catch (error) {
@@ -91,8 +95,22 @@ const deleteProject = async (id: number) => {
     isDeleting.value[id] = true;
 
     try {
-        const response = await fetch(`http://localhost:3000/api/admin/projects/${id}`, {
+        const token = user.value?.token;
+        if (!token) {
+            alert('Authentication required: please log in as an admin before deleting projects.');
+            isDeleting.value[id] = false;
+            return;
+        }
+
+        const defaultBackend = 'http://localhost:3000';
+        const currentOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+        const backendOrigin = currentOrigin.includes(':3000') ? currentOrigin : defaultBackend;
+
+        const response = await fetch(`${backendOrigin}/api/admin/projects/${id}`, {
             method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
 
         if (response.ok) {
