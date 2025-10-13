@@ -127,9 +127,11 @@ const login = async () => {
         token: token, // store token so API calls can use it
       };
 
-      setAuth(authObj as any);
+  setAuth(authObj as any);
+  // notify UI parts (sidebar/header) immediately so sidebar can open
+  window.dispatchEvent(new Event('auth-action'));
       
-      // Admin ya user ke hisaab se redirect karo
+  // Admin ya user ke hisaab se redirect karo
   // Redirect admins to /admin. Accept either role === 'admin' (case-insensitive) or the admin email.
   const isAdmin = (normalizedRole === 'admin') || (normalizedEmail === 'admin@devidhaam.org');
   const redirectPath = isAdmin ? '/admin' : '/dashboard';
