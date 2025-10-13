@@ -685,6 +685,157 @@ app.get('/api/admin/donations', authenticateToken, async (req, res) => {
 });
 
 // ==========================================================
+//        GET Current User Donations (My Receipts) - PROTECTED
+// ==========================================================
+// Returns donations where the email matches the authenticated user.
+app.get('/api/donations/me', authenticateToken, async (req, res) => {
+    try {
+        const userEmail = req.user && req.user.email ? String(req.user.email) : null;
+        if (!userEmail) return res.status(400).json({ message: 'Authenticated user email not found.' });
+
+        const sql = 'SELECT id, receipt_id, transaction_id, amount, mode, purpose, created_at AS date, email FROM donations WHERE email = ? ORDER BY created_at DESC';
+        const [rows] = await dbPool.query(sql, [userEmail]);
+        return res.json({ donations: rows });
+    } catch (error) {
+        console.warn('[WARN] /api/donations/me DB read failed, attempting fallback file. Error:', error && error.code ? error.code : error);
+        try {
+            const dataPath = path.join(__dirname, 'data', 'donations.json');
+            if (fs.existsSync(dataPath)) {
+                const content = fs.readFileSync(dataPath, 'utf8');
+                let parsed = JSON.parse(content || '[]');
+                const userEmail = req.user && req.user.email ? String(req.user.email) : null;
+                if (userEmail) {
+                    parsed = parsed.filter(d => d.email && String(d.email) === String(userEmail));
+                } else {
+                    parsed = [];
+                }
+                return res.json({ donations: parsed });
+            }
+        } catch (fileErr) {
+            console.warn('[WARN] donations fallback file read failed for /api/donations/me:', fileErr);
+        }
+
+        // If everything fails, return empty list (200) to let frontend handle gracefully
+        return res.status(200).json({ donations: [] });
+    }
+});
+
+// ==========================================================
+//        CURRENT USER PROFILE ROUTES (Protected)
+// ==========================================================
+
+// GET current authenticated user's profile
+app.get('/api/me', authenticateToken, async (req, res) => {
+    try {
+        if (!req.user || !req.user.id) return res.status(400).json({ message: 'Authenticated user not found in token.' });
+
+        const [rows] = await dbPool.query('SELECT id, name, email, role, created_at AS createdAt FROM users WHERE id = ?', [req.user.id]);
+        if (rows && rows.length > 0) {
+            return res.json({ user: rows[0] });
+        }
+
+        // fallback to token payload if DB row missing
+        return res.json({ user: req.user });
+    } catch (error) {
+        console.error('❌ Error fetching current user profile:', error);
+        return res.status(500).json({ message: 'Error fetching profile.' });
+    }
+});
+
+// PUT update current user's profile (name, email etc.)
+app.put('/api/me', authenticateToken, async (req, res) => {
+    try {
+        if (!req.user || !req.user.id) return res.status(401).json({ message: 'Not authenticated' });
+
+        const { name, email } = req.body;
+        const updates = [];
+        const params = [];
+        if (name !== undefined) { updates.push('name = ?'); params.push(name); }
+        if (email !== undefined) { updates.push('email = ?'); params.push(email); }
+
+        if (updates.length === 0) {
+            return res.status(400).json({ message: 'No fields provided for update.' });
+        }
+
+        params.push(req.user.id);
+        const sql = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
+        const [result] = await dbPool.query(sql, params);
+
+        const [rows] = await dbPool.query('SELECT id, name, email, role, created_at AS createdAt FROM users WHERE id = ?', [req.user.id]);
+        const updatedUser = rows && rows[0] ? rows[0] : req.user;
+
+        // Issue a fresh token so client can continue using updated email/name in the token payload
+        const token = jwt.sign({ id: updatedUser.id, name: updatedUser.name, email: updatedUser.email, role: updatedUser.role }, JWT_SECRET, { expiresIn: '7d' });
+
+        return res.json({ message: 'Profile updated successfully.', user: updatedUser, token });
+    } catch (error) {
+        console.error('❌ Error updating profile:', error);
+        return res.status(500).json({ message: 'Error updating profile.' });
+    }
+});
+
+// POST change password for current user (requires current and new password)
+app.post('/api/me/password', authenticateToken, async (req, res) => {
+    try {
+        const { current, newPassword } = req.body || {};
+        if (!current || !newPassword) return res.status(400).json({ message: 'Both current and newPassword are required.' });
+        if (!req.user || !req.user.id) return res.status(401).json({ message: 'Not authenticated' });
+
+        const [rows] = await dbPool.query('SELECT password FROM users WHERE id = ?', [req.user.id]);
+        if (!rows || rows.length === 0) return res.status(404).json({ message: 'User not found.' });
+
+        const storedHash = rows[0].password;
+        const match = await bcrypt.compare(current, storedHash);
+        if (!match) return res.status(401).json({ message: 'Current password is incorrect.' });
+
+        const hashed = await bcrypt.hash(newPassword, saltRounds);
+        await dbPool.query('UPDATE users SET password = ? WHERE id = ?', [hashed, req.user.id]);
+        return res.json({ message: 'Password changed successfully.' });
+    } catch (error) {
+        console.error('❌ Error changing password:', error);
+        return res.status(500).json({ message: 'Error changing password.' });
+    }
+});
+
+// ==========================================================
+//        CERTIFICATES: current user's certificates (Protected)
+// ==========================================================
+
+app.get('/api/certificates/me', authenticateToken, async (req, res) => {
+    try {
+        const userEmail = req.user && req.user.email ? String(req.user.email) : null;
+        const userId = req.user && req.user.id ? req.user.id : null;
+
+        // Try DB first
+        try {
+            const sql = 'SELECT id, title, issued, preview, email AS userEmail, userId FROM certificates WHERE email = ? OR userId = ? ORDER BY issued DESC';
+            const [rows] = await dbPool.query(sql, [userEmail, userId]);
+            return res.json({ certificates: rows });
+        } catch (dbErr) {
+            console.warn('[WARN] Could not fetch certificates from DB, attempting fallback file. Error:', dbErr && dbErr.code ? dbErr.code : dbErr);
+        }
+
+        // Fallback to local data file if DB query failed or table missing
+        try {
+            const dataPath = path.join(__dirname, 'data', 'certificates.json');
+            if (fs.existsSync(dataPath)) {
+                const content = fs.readFileSync(dataPath, 'utf8');
+                let parsed = JSON.parse(content || '[]');
+                if (userEmail) parsed = parsed.filter(c => (c.email && String(c.email) === String(userEmail)) || (c.userEmail && String(c.userEmail) === String(userEmail)) || (c.userId && String(c.userId) === String(userId)));
+                return res.json({ certificates: parsed });
+            }
+        } catch (fileErr) {
+            console.warn('[WARN] certificates fallback file read failed:', fileErr);
+        }
+
+        return res.json({ certificates: [] });
+    } catch (error) {
+        console.error('❌ Error fetching certificates for user:', error);
+        return res.status(500).json({ message: 'Error fetching certificates.' });
+    }
+});
+
+// ==========================================================
 //                     SERVER START
 // ==========================================================
 

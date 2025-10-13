@@ -33,7 +33,7 @@
 
         <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-10">
           <button v-for="(photo, index) in photos" :key="photo.id" @click="setIndex(index)"
-            :class="['w-3 h-3 rounded-full transition duration-300', currentIndex === index ? 'bg-indigo-500 scale-110' : 'bg-gray-300 hover:bg-gray-100']"
+            :class="['w-3 h-3 rounded-full transition duration-300', currentIndex === index ? 'bg-orange-500 scale-110' : 'bg-gray-300 hover:bg-gray-100']"
             aria-label="Go to slide"></button>
         </div>
       </div>

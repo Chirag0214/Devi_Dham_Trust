@@ -95,7 +95,7 @@
           <input v-model="editForm.mobile" class="w-full p-2 border rounded mb-2" />
           <div class="flex justify-end gap-2 mt-3">
             <button @click="closeEdit" class="px-3 py-1 border rounded">Cancel</button>
-            <button @click="saveEdit" class="px-3 py-1 bg-indigo-600 text-white rounded">Save</button>
+            <button @click="saveEdit" class="px-3 py-1 bg-orange-600 text-white rounded">Save</button>
           </div>
         </div>
       </div>

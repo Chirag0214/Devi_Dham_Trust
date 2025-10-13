@@ -2,7 +2,7 @@
 <div class="min-h-screen flex bg-gray-50">
     <Sidebar :user="user" :is-admin="isAdmin" />
   <main class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6 text-indigo-700 text-center">Add New Project</h1>
+  <h1 class="text-3xl font-bold mb-6 text-orange-700 text-center">Add New Project</h1>
     
     <form @submit.prevent="submitForm" class="bg-white p-8 shadow-lg rounded-lg max-w-2xl mx-auto">
       

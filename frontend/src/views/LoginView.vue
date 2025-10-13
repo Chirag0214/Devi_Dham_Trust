@@ -2,8 +2,8 @@
   <div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 p-10 bg-white rounded-2xl shadow-2xl">
       <div class="flex justify-center">
-        <div class="h-20 w-20 rounded-full bg-indigo-50 flex items-center justify-center">
-          <i class="fas fa-user-circle text-5xl text-indigo-600"></i>
+        <div class="h-20 w-20 rounded-full bg-orange-50 flex items-center justify-center">
+          <i class="fas fa-user-circle text-5xl text-orange-600"></i>
         </div>
       </div>
       <transition name="fade" mode="out-in">
@@ -20,29 +20,29 @@
                 <label for="login-email-address" class="sr-only">Email address</label>
                 <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 <input v-model="loginForm.email" id="login-email-address" name="email" type="email" autocomplete="email" required 
-                       class="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-md placeholder-gray-500 text-gray-900 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+                       class="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-md placeholder-gray-500 text-gray-900 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm" 
                        placeholder="Email address" />
               </div>
               <div class="relative">
                 <label for="login-password" class="sr-only">Password</label>
                 <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                <input v-model="loginForm.password" id="login-password" name="password" :type="showPassword ? 'text' : 'password'" autocomplete="current-password" required 
-                       class="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-md placeholder-gray-500 text-gray-900 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" 
+      <input v-model="loginForm.password" id="login-password" name="password" :type="showPassword ? 'text' : 'password'" autocomplete="current-password" required 
+        class="w-full pl-10 pr-3 py-3 border border-gray-200 rounded-md placeholder-gray-500 text-gray-900 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 sm:text-sm" 
                        placeholder="Password" />
               </div>
               <div class="flex items-center mt-2">
-                <input id="show-password" type="checkbox" v-model="showPassword" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                <input id="show-password" type="checkbox" v-model="showPassword" class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded" />
                 <label for="show-password" class="ml-2 text-sm text-gray-600">Show password</label>
               </div>
             </div>
 
             <div class="flex items-center justify-between">
               <div class="flex items-center">
-                <input id="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" />
+                <input id="remember-me" type="checkbox" class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded" />
                 <label for="remember-me" class="ml-2 block text-sm text-gray-600">Remember me</label>
               </div>
               <div class="text-sm">
-                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
+                <a href="#" class="font-medium text-orange-600 hover:text-orange-500">
                   Forgot your password?
                 </a>
               </div>
@@ -58,7 +58,7 @@
           <div v-if="error" class="mt-3 text-sm text-red-600 text-center font-bold">{{ error }}</div>
           <p class="mt-2 text-center text-sm text-gray-600">
             Don't have an account?&nbsp;
-            <router-link to="/signup" class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none">
+            <router-link to="/signup" class="font-medium text-orange-600 hover:text-orange-500 focus:outline-none">
               Sign up
             </router-link>
           </p>
@@ -166,15 +166,15 @@ const login = async () => {
 /* Note: inputs use explicit padding classes (pl-10) so no global override is needed here. */
 
 .primary-gradient {
-  background: linear-gradient(90deg,#6366f1,#06b6d4);
+  background: linear-gradient(90deg,#fb923c,#f97316);
 }
 
 .primary-gradient:hover {
-  filter: brightness(0.98);
+  filter: brightness(0.95);
 }
 
 .focus-ring:focus {
-  outline: 2px solid rgba(99,102,241,0.18);
+  outline: 2px solid rgba(249,115,22,0.18);
   outline-offset: 2px;
 }
 </style>

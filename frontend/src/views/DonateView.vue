@@ -1,5 +1,5 @@
 <template>
-  <div class="page-section bg-indigo-50">
+  <div class="page-section bg-orange-50">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="callout bg-white rounded-lg p-8 md:p-12 shadow-xl">
         <SectionTitle subtitle="Your Support, A Bright Future">Donate Now</SectionTitle>
@@ -23,7 +23,7 @@
               <label for="donation-amount" class="block text-sm font-medium text-gray-700">Donation Amount (₹)</label>
               <input v-model.number="donor.amount" type="number" id="donation-amount" min="100" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
             </div>
-            <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 transition">
+            <button type="submit" class="w-full px-4 py-2 bg-orange-600 text-white font-medium rounded-md hover:bg-orange-700 transition">
               Next: Select Payment Method
             </button>
           </form>
@@ -34,7 +34,7 @@
           
           <div>
             <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-              <i class="fas fa-qrcode text-indigo-600 mr-3"></i> 2. UPI / QR Code (Recommended)
+              <i class="fas fa-qrcode text-orange-600 mr-3"></i> 2. UPI / QR Code (Recommended)
             </h3>
             <p class="text-gray-700 mb-4">
               Donate instantly via UPI using your preferred app:
@@ -44,15 +44,15 @@
                 <img src="/images/devidhaam_upi_qr.png" alt="Devi Dhaam Trust UPI QR Code" class="w-48 h-48" /> 
                 <p class="text-center text-sm text-gray-600 mt-2">Scan to Donate</p>
               </div>
-              <p class="text-xl font-semibold text-gray-800">
-                Or UPI ID: <span class="text-indigo-600">devidhaamtrust@upi</span>
+                <p class="text-xl font-semibold text-gray-800">
+                Or UPI ID: <span class="text-orange-600">devidhaamtrust@upi</span>
               </p>
             </div>
           </div>
           
           <div>
             <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-              <i class="fas fa-university text-indigo-600 mr-3"></i> 3. Bank Transfer
+              <i class="fas fa-university text-orange-600 mr-3"></i> 3. Bank Transfer
             </h3>
             <p class="text-gray-700 mb-4">
               You can directly transfer funds to our bank account:
@@ -65,12 +65,12 @@
               <p class="mb-2 flex justify-between items-center">
                 <strong class="text-gray-800">Account Number:</strong> 
                 <span id="acc-num">12345678901</span>
-                <button @click="copyToClipboard('12345678901', 'Account Number')" class="text-sm bg-indigo-200 text-indigo-800 rounded px-2 py-1 hover:bg-indigo-300 transition">Copy</button>
+                <button @click="copyToClipboard('12345678901', 'Account Number')" class="text-sm bg-orange-200 text-orange-800 rounded px-2 py-1 hover:bg-orange-300 transition">Copy</button>
               </p>
               <p class="mb-2 flex justify-between items-center">
                 <strong class="text-gray-800">IFSC Code:</strong> 
                 <span id="ifsc-code">SBIN0001234</span>
-                <button @click="copyToClipboard('SBIN0001234', 'IFSC Code')" class="text-sm bg-indigo-200 text-indigo-800 rounded px-2 py-1 hover:bg-indigo-300 transition">Copy</button>
+                <button @click="copyToClipboard('SBIN0001234', 'IFSC Code')" class="text-sm bg-orange-200 text-orange-800 rounded px-2 py-1 hover:bg-orange-300 transition">Copy</button>
               </p>
               <p><strong class="text-gray-800">Branch:</strong> Sector-1, Noida</p>
             </div>
@@ -78,7 +78,7 @@
           
           <div>
             <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-              <i class="fas fa-globe text-indigo-600 mr-3"></i> 4. Online Payment Gateway
+              <i class="fas fa-globe text-orange-600 mr-3"></i> 4. Online Payment Gateway
             </h3>
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
               <p class="font-bold">Coming Soon!</p>
@@ -105,6 +105,7 @@
 import { reactive } from 'vue';
 import SectionTitle from '@/components/SectionTitle.vue';
 // FontAwesome icons will need a CDN or package installation
+import { ref } from 'vue';
 
 // Reactive state for donor form
 const donor = reactive({
@@ -112,6 +113,9 @@ const donor = reactive({
     email: '',
     amount: 500 // Default amount
 });
+
+// Error state for payment
+const payError = ref('');
 
 // Mock function for submitting form details
 function submitDetails() {
@@ -134,6 +138,11 @@ function copyToClipboard(text: string, fieldName: string) {
     }).catch(err => {
         console.error('Could not copy text: ', err);
     });
+}
+
+// Dummy pay function for test payment button
+function pay() {
+    alert(`Test payment of ₹${donor.amount} initiated! (No real transaction will occur.)`);
 }
 </script>
 

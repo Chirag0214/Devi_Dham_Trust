@@ -2,19 +2,19 @@
   <header class="bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
       
-      <router-link to="/" class="flex items-center space-x-2 text-2xl font-bold text-indigo-700 hover:text-indigo-800 transition duration-150">
-        <span>Devi Dhamm Trust</span>
+      <router-link to="/" class="flex items-center space-x-2 text-2xl font-bold text-orange-700 hover:text-orange-800 transition duration-150">
+        <span>Devi Dhaam Trust</span>
       </router-link>
 
       <nav class="flex space-x-6 md:space-x-8">
-        <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/') ? 'nav-active' : '']" to="/">Home</router-link>
+  <router-link :class="['text-gray-600 hover:text-orange-600 transition duration-150 font-medium', isActive('/') ? 'nav-active' : '']" to="/">Home</router-link>
         
-        <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/about') ? 'nav-active' : '']" to="/about">About Us</router-link>
-        <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/projects') ? 'nav-active' : '']" to="/projects">Our Work</router-link>
-  <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/gallery') ? 'nav-active' : '']" to="/gallery">Gallery</router-link>
-  <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/certifications') ? 'nav-active' : '']" to="/certifications">Certifications</router-link>
-  <router-link :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/contact') ? 'nav-active' : '']" to="/contact">Contact</router-link>
-        <router-link v-if="user" :class="['text-gray-600 hover:text-indigo-600 transition duration-150 font-medium', isActive('/dashboard') ? 'nav-active' : '']" to="/dashboard">Dashboard</router-link>
+    <router-link :class="['text-gray-600 hover:text-orange-600 transition duration-150 font-medium', isActive('/about') ? 'nav-active' : '']" to="/about">About Us</router-link>
+    <router-link :class="['text-gray-600 hover:text-orange-600 transition duration-150 font-medium', isActive('/projects') ? 'nav-active' : '']" to="/projects">Our Work</router-link>
+  <router-link :class="['text-gray-600 hover:text-orange-600 transition duration-150 font-medium', isActive('/gallery') ? 'nav-active' : '']" to="/gallery">Gallery</router-link>
+  <router-link :class="['text-gray-600 hover:text-orange-600 transition duration-150 font-medium', isActive('/certifications') ? 'nav-active' : '']" to="/certifications">Certifications</router-link>
+  <router-link :class="['text-gray-600 hover:text-orange-600 transition duration-150 font-medium', isActive('/contact') ? 'nav-active' : '']" to="/contact">Contact</router-link>
+    <router-link v-if="user" :class="['text-gray-600 hover:text-orange-600 transition duration-150 font-medium', isActive('/dashboard') ? 'nav-active' : '']" to="/dashboard">Dashboard</router-link>
       </nav>
 
       <div class="flex items-center space-x-3">
@@ -46,7 +46,7 @@
       </div>
     </div>
     <!-- Short action toast (login/signup) -->
-    <div v-if="showActionToast" class="fixed right-6 top-20 bg-indigo-600 text-white shadow-lg px-4 py-2 rounded-md action-toast">
+    <div v-if="showActionToast" class="fixed right-6 top-20 bg-orange-600 text-white shadow-lg px-4 py-2 rounded-md action-toast">
       <div class="text-sm font-medium">Welcome!</div>
     </div>
   </header>
@@ -123,14 +123,14 @@ window.addEventListener('auth-action', () => {
 .nav-active {
   position: relative;
 }
-.nav-active::after {
+  .nav-active::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
   bottom: -8px;
   height: 3px;
-  background: linear-gradient(90deg,#6366f1,#06b6d4);
+  background: linear-gradient(90deg,#fb923c,#f97316);
   transform-origin: left center;
   animation: navUnderline 0.35s ease forwards;
 }

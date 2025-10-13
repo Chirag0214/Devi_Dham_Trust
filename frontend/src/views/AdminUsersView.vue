@@ -73,7 +73,7 @@
 
                     <div class="flex justify-end gap-3">
                         <button @click="closeEditModal" class="px-4 py-2 bg-gray-200 rounded">Cancel</button>
-                        <button @click="submitEdit" :disabled="isSubmittingEdit" class="px-4 py-2 bg-indigo-600 text-white rounded">Save</button>
+                        <button @click="submitEdit" :disabled="isSubmittingEdit" class="px-4 py-2 bg-orange-600 text-white rounded">Save</button>
                     </div>
                 </div>
             </div>

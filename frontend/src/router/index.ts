@@ -26,6 +26,16 @@ const router = createRouter({
       component: () => import('../views/DonateView.vue')
     },
     {
+      path: '/my-donations',
+      name: 'my-donations',
+      component: () => import('../views/MyDonationsView.vue')
+    },
+    {
+      path: '/receipts',
+      name: 'receipts',
+      component: () => import('../views/ReceiptsView.vue')
+    },
+    {
       path: '/contact',
       name: 'contact',
       component: () => import('../views/ContactView.vue')
@@ -67,6 +77,11 @@ const router = createRouter({
       path: '/certifications',
       name: 'certifications',
       component: () => import('../views/CertificateView.vue')
+    },
+    {
+      path: '/my-certificates',
+      name: 'my-certificates',
+      component: () => import('../views/MyCertificatesView.vue')
     },
     {
       path: '/profile',

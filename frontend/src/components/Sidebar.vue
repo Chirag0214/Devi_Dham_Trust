@@ -1,5 +1,5 @@
 <template>
-  <aside :class="[collapsed ? 'w-16' : 'w-64', 'bg-[#2f4552] text-white flex flex-col transition-all duration-200 overflow-hidden']">
+  <aside v-if="isAdmin" :class="[collapsed ? 'w-16' : 'w-64', 'bg-[#2f4552] text-white flex flex-col transition-all duration-200 overflow-hidden']">
     <div class="px-4 py-6 border-b border-black/10">
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 bg-[#0ea5a4] rounded flex items-center justify-center">+</div>
@@ -35,16 +35,7 @@
               </div>
             </router-link>
           </li>
-          <li>
-            <router-link :to="'/admin/generate-certificate'" :class="navClass('/admin/generate-certificate')">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                  <svg class="w-5 h-5 opacity-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
-                  <span v-show="!collapsed">Generate Certificate</span>
-                </div>
-              </div>
-            </router-link>
-          </li>
+         
           <li>
             <router-link :to="'/admin/add-project'" :class="navClass('/admin/add-project')">
               <div class="flex items-center justify-between">
@@ -119,14 +110,6 @@
 
         <!-- Non-admin (regular user) menu -->
         <template v-else>
-          <li>
-            <router-link :to="'/dashboard'" :class="navClass('/dashboard')">
-              <div class="flex items-center gap-3">
-                <svg class="w-5 h-5 opacity-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h8V3H3v10zM13 21h8V11h-8v10zM13 3v4h8V3h-8z"/></svg>
-                <span v-show="!collapsed">Dashboard</span>
-              </div>
-            </router-link>
-          </li>
           <li>
             <router-link :to="'/profile'" :class="navClass('/profile')">
               <div class="flex items-center gap-3">

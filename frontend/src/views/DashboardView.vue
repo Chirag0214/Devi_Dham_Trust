@@ -2,36 +2,87 @@
   <div class="min-h-screen flex bg-gray-50">
     <Sidebar :user="user" :is-admin="isAdmin" />
 
-    <main class="flex-1 p-8">
-      <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+    <main class="flex-1 p-8 relative">
+      <!-- full-page animated background -->
+      <div class="page-hero absolute inset-0 pointer-events-none -z-20" :style="{ opacity: heroVisible ? 1 : 0, transition: 'opacity .28s ease' }">
+        <div class="hero-bg absolute inset-0"></div>
+      </div>
+      <div class="relative rounded-xl mb-6 overflow-hidden">
+        <!-- decorative floating shapes -->
+        <svg :style="{ opacity: shapesVisible ? 0.42 : 0, transition: 'opacity .45s ease' }" class="absolute left-6 top-6 transform float-anim" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="60" r="60" fill="url(#g1)" />
+          <!-- restored original blue->green gradient but hidden until mount -->
+          <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs>
+        </svg>
+        <svg :style="{ opacity: shapesVisible ? 0.28 : 0, transition: 'opacity .55s ease .08s' }" class="absolute right-6 top-12 transform float-anim delay-2" width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="180" height="180" rx="24" fill="url(#g2)" />
+          <defs><linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#f97316"/><stop offset="1" stop-color="#ef4444"/></linearGradient></defs>
+        </svg>
+        
 
-      <section class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-xl font-semibold mb-4">Welcome to your dashboard</h2>
-        <p class="text-gray-600 mb-4">Use the left menu to view your certificate or manage your account.</p>
-
-        <div class="mt-6">
-          <h3 class="font-medium mb-2">Donation History</h3>
-          <div class="space-y-3">
-            <div v-if="donations.length === 0" class="text-sm text-gray-500">No donations yet.</div>
-            <div v-for="d in donations" :key="d.id" class="p-3 border rounded flex justify-between items-center">
-              <div>
-                <div class="font-medium">₹{{ d.amount }} <span class="text-sm text-gray-500">({{ d.purpose || 'General' }})</span></div>
-                <div class="text-sm text-gray-500">{{ new Date(d.date).toLocaleString() }}</div>
+  <div class="p-8 md:p-12 relative">
+             <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 text-center mb-4"><u>Welcome ,{{ displayName }}</u></h1>
+         </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+      </div>
+      
+         <!-- Quick action cards (mirror user sidebar options) -->
+      <section class="mb-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
+          <router-link to="/profile" class="card-cta card-anim card-indigo" aria-label="Open Profile">
+            <div class="flex items-center justify-between w-full h-44 md:h-40">
+              <div class="flex items-center space-x-4">
+                <div class="card-icon">👤</div>
+                <div>
+                  <div class="font-semibold text-lg"><span class="text-badge badge-indigo">Profile</span></div>
+                  <div class="text-sm opacity-80 text-black">View & edit your profile</div>
+                </div>
               </div>
-              <div class="flex items-center space-x-2">
-                <button @click="printReceipt(d)" class="px-3 py-1 bg-indigo-600 text-white rounded text-sm">Receipt</button>
-              </div>
+              <div class="card-action" aria-hidden="true">›</div>
             </div>
-          </div>
-        </div>
+          </router-link>
 
-        <div class="mt-6">
-          <h3 class="font-medium mb-2">Add Donation (test)</h3>
-          <div class="flex items-center space-x-2">
-            <input v-model.number="newAmount" type="number" class="border px-3 py-2 rounded w-40" placeholder="Amount" />
-            <input v-model="newPurpose" class="border px-3 py-2 rounded" placeholder="Purpose" />
-            <button @click="addDonation" class="px-4 py-2 bg-green-600 text-white rounded">Add</button>
-          </div>
+          <router-link to="/my-certificates" class="card-cta card-anim card-amber" aria-label="View Certificates">
+            <div class="flex items-center justify-between w-full h-44 md:h-40">
+              <div class="flex items-center space-x-4">
+                <div class="card-icon">📜</div>
+                <div>
+                  <div class="font-semibold text-lg"><span class="text-badge badge-amber">Certificates</span></div>
+                  <div class="text-sm opacity-80 text-black">View your certificates</div>
+                </div>
+              </div>
+              <div class="card-action" aria-hidden="true">›</div>
+            </div>
+          </router-link>
+
+          <router-link to="/my-donations" class="card-cta card-anim card-emerald" aria-label="Donations">
+            <div class="flex items-center justify-between w-full h-44 md:h-40">
+              <div class="flex items-center space-x-4">
+                <div class="card-icon">🤝</div>
+                <div>
+                  <div class="font-semibold text-lg"><span class="text-badge badge-emerald">Donate</span></div>
+                  <div class="text-sm opacity-80 text-black">Make a donation</div>
+                </div>
+              </div>
+              <div class="card-action" aria-hidden="true">›</div>
+            </div>
+          </router-link>
+
+          <router-link to="/receipts" class="card-cta card-anim card-pink" aria-label="Receipts">
+            <div class="flex items-center justify-between w-full h-44 md:h-40">
+              <div class="flex items-center space-x-4">
+                <div class="card-icon">🧾</div>
+                <div>
+                  <div class="font-semibold text-lg"><span class="text-badge badge-pink">Receipts</span></div>
+                  <div class="text-sm opacity-80 text-black">View & download your donation receipts</div>
+                </div>
+              </div>
+              <div class="card-action" aria-hidden="true">›</div>
+            </div>
+          </router-link>
         </div>
       </section>
     </main>
@@ -41,8 +92,7 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
 import auth, { clearAuth } from '@/stores/auth';
-import { ref, onMounted, computed } from 'vue';
-import { listDonationsFor, addDonation as addDonationEntry } from '@/stores/donations';
+import { computed, ref, onMounted } from 'vue';
 import Sidebar from '@/components/Sidebar.vue';
 
 const user = auth;
@@ -52,6 +102,22 @@ const route = useRoute();
 const isAdmin = computed(() => {
   return !!(user.value && (user.value.role === 'admin' || user.value.email === 'admin@devidhaam.org'));
 });
+
+// friendly display name used in template (avoids accessing ref.value in template)
+const displayName = computed(() => {
+  return (user.value && (user.value.name || user.value.email)) ? (user.value.name || user.value.email) : 'Member';
+});
+
+// control hero visibility to avoid paint flash
+const heroVisible = ref(false);
+onMounted(() => {
+  // small delay so initial paint uses neutral background
+  setTimeout(() => (heroVisible.value = true), 30);
+  // reveal decorative shapes a bit later to avoid first-paint color flash
+  setTimeout(() => (shapesVisible.value = true), 180);
+});
+
+const shapesVisible = ref(false);
 
 const handleLogout = () => {
   // Clear auth and redirect
@@ -65,86 +131,106 @@ const isActive = (path: string) => {
   return route.path === path || route.path.startsWith(path + '/');
 };
 
-// Donations
-const donations = ref([] as any[]);
-const newAmount = ref<number | null>(null);
-const newPurpose = ref('');
-
-onMounted(() => {
-  if (auth.value?.email) {
-    donations.value = listDonationsFor(auth.value.email);
-  }
-});
-
-function addDonation() {
-  if (!auth.value?.email || !newAmount.value) return alert('Provide amount');
-  const created = addDonationEntry({ email: auth.value.email, amount: newAmount.value, date: new Date().toISOString(), purpose: newPurpose.value });
-  donations.value.unshift(created);
-  newAmount.value = null;
-  newPurpose.value = '';
-}
-
-function printReceipt(d: any) {
-  const w = window.open('', '_blank');
-  if (!w) return alert('Popup blocked');
-  // build a professional receipt layout
-  const orgName = 'Devi Dhaam Trust';
-  const orgAddress = '123 Trust Street, City, State - PIN';
-  const orgEmail = 'contact@devidhaam.org';
-  const orgPhone = '+91 98765 43210';
-  const receiptNo = d.id || ('RCPT-' + Date.now().toString(36));
-  const donorName = (auth && auth.value && auth.value.name) ? auth.value.name : d.email;
-  const amountText = '₹' + Number(d.amount).toLocaleString('en-IN');
-
-  const html = '<html><head><meta charset="utf-8"><title>Donation Receipt</title>' +
-    '<style>body{font-family:Inter, Arial, sans-serif;margin:30px;color:#111} .header{display:flex;align-items:center;gap:16px} .logo{width:64px;height:64px;border-radius:8px;background:#eef2ff;display:flex;align-items:center;justify-content:center;font-weight:700;color:#4f46e5} h1{margin:0;font-size:20px} .meta{margin-top:8px;color:#555} .box{border:1px solid #e5e7eb;padding:18px;border-radius:8px;margin-top:18px} table{width:100%;border-collapse:collapse;margin-top:8px} td{padding:8px;vertical-align:top} .label{color:#6b7280;width:35%} .value{color:#111} .amount{font-size:18px;font-weight:700;color:#111} .footer{margin-top:22px;font-size:13px;color:#444;border-top:1px dashed #e5e7eb;padding-top:12px}</style>' +
-    '</head><body>' +
-    '<div class="header"><div class="logo">DD</div><div><h1>' + orgName + '</h1><div class="meta">' + orgAddress + '<br/>' + orgEmail + ' | ' + orgPhone + '</div></div></div>' +
-    '<div class="box">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center">' +
-        '<div>' +
-          '<strong>Receipt</strong><div style="color:#6b7280;font-size:13px">Thank you for your support</div>' +
-        '</div>' +
-        '<div style="text-align:right">' +
-          '<div style="font-weight:700">Receipt No: ' + receiptNo + '</div>' +
-          '<div style="color:#6b7280;font-size:13px">' + new Date(d.date).toLocaleString() + '</div>' +
-        '</div>' +
-      '</div>' +
-      '<table>' +
-        '<tr><td class="label">Donor</td><td class="value">' + donorName + ' (' + d.email + ')</td></tr>' +
-        '<tr><td class="label">Amount</td><td class="value amount">' + amountText + '</td></tr>' +
-        '<tr><td class="label">Purpose</td><td class="value">' + (d.purpose || 'General Donation') + '</td></tr>' +
-        '<tr><td class="label">Transaction ID</td><td class="value">' + (d.id || '-') + '</td></tr>' +
-      '</table>' +
-      '<div class="footer">This is a system generated receipt. For any queries, contact us at ' + orgEmail + '.</div>' +
-    '</div>' +
-    // trigger print and close
-    '<scr' + 'ipt>window.print();setTimeout(function(){ window.close(); },500);</scr' + 'ipt>' +
-    '</body></html>';
-  w.document.write(html);
-  w.document.close();
-}
 </script>
 
 <style scoped>
-.active-link {
-  position: relative;
-}
-.active-link::after {
-  content: '';
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 6px;
-  height: 3px;
-  background: linear-gradient(90deg,#6366f1,#10b981);
-  border-radius: 2px;
-  transform-origin: left center;
-  animation: underline 0.4s ease forwards;
+/* Animated gradient hero background */
+.hero-bg{ background: linear-gradient(120deg, rgba(250,251,253,0.85), rgba(255,250,240,0.7), rgba(255,255,255,0.0)); background-size: 600% 600%; animation: gradientShift 20s ease infinite; filter: blur(18px) saturate(100%); opacity: 0.7; }
+@keyframes gradientShift{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+/* floating shapes */
+.float-anim{ animation: floaty 6s ease-in-out infinite; }
+.float-anim.delay-2{ animation-delay: 2s }
+@keyframes floaty{ 0%{transform:translateY(0)}50%{transform:translateY(-12px)}100%{transform:translateY(0)} }
+
+/* card styles */
+.card-cta{ position:relative; overflow:hidden; background:linear-gradient(180deg, rgba(15,23,42,0.04), rgba(15,23,42,0.02)); padding:28px; border-radius:14px; box-shadow:0 12px 36px rgba(2,6,23,0.08); transition:transform .20s cubic-bezier(.2,.9,.2,1), box-shadow .20s ease; display:flex; align-items:center; min-height:140px }
+.card-cta:hover{ transform:translateY(-8px); box-shadow:0 26px 56px rgba(2,6,23,0.18) }
+/* premium glass effect and subtle border */
+.card-cta{ backdrop-filter: blur(6px) saturate(115%); border:1px solid rgba(255,255,255,0.06); }
+.card-cta:hover{ box-shadow:0 32px 80px rgba(59,130,246,0.06), 0 10px 30px rgba(2,6,23,0.12); }
+
+/* subtle global dark overlay to make hover darker uniformly */
+.card-cta::after{ content:""; position:absolute; inset:0; border-radius:14px; background:rgba(0,0,0,0); pointer-events:none; transition:background .18s ease, opacity .18s ease; }
+.card-cta:hover::after, .card-cta:focus::after{ background:rgba(0,0,0,0.14); }
+
+/* full-card colored variants (subtle, semi-transparent fill) */
+.card-indigo{ background-image: linear-gradient(180deg, rgba(63,52,166,0.18), rgba(48,40,130,0.10)); color: #eef2ff }
+.card-amber{ background-image: linear-gradient(180deg, rgba(160,56,6,0.18), rgba(140,50,8,0.10)); color: #fff7ed }
+.card-emerald{ background-image: linear-gradient(180deg, rgba(6,95,69,0.18), rgba(4,74,56,0.10)); color: #ecfdf5 }
+.card-pink{ background-image: linear-gradient(180deg, rgba(157,20,83,0.18), rgba(139,20,77,0.10)); color: #fff1f2 }
+
+/* keep icons and small text readable on colored backgrounds */
+.card-indigo .card-icon, .card-indigo .text-badge{ color: #f8fafc }
+.card-amber .card-icon, .card-amber .text-badge{ color: #fffaf0 }
+.card-emerald .card-icon, .card-emerald .text-badge{ color: #f0fdf4 }
+.card-pink .card-icon, .card-pink .text-badge{ color: #fff5f9 }
+
+/* stronger colored hover glow */
+.card-indigo:hover{ background-image: linear-gradient(180deg, rgba(48,40,130,0.32), rgba(36,28,90,0.20)); box-shadow:0 44px 120px rgba(48,40,130,0.18), 0 14px 44px rgba(2,6,23,0.22); }
+.card-amber:hover{ background-image: linear-gradient(180deg, rgba(140,50,8,0.32), rgba(120,45,6,0.20)); box-shadow:0 44px 120px rgba(140,50,8,0.18), 0 14px 44px rgba(2,6,23,0.22); }
+.card-emerald:hover{ background-image: linear-gradient(180deg, rgba(4,74,56,0.32), rgba(3,60,46,0.20)); box-shadow:0 44px 120px rgba(4,74,56,0.18), 0 14px 44px rgba(2,6,23,0.22); }
+.card-pink:hover{ background-image: linear-gradient(180deg, rgba(139,20,77,0.32), rgba(115,15,64,0.20)); box-shadow:0 44px 120px rgba(139,20,77,0.18), 0 14px 44px rgba(2,6,23,0.22); }
+
+/* icon tile inside card */
+.card-icon{ width:72px; height:72px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:28px; box-shadow:0 12px 34px rgba(2,6,23,0.12) }
+/* gradient icon backgrounds for a premium feel */
+.card-icon{ background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04)); }
+.card-indigo .card-icon{ background: linear-gradient(135deg,#8b5cf6,#5b21b6) }
+.card-amber .card-icon{ background: linear-gradient(135deg,#d97706,#b45309) }
+.card-emerald .card-icon{ background: linear-gradient(135deg,#10b981,#065f46) }
+.card-pink .card-icon{ background: linear-gradient(135deg,#db2777,#be185d) }
+
+.card-cta .font-semibold{ font-size:1.02rem }
+
+/* entry animation */
+.card-anim{ opacity:0; transform:translateY(10px); animation: cardEnter .7s ease forwards }
+.card-anim:nth-child(1){ animation-delay: 0.08s }
+.card-anim:nth-child(2){ animation-delay: 0.16s }
+.card-anim:nth-child(3){ animation-delay: 0.24s }
+.card-anim:nth-child(4){ animation-delay: 0.32s }
+@keyframes cardEnter{ to{ opacity:1; transform:translateY(0) } }
+
+/* text badge backgrounds */
+.text-badge{ display:inline-block; padding:6px 10px; border-radius:999px; color:white }
+.badge-indigo{ background:linear-gradient(90deg,#4338ca,#3730a3) }
+.badge-amber{ background:linear-gradient(90deg,#b45309,#92400e) }
+.badge-emerald{ background:linear-gradient(90deg,#059669,#065f46) }
+.badge-pink{ background:linear-gradient(90deg,#be185d,#9f1239) }
+
+/* colored hover variants */
+
+/* hover background subtle tint per variant (keeps full-card colored base) */
+.card-indigo:hover{ background-image: linear-gradient(180deg, rgba(79,70,229,0.18), rgba(67,56,202,0.08)); }
+.card-amber:hover{ background-image: linear-gradient(180deg, rgba(194,65,12,0.18), rgba(180,75,10,0.07)); }
+.card-emerald:hover{ background-image: linear-gradient(180deg, rgba(4,120,87,0.18), rgba(16,185,129,0.08)); }
+.card-pink:hover{ background-image: linear-gradient(180deg, rgba(190,24,93,0.18), rgba(236,72,153,0.07)); }
+
+.card-indigo:hover .card-icon{ transform:scale(1.06) }
+.card-amber:hover .card-icon{ transform:scale(1.06) }
+.card-emerald:hover .card-icon{ transform:scale(1.06) }
+.card-pink:hover .card-icon{ transform:scale(1.06) }
+
+.card-cta{ transition: transform .18s ease, box-shadow .18s ease, background .18s ease }
+.card-icon{ transition: transform .22s cubic-bezier(.2,.9,.2,1) }
+
+/* keyboard & focus styles for accessibility */
+.card-cta:focus{ outline: none; box-shadow:0 12px 40px rgba(59,130,246,0.12), 0 4px 14px rgba(2,6,23,0.12); transform:translateY(-6px); }
+.card-cta:focus .card-action{ transform:translateX(0); color:rgba(255,255,255,0.95) }
+
+/* responsive tweaks */
+@media (max-width: 640px){
+  .card-icon{ width:60px; height:60px; font-size:22px }
+  .card-cta{ padding:20px; min-height:120px }
+  .card-action{ font-size:22px }
 }
 
-@keyframes underline {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+@media (min-width: 1024px){
+  .card-cta{ min-height:150px }
 }
+
+/* chevron action style */
+.card-action{ font-size:26px; color:rgba(15,23,42,0.36); font-weight:700; transform:translateX(2px); }
+.card-cta:hover .card-action{ color:rgba(15,23,42,0.7); transform:translateX(0); }
+
 </style>

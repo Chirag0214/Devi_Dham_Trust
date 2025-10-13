@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <main class="max-w-5xl mx-auto p-8">
-      <h1 class="text-2xl font-bold mb-6">Certifications</h1>
+      <h1 class="text-2xl font-bold mb-6"> Demo Certifications</h1>
 
       <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div v-for="cert in certificates" :key="cert.id" class="bg-white p-5 rounded-lg shadow">
@@ -19,7 +19,7 @@
           </div>
 
           <div class="flex">
-            <button @click="openPreview(cert)" class="w-full px-3 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Preview</button>
+            <button @click="openPreview(cert)" class="w-full px-3 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700">Preview</button>
           </div>
         </div>
       </section>

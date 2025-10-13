@@ -2,7 +2,9 @@ import { ref, watch } from 'vue';
 
 // CRITICAL FIX: Added 'token?: string' to the Auth type.
 // The component needs to read the token from this object.
-type Auth = { name: string; email?: string; loggedAt?: number; role?: string; token?: string } | null;
+// Added optional `id` and `createdAt` fields because components
+// (e.g., ProfileView) read these properties from the auth object.
+type Auth = { name: string; email?: string; loggedAt?: number; role?: string; token?: string; id?: string | number; createdAt?: number } | null;
 
 const auth = ref<Auth>(null);
 

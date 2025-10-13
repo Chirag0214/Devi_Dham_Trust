@@ -1,22 +1,49 @@
 <template>
   <div class="bg-gray-50">
-    <section class="bg-gradient-to-r from-purple-600 to-indigo-700 text-white py-20 md:py-28">
+  <section class="bg-gradient-to-r from-orange-600 to-orange-400 text-white py-20 md:py-28">
       <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">About Devi Dhamm Trust</h1>
-        <p class="text-lg md:text-xl text-indigo-100 max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight">About Devi Dhamm Trust</h1>
+  <p class="text-lg md:text-xl text-orange-100 max-w-3xl mx-auto leading-relaxed">
           Empowering underprivileged children and communities through education, healthcare, and sustainable
-          development. Join us in creating a brighter future.
+          development. Join us in creating measurable impact and long-term change.
         </p>
-        <div class="mt-10 flex justify-center gap-4">
+
+        <div class="mt-8 flex items-center justify-center gap-6">
           <router-link to="/donate"
-            class="bg-white text-indigo-600 font-semibold py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transform hover:scale-105 transition-transform duration-300">
-            <i class="fas fa-heart mr-2"></i>Donate Now
+            class="inline-flex items-center gap-3 bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full shadow-2xl hover:bg-white hover:text-orange-600 transition-colors duration-300">
+            <i class="fas fa-heart mr-1"></i>
+            Donate Now
           </router-link>
           <router-link to="/contact"
-            class="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-indigo-600 transition-colors duration-300">
-            <i class="fas fa-hands-helping mr-2"></i>Get Involved
+            class="inline-flex items-center gap-3 bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-orange-600 transition-colors duration-300">
+            <i class="fas fa-hands-helping mr-1"></i>
+            Get Involved
           </router-link>
         </div>
+
+        <!-- Quick stats chips -->
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 text-left">
+            <div class="text-sm text-orange-100">Years of Service</div>
+            <div class="text-2xl font-bold text-white">10+</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 text-left">
+            <div class="text-sm text-orange-100">Communities Reached</div>
+            <div class="text-2xl font-bold text-white">40+</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 text-left">
+            <div class="text-sm text-orange-100">Volunteers</div>
+            <div class="text-2xl font-bold text-white">200+</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- decorative wave -->
+      <div class="mt-8 -mb-1">
+        <svg viewBox="0 0 1440 80" class="w-full" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,32 C240,96 420,0 720,32 C1020,64 1200,16 1440,48 L1440,120 L0,120 Z" fill="#f8fafc" fill-opacity="1"></path>
+        </svg>
       </div>
     </section>
 
@@ -32,10 +59,10 @@
 
           <div class="mb-8 flex justify-between items-center w-full right-timeline">
             <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-indigo-500 shadow-xl w-12 h-12 rounded-full">
+            <div class="z-10 flex items-center order-1 bg-orange-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-orange-100">
               <h1 class="mx-auto font-semibold text-lg text-white">2015</h1>
             </div>
-            <div class="order-1 bg-indigo-100 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4">
+            <div class="order-1 bg-orange-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-orange-100">
               <h3 class="font-bold text-gray-800 text-xl">The Beginning</h3>
               <p class="text-sm leading-snug tracking-wide text-gray-600 text-opacity-100">Started by local volunteers,
                 Devi Dhamm Trust began as a small education initiative to support children in our community.</p>
@@ -44,10 +71,10 @@
 
           <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
             <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-purple-500 shadow-xl w-12 h-12 rounded-full">
+            <div class="z-10 flex items-center order-1 bg-orange-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-orange-100">
               <h1 class="mx-auto text-white font-semibold text-lg">2018</h1>
             </div>
-            <div class="order-1 bg-purple-100 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4">
+            <div class="order-1 bg-orange-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-orange-100">
               <h3 class="font-bold text-gray-800 text-xl">Expanding Horizons</h3>
               <p class="text-sm leading-snug tracking-wide text-gray-600 text-opacity-100">We expanded our programs to
                 include health camps and environmental initiatives, reaching more families and creating a wider impact.
@@ -57,10 +84,10 @@
 
           <div class="mb-8 flex justify-between items-center w-full right-timeline">
             <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-indigo-500 shadow-xl w-12 h-12 rounded-full">
+            <div class="z-10 flex items-center order-1 bg-orange-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-orange-100">
               <h1 class="mx-auto font-semibold text-lg text-white">Today</h1>
             </div>
-            <div class="order-1 bg-indigo-100 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4">
+            <div class="order-1 bg-orange-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-orange-100">
               <h3 class="font-bold text-gray-800 text-xl">A Growing Movement</h3>
               <p class="text-sm leading-snug tracking-wide text-gray-600 text-opacity-100">With the help of our donors
                 and volunteers, we continue to scale our work, keeping the community at the heart of everything we do.
@@ -74,19 +101,19 @@
     <section class="py-16 sm:py-24 bg-gray-50">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div class="p-8 bg-white rounded-lg shadow-lg">
+          <div class="p-8 bg-white rounded-lg shadow-lg border border-gray-100 transition-transform hover:shadow-2xl hover:-translate-y-1">
             <div class="flex items-center mb-4">
-              <i class="fas fa-bullseye text-4xl text-indigo-600 mr-4"></i>
+              <i class="fas fa-bullseye text-4xl text-orange-600 mr-4"></i>
               <h3 class="text-3xl font-bold text-gray-900">Our Mission</h3>
             </div>
             <p class="text-lg text-gray-600">To empower underprivileged children and communities with holistic
               education, essential life skills, and access to opportunities, enabling them to realize their full
               potential and contribute to a more equitable society.</p>
           </div>
-          <div class="p-8 bg-white rounded-lg shadow-lg">
+            <div class="p-8 bg-white rounded-lg shadow-lg border border-gray-100 transition-transform hover:shadow-2xl hover:-translate-y-1">
             <div class="flex items-center mb-4">
-              <i class="fas fa-eye text-4xl text-purple-600 mr-4"></i>
-              <h3 class="text-3xl font-bold text-gray-900">Our Vision</h3>
+            <i class="fas fa-eye text-4xl text-orange-400 mr-4"></i>
+            <h3 class="text-3xl font-bold text-gray-900">Our Vision</h3>
             </div>
             <p class="text-lg text-gray-600">We envision a world where every child has the chance to thrive. We focus on
               creating sustainable programs in education, health, and community awareness, all driven by compassion,
@@ -96,16 +123,16 @@
       </div>
     </section>
 
-    <section class="py-16 sm:py-20 bg-indigo-700 text-white">
+  <section class="py-16 sm:py-24 bg-orange-600 text-white">
       <div class="container mx-auto px-4">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold">Our Impact in Numbers</h2>
-          <p class="mt-4 text-lg text-indigo-200 max-w-2xl mx-auto">Every number tells a story of a life changed.</p>
+          <p class="mt-4 text-lg text-orange-200 max-w-2xl mx-auto">Every number tells a story of a life changed.</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          <div v-for="c in counters" :key="c.id" class="p-6">
+          <div v-for="c in counters" :key="c.id" class="p-6 bg-white/5 rounded-lg">
             <div class="text-5xl md:text-6xl font-extrabold text-white" :data-target="c.value">0</div>
-            <div class="mt-2 text-lg font-medium text-indigo-200 uppercase tracking-wider">{{ c.label }}</div>
+            <div class="mt-2 text-lg font-medium text-orange-100 uppercase tracking-wider">{{ c.label }}</div>
           </div>
         </div>
       </div>
@@ -149,10 +176,12 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
           <div v-for="m in team" :key="m.id" @click="openMember(m)"
             class="group bg-white rounded-xl shadow-md p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer">
-            <img :src="m.img" :alt="m.name"
-              class="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-lg border-4 border-white group-hover:border-indigo-200 transition-all duration-300" />
+              <img :src="m.img" :alt="m.name"
+              class="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-lg border-4 border-white group-hover:border-orange-200 transition-all duration-300" />
             <h4 class="text-xl font-semibold text-gray-900">{{ m.name }}</h4>
-            <p class="text-indigo-600 font-medium">{{ m.role }}</p>
+            <div class="mt-2">
+              <span class="inline-block bg-orange-50 text-orange-700 text-sm font-medium px-3 py-1 rounded-full">{{ m.role }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -161,7 +190,7 @@
    <Transition name="modal-fade">
       <div v-if="selectedMember" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
         @click.self="closeMember">
-        <div class="relative bg-white rounded-xl shadow-2xl max-w-lg w-full p-8 z-10 m-4 transform transition-all"
+          <div class="relative bg-white rounded-xl shadow-2xl max-w-xl w-full p-8 z-10 m-4 transform transition-all"
           :class="selectedMember ? 'scale-100' : 'scale-95'">
           <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition" @click="closeMember"
             aria-label="Close modal">
@@ -169,10 +198,10 @@
           </button>
           <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <img :src="selectedMember.img" :alt="selectedMember.name"
-              class="w-32 h-32 rounded-full object-cover border-4 border-indigo-200 shadow-md" />
+              class="w-36 h-36 rounded-full object-cover border-4 border-orange-200 shadow-md" />
             <div class="text-center sm:text-left">
               <h3 class="text-2xl font-bold text-gray-900">{{ selectedMember.name }}</h3>
-              <p class="text-indigo-600 font-semibold">{{ selectedMember.role }}</p>
+              <p class="text-orange-600 font-semibold">{{ selectedMember.role }}</p>
               <p class="mt-4 text-gray-700 leading-relaxed">{{ selectedMember.bio }}</p>
             </div>
           </div>
@@ -257,7 +286,7 @@ const handleEsc = (e: KeyboardEvent) => {
 </script>
 
 <style scoped>
-.modal-backdrop {
+  .modal-backdrop {
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
 }
@@ -283,14 +312,13 @@ const handleEsc = (e: KeyboardEvent) => {
 }
 
 /* Timeline styling */
-.right-timeline::before {
+  .right-timeline::before {
   content: '';
   position: absolute;
   width: 50%;
   left: 0;
   top: 1.5rem;
-  border-top: 2px dashed #d1d5db;
-  /* gray-300 */
+  border-top: 2px dashed #ffd8a8; /* orange-200 */
 }
 
 .left-timeline::before {
@@ -299,8 +327,7 @@ const handleEsc = (e: KeyboardEvent) => {
   width: 50%;
   right: 0;
   top: 1.5rem;
-  border-top: 2px dashed #d1d5db;
-  /* gray-300 */
+  border-top: 2px dashed #ffd8a8; /* orange-200 */
 }
 
 @media (max-width: 767px) {
