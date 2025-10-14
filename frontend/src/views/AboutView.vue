@@ -1,183 +1,171 @@
 <template>
-  <div class="bg-gray-50">
-  <section class="bg-gradient-to-r from-brand-600 to-brand-500 text-white py-20 md:py-28">
-      <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight">About Devi Dhamm Trust</h1>
-  <p class="text-lg md:text-xl text-brand-50 max-w-3xl mx-auto leading-relaxed">
-          Empowering underprivileged children and communities through education, healthcare, and sustainable
-          development. Join us in creating measurable impact and long-term change.
-        </p>
+  <div class="relative bg-gray-50 text-gray-900 overflow-hidden">
+    <!-- Animated background blobs (same as HomeView) -->
+    <div aria-hidden="true" class="animated-bg pointer-events-none">
+      <div class="bg-blob blob-1"></div>
+      <div class="bg-blob blob-2"></div>
+      <div class="bg-blob blob-3"></div>
+    </div>
+    <div class="relative z-10">
+    <!-- Hero (simpler, neutral) -->
+    <section class="py-20 md:py-28 bg-white overflow-hidden">
+      <div class="container mx-auto px-4 text-center stagger-parent animate-on-scroll">
+        <div class="max-w-3xl mx-auto">
+          <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight text-gray-900 stagger-child">About Devi Dhamm Trust</h1>
+          <p class="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed stagger-child">Empowering underprivileged children and communities through education, healthcare, and sustainable development. Join us in creating measurable impact and long-term change.</p>
 
-        <div class="mt-8 flex items-center justify-center gap-6">
-          <router-link to="/donate"
-            class="inline-flex items-center gap-3 bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full shadow-2xl hover:bg-white hover:text-brand-500 transition-colors duration-300">
-            <HeartIcon class="inline-block h-4 w-4 mr-1 text-red-500" />
-            Donate Now
-          </router-link>
-          <router-link to="/contact"
-            class="inline-flex items-center gap-3 bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-brand-500 transition-colors duration-300">
-            <HandRaisedIcon class="inline-block h-4 w-4 mr-1 text-brand-500" />
-            Get Involved
-          </router-link>
+          <div class="mt-8 flex items-center justify-center gap-4 stagger-child">
+            <router-link to="/donate" class="inline-flex items-center gap-2 bg-brand-600 text-white font-semibold py-3 px-6 rounded-full hover:bg-brand-700 transition-colors duration-300 shadow-md float">
+              <HeartIcon class="inline-block h-4 w-4 text-white" />
+              Donate
+            </router-link>
+            <router-link to="/contact" class="inline-flex items-center gap-2 border border-brand-200 text-brand-700 font-semibold py-3 px-6 rounded-full hover:bg-brand-50 transition-colors duration-300">
+              <HandRaisedIcon class="inline-block h-4 w-4 text-brand-600" />
+              Contact
+            </router-link>
+          </div>
+
+          <!-- Quick stats chips (muted) -->
+          <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center stagger-child">
+            <div class="bg-white rounded-xl px-6 py-3 text-left shadow-sm border border-gray-100 stagger-child">
+              <div class="text-sm text-gray-500">Years of Service</div>
+              <div class="text-2xl font-bold text-gray-900">10+</div>
+            </div>
+            <div class="bg-white rounded-xl px-6 py-3 text-left shadow-sm border border-gray-100 stagger-child">
+              <div class="text-sm text-gray-500">Communities Reached</div>
+              <div class="text-2xl font-bold text-gray-900">40+</div>
+            </div>
+            <div class="bg-white rounded-xl px-6 py-3 text-left shadow-sm border border-gray-100 stagger-child">
+              <div class="text-sm text-gray-500">Volunteers</div>
+              <div class="text-2xl font-bold text-gray-900">200+</div>
+            </div>
+          </div>
         </div>
-
-        <!-- Quick stats chips -->
-        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 text-left">
-            <div class="text-sm text-brand-50">Years of Service</div>
-            <div class="text-2xl font-bold text-white">10+</div>
-          </div>
-          <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 text-left">
-            <div class="text-sm text-brand-50">Communities Reached</div>
-            <div class="text-2xl font-bold text-white">40+</div>
-          </div>
-          <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 text-left">
-            <div class="text-sm text-brand-50">Volunteers</div>
-            <div class="text-2xl font-bold text-white">200+</div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- decorative wave -->
-      <div class="mt-8 -mb-1">
-        <svg viewBox="0 0 1440 80" class="w-full" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0,32 C240,96 420,0 720,32 C1020,64 1200,16 1440,48 L1440,120 L0,120 Z" fill="#f8fafc" fill-opacity="1"></path>
-        </svg>
       </div>
     </section>
 
+    <!-- Our story (timeline) -->
     <section class="py-16 sm:py-24 bg-white">
       <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
+        <div class="text-center mb-8 animate-on-scroll">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Story</h2>
-          <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">From a small seed of an idea to a growing tree of
-            impact.</p>
+          <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">From a small seed of an idea to a growing tree of impact.</p>
         </div>
-        <div class="relative">
-          <div class="absolute left-1/2 h-full border-l-2 border-gray-200 hidden md:block"></div>
 
-          <div class="mb-8 flex justify-between items-center w-full right-timeline">
+        <div class="relative stagger-parent">
+          <div class="absolute left-1/2 h-full border-l-2 border-gray-100 hidden md:block"></div>
+
+          <div class="mb-8 flex justify-between items-center w-full right-timeline animate-on-scroll stagger-parent">
             <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-brand-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-brand-50">
+            <div class="z-10 flex items-center order-1 bg-brand-600 shadow w-14 h-14 rounded-full ring-4 ring-brand-50 stagger-child">
               <h1 class="mx-auto font-semibold text-lg text-white">2015</h1>
             </div>
-            <div class="order-1 bg-brand-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-brand-50">
+            <div class="order-1 bg-white rounded-lg shadow w-full md:w-5/12 px-6 py-4 border border-gray-100 stagger-child">
               <h3 class="font-bold text-gray-800 text-xl">The Beginning</h3>
-              <p class="text-sm leading-snug tracking-wide text-gray-600 text-opacity-100">Started by local volunteers,
-                Devi Dhamm Trust began as a small education initiative to support children in our community.</p>
+              <p class="text-sm leading-snug tracking-wide text-gray-600">Started by local volunteers, Devi Dhamm Trust began as a small education initiative to support children in our community.</p>
             </div>
           </div>
 
-          <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
+          <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline animate-on-scroll stagger-parent">
             <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-brand-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-brand-50">
+            <div class="z-10 flex items-center order-1 bg-brand-600 shadow w-14 h-14 rounded-full ring-4 ring-brand-50 stagger-child">
               <h1 class="mx-auto text-white font-semibold text-lg">2018</h1>
             </div>
-            <div class="order-1 bg-brand-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-brand-50">
+            <div class="order-1 bg-white rounded-lg shadow w-full md:w-5/12 px-6 py-4 border border-gray-100 stagger-child">
               <h3 class="font-bold text-gray-800 text-xl">Expanding Horizons</h3>
-              <p class="text-sm leading-snug tracking-wide text-gray-600 text-opacity-100">We expanded our programs to
-                include health camps and environmental initiatives, reaching more families and creating a wider impact.
-              </p>
+              <p class="text-sm leading-snug tracking-wide text-gray-600">We expanded our programs to include health camps and environmental initiatives, reaching more families and creating a wider impact.</p>
             </div>
           </div>
 
-          <div class="mb-8 flex justify-between items-center w-full right-timeline">
+          <div class="mb-8 flex justify-between items-center w-full right-timeline animate-on-scroll stagger-parent">
             <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-brand-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-brand-50">
+            <div class="z-10 flex items-center order-1 bg-brand-600 shadow w-14 h-14 rounded-full ring-4 ring-brand-50 stagger-child">
               <h1 class="mx-auto font-semibold text-lg text-white">Today</h1>
             </div>
-            <div class="order-1 bg-brand-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-brand-50">
+            <div class="order-1 bg-white rounded-lg shadow w-full md:w-5/12 px-6 py-4 border border-gray-100 stagger-child">
               <h3 class="font-bold text-gray-800 text-xl">A Growing Movement</h3>
-              <p class="text-sm leading-snug tracking-wide text-gray-600 text-opacity-100">With the help of our donors
-                and volunteers, we continue to scale our work, keeping the community at the heart of everything we do.
-              </p>
+              <p class="text-sm leading-snug tracking-wide text-gray-600">With the help of our donors and volunteers, we continue to scale our work, keeping the community at the heart of everything we do.</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Mission / Vision -->
     <section class="py-16 sm:py-24 bg-gray-50">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div class="p-8 bg-white rounded-lg shadow-lg border border-gray-100 transition-transform hover:shadow-2xl hover:-translate-y-1">
-        <div class="flex items-center mb-4">
-          <TagIcon class="text-brand-500 mr-4 h-10 w-10" />
-              <h3 class="text-3xl font-bold text-gray-900">Our Mission</h3>
-            </div>
-            <p class="text-lg text-gray-600">To empower underprivileged children and communities with holistic
-              education, essential life skills, and access to opportunities, enabling them to realize their full
-              potential and contribute to a more equitable society.</p>
-          </div>
-            <div class="p-8 bg-white rounded-lg shadow-lg border border-gray-100 transition-transform hover:shadow-2xl hover:-translate-y-1">
+          <div class="p-8 bg-white rounded-lg shadow-sm border border-gray-100 animate-on-scroll">
             <div class="flex items-center mb-4">
-            <EyeIcon class="text-brand-300 mr-4 h-10 w-10" />
-            <h3 class="text-3xl font-bold text-gray-900">Our Vision</h3>
+              <TagIcon class="text-brand-600 mr-4 h-8 w-8" />
+              <h3 class="text-2xl font-bold text-gray-900">Our Mission</h3>
             </div>
-            <p class="text-lg text-gray-600">We envision a world where every child has the chance to thrive. We focus on
-              creating sustainable programs in education, health, and community awareness, all driven by compassion,
-              transparency, and active community participation.</p>
+            <p class="text-gray-600">To empower underprivileged children and communities with holistic education, essential life skills, and access to opportunities, enabling them to realize their full potential and contribute to a more equitable society.</p>
+          </div>
+          <div class="p-8 bg-white rounded-lg shadow-sm border border-gray-100 animate-on-scroll">
+            <div class="flex items-center mb-4">
+              <EyeIcon class="text-brand-500 mr-4 h-8 w-8" />
+              <h3 class="text-2xl font-bold text-gray-900">Our Vision</h3>
+            </div>
+            <p class="text-gray-600">We envision a world where every child has the chance to thrive. We focus on creating sustainable programs in education, health, and community awareness, all driven by compassion, transparency, and active community participation.</p>
           </div>
         </div>
       </div>
     </section>
 
-  <section class="py-16 sm:py-24 bg-brand-600 text-white">
-      <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
-          <h2 class="text-3xl md:text-4xl font-bold">Our Impact in Numbers</h2>
-          <p class="mt-4 text-lg text-brand-100 max-w-2xl mx-auto">Every number tells a story of a life changed.</p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
-          <div v-for="c in counters" :key="c.id" class="p-6 bg-white/5 rounded-lg">
-            <div class="text-5xl md:text-6xl font-extrabold text-white" :data-target="c.value">0</div>
-            <div class="mt-2 text-lg font-medium text-brand-50 uppercase tracking-wider">{{ c.label }}</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    <!-- Impact counters -->
     <section class="py-16 sm:py-24 bg-white">
       <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
+        <div class="text-center mb-8 animate-on-scroll">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Impact in Numbers</h2>
+          <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Every number tells a story of a life changed.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+          <div v-for="c in counters" :key="c.id" class="p-6 bg-gray-50 rounded-lg animate-on-scroll">
+            <div class="text-5xl md:text-6xl font-extrabold text-brand-600 counter" :data-target="c.value">0</div>
+            <div class="mt-2 text-lg font-medium text-gray-500 uppercase tracking-wider">{{ c.label }}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core values -->
+    <section class="py-16 sm:py-24 bg-gray-50">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-8 animate-on-scroll">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Core Values</h2>
           <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">The principles that guide our every action.</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-          <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
-            <HeartIcon class="text-red-500 mb-4 h-10 w-10" />
+          <div class="p-6 bg-white rounded-lg shadow-sm animate-on-scroll">
+              <HeartIcon class="text-red-500 mb-4 h-8 w-8 mx-auto" />
             <h4 class="text-xl font-semibold text-gray-900 mb-2">Compassion</h4>
-            <p class="text-gray-600">We approach our work with empathy and a deep sense of care for the communities we
-              serve.</p>
+            <p class="text-gray-600">We approach our work with empathy and a deep sense of care for the communities we serve.</p>
           </div>
-          <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
-            <ShieldCheckIcon class="text-blue-500 mb-4 h-10 w-10" />
+          <div class="p-6 bg-white rounded-lg shadow-sm animate-on-scroll">
+              <ShieldCheckIcon class="text-brand-500 mb-4 h-8 w-8 mx-auto" />
             <h4 class="text-xl font-semibold text-gray-900 mb-2">Integrity</h4>
-            <p class="text-gray-600">We are committed to transparency and accountability in all our actions and use of
-              resources.</p>
+            <p class="text-gray-600">We are committed to transparency and accountability in all our actions and use of resources.</p>
           </div>
-          <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
-            <LightBulbIcon class="text-yellow-500 mb-4 h-10 w-10" />
+          <div class="p-6 bg-white rounded-lg shadow-sm animate-on-scroll">
+              <LightBulbIcon class="text-yellow-400 mb-4 h-8 w-8 mx-auto" />
             <h4 class="text-xl font-semibold text-gray-900 mb-2">Empowerment</h4>
-            <p class="text-gray-600">We believe in providing tools and knowledge to help individuals build their own
-              futures.</p>
+            <p class="text-gray-600">We believe in providing tools and knowledge to help individuals build their own futures.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="py-16 sm:py-24 bg-gray-50">
+    <!-- Team -->
+    <section class="py-16 sm:py-24 bg-white">
       <div class="container mx-auto px-4">
-        <div class="text-center mb-12">
+        <div class="text-center mb-8 animate-on-scroll">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Meet Our Team</h2>
           <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">The dedicated individuals behind our mission.</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-          <div v-for="m in team" :key="m.id" @click="openMember(m)"
-            class="group bg-white rounded-xl shadow-md p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer">
-              <img :src="m.img" :alt="m.name"
-              class="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-lg border-4 border-white group-hover:border-brand-100 transition-all duration-300" />
+          <div v-for="m in team" :key="m.id" @click="openMember(m)" class="group bg-white rounded-xl shadow p-6 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer animate-on-scroll">
+            <img :src="m.img" :alt="m.name" class="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-sm border-2 border-gray-50 transition-all duration-300" />
             <h4 class="text-xl font-semibold text-gray-900">{{ m.name }}</h4>
             <div class="mt-2">
               <span class="inline-block bg-brand-50 text-brand-700 text-sm font-medium px-3 py-1 rounded-full">{{ m.role }}</span>
@@ -186,22 +174,20 @@
         </div>
       </div>
     </section>
-    
-   <Transition name="modal-fade">
-      <div v-if="selectedMember" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
-        @click.self="closeMember">
-          <div class="relative bg-white rounded-xl shadow-2xl max-w-xl w-full p-8 z-10 m-4 transform transition-all"
-          :class="selectedMember ? 'scale-100' : 'scale-95'">
-          <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition" @click="closeMember"
-            aria-label="Close modal">
+
+  </div>
+
+  <Transition name="modal-fade">
+      <div v-if="selectedMember" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50" @click.self="closeMember">
+        <div class="relative bg-white rounded-xl shadow-2xl max-w-xl w-full p-8 z-10 m-4 transform transition-all" :class="selectedMember ? 'scale-100' : 'scale-95'">
+          <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition" @click="closeMember" aria-label="Close modal">
             <XMarkIcon class="h-5 w-5" />
           </button>
           <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-            <img :src="selectedMember.img" :alt="selectedMember.name"
-              class="w-36 h-36 rounded-full object-cover border-4 border-brand-100 shadow-md" />
+            <img :src="selectedMember.img" :alt="selectedMember.name" class="w-36 h-36 rounded-full object-cover border-4 border-gray-100 shadow-md" />
             <div class="text-center sm:text-left">
               <h3 class="text-2xl font-bold text-gray-900">{{ selectedMember.name }}</h3>
-              <p class="text-brand-500 font-semibold">{{ selectedMember.role }}</p>
+              <p class="text-gray-700 font-semibold">{{ selectedMember.role }}</p>
               <p class="mt-4 text-gray-700 leading-relaxed">{{ selectedMember.bio }}</p>
             </div>
           </div>
@@ -271,13 +257,77 @@ const animateCounters = () => {
   });
 };
 
+// Scroll-triggered reveal for general elements
+let scrollObserver: IntersectionObserver | null = null;
+
+const observeScrollElements = () => {
+  scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target as HTMLElement;
+        el.classList.add('in-view');
+
+        // Handle stagger parents: add delay vars to children
+        if (el.classList.contains('stagger-parent')) {
+          const children = Array.from(el.querySelectorAll('.stagger-child')) as HTMLElement[];
+          children.forEach((child, idx) => {
+            // small delay per child
+            const delay = (idx * 80); // ms
+            child.style.setProperty('--enter-delay', `${delay}ms`);
+            child.style.transitionDelay = `${delay}ms`;
+          });
+        }
+
+        scrollObserver?.unobserve(el);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  // Observe both animate-on-scroll and stagger-parent containers
+  document.querySelectorAll('.animate-on-scroll, .stagger-parent').forEach(el => {
+    scrollObserver?.observe(el);
+  });
+};
+
+// Fallback: check elements already in viewport and apply in-view + stagger delays
+const applyInViewIfVisible = () => {
+  const els = Array.from(document.querySelectorAll('.animate-on-scroll, .stagger-parent')) as HTMLElement[];
+  els.forEach(el => {
+    try {
+      const rect = el.getBoundingClientRect();
+      const inViewport = rect.top < (window.innerHeight * 0.9) && rect.bottom > 0;
+      if (inViewport) {
+        el.classList.add('in-view');
+        if (el.classList.contains('stagger-parent')) {
+          const children = Array.from(el.querySelectorAll('.stagger-child')) as HTMLElement[];
+          children.forEach((child, idx) => {
+            const delay = (idx * 80);
+            child.style.setProperty('--enter-delay', `${delay}ms`);
+            child.style.transitionDelay = `${delay}ms`;
+          });
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+  });
+};
+
 onMounted(() => {
   animateCounters();
+  observeScrollElements();
+  // ensure elements already visible get revealed
+  applyInViewIfVisible();
+  setTimeout(applyInViewIfVisible, 300);
   window.addEventListener('keydown', handleEsc);
 });
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleEsc);
+  if (scrollObserver) {
+    scrollObserver.disconnect();
+    scrollObserver = null;
+  }
 });
 
 const handleEsc = (e: KeyboardEvent) => {
@@ -288,14 +338,15 @@ const handleEsc = (e: KeyboardEvent) => {
 </script>
 
 <style scoped>
-  .modal-backdrop {
+/* Modal */
+.modal-backdrop {
   background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(4px);
 }
 
 .modal-fade-enter-active,
 .modal-fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
 }
 
 .modal-fade-enter-from,
@@ -305,35 +356,34 @@ const handleEsc = (e: KeyboardEvent) => {
 
 .modal-fade-enter-active .relative,
 .modal-fade-leave-active .relative {
-  transition: transform 0.3s ease;
+  transition: transform 0.25s ease;
 }
 
 .modal-fade-enter-from .relative,
 .modal-fade-leave-to .relative {
-  transform: scale(0.95) translateY(-20px);
+  transform: scale(0.96) translateY(-8px);
 }
 
 /* Timeline styling */
-  .right-timeline::before {
+.right-timeline::before {
   content: '';
   position: absolute;
   width: 50%;
   left: 0;
   top: 1.5rem;
-  border-top: 2px dashed #fcefe6; /* brand-100 (approx) */
+  border-top: 2px dashed #f3f4f6; /* muted */
 }
 
-  .left-timeline::before {
+.left-timeline::before {
   content: '';
   position: absolute;
   width: 50%;
   right: 0;
   top: 1.5rem;
-  border-top: 2px dashed #fcefe6; /* brand-100 (approx) */
+  border-top: 2px dashed #f3f4f6; /* muted */
 }
 
 @media (max-width: 767px) {
-
   .right-timeline::before,
   .left-timeline::before {
     display: none;
@@ -354,4 +404,76 @@ const handleEsc = (e: KeyboardEvent) => {
     display: none;
   }
 }
+
+/* Scroll animations (subtle fade-up) */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children use a CSS variable set by JS */
+.stagger-child {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition-delay: var(--enter-delay, 0ms);
+}
+
+.stagger-parent.in-view .stagger-child {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Floating CTA */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+/* subtle pulse on hover for primary CTA */
+.float:hover {
+  animation: none;
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* Page background animated blobs */
+
+/* Animated blobs (copied from HomeView) */
+.animated-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.bg-blob { position: absolute; filter: blur(40px) saturate(1.2) opacity(0.18); transform-origin: center; }
+.blob-1 { width: 420px; height: 420px; background: radial-gradient(circle at 30% 30%, #3b82f6, #06b6d4); top: -80px; left: -120px; animation: floatA 10s ease-in-out infinite; }
+.blob-2 { width: 360px; height: 360px; background: radial-gradient(circle at 20% 20%, #f97316, #f43f5e); bottom: -100px; right: -80px; animation: floatB 12s ease-in-out infinite; }
+.blob-3 { width: 280px; height: 280px; background: radial-gradient(circle at 40% 40%, #10b981, #7c3aed); top: 180px; right: -60px; animation: floatC 14s ease-in-out infinite; }
+
+@keyframes floatA { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(18px) rotate(6deg); } 100% { transform: translateY(0) rotate(0deg); } }
+@keyframes floatB { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(-6deg); } 100% { transform: translateY(0) rotate(0deg); } }
+@keyframes floatC { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(12px) rotate(4deg); } 100% { transform: translateY(0) rotate(0deg); } }
+
+.reveal-hidden { opacity: 0; transform: translateY(16px) scale(0.995); transition: opacity 600ms ease, transform 700ms cubic-bezier(.2,.9,.3,1); }
+.reveal-visible { opacity: 1; transform: translateY(0) scale(1); }
+
+.animated-bg .bg-blob { border-radius: 50%; }
+
+/* Subtle rotation for blobs */
+.blob-1 { animation: floatA 10s ease-in-out infinite, rotateSlow 40s linear infinite; }
+.blob-2 { animation: floatB 12s ease-in-out infinite, rotateSlow 50s linear infinite; }
+.blob-3 { animation: floatC 14s ease-in-out infinite, rotateSlow 38s linear infinite; }
+@keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* Counters appear slightly bolder */
+.counter {
+  font-variant-numeric: tabular-nums;
+}
+
 </style>

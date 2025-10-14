@@ -4,7 +4,7 @@
 
       <router-link to="/"
         class="flex items-center pr-3 text-2xl font-bold text-brand-600 hover:text-brand-700 transition duration-150 -ml-2 cursor-pointer">
-        <img src="/images/plantation.avif" alt="logo" class="h-9 w-9 rounded-md object-cover shadow-elevate" />
+        <img src="/images/plantation.avif" alt="logo" class="h-9 w-9 rounded-md object-cover shadow-elevate mr-2" />
         <span class="leading-tight">Devi Dhaam Trust</span>
       </router-link>
 
