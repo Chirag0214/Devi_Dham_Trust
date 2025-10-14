@@ -28,7 +28,7 @@
         </div>
 
         <div class="relative">
-          <div class="rounded-xl overflow-hidden shadow-lg">
+          <div class="rounded-xl overflow-hidden shadow-lg tilt-hero">
             <!-- Autoplay carousel: fades between images -->
             <div class="relative w-full h-64 sm:h-80 md:h-96">
               <img v-for="(src, i) in carouselImages" :key="i" :src="src"
@@ -56,7 +56,7 @@
       <p class="text-gray-700 mb-8 max-w-2xl">We provide access to essential resources, foster sustainable livelihoods, and create opportunities that allow individuals and communities to thrive.</p>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
+  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative card-sheen">
           <div class="flex items-center gap-4">
             <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
               <!-- community icon -->
@@ -71,7 +71,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
+  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden">
           <div class="flex items-center gap-4">
             <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
               <!-- health icon -->
@@ -86,7 +86,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
+  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden">
           <div class="flex items-center gap-4">
             <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
               <!-- education icon -->
@@ -112,7 +112,7 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
+  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen">
           <img src="/images/plantation.avif" alt="future leaders" class="w-full h-40 object-cover" />
           <div class="p-4">
             <h3 class="font-semibold">Future Leaders Program</h3>
@@ -121,7 +121,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
+  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen">
           <img src="/images/plantation1.avif" alt="green earth" class="w-full h-40 object-cover" />
           <div class="p-4">
             <h3 class="font-semibold">Green Earth Initiative</h3>
@@ -130,7 +130,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
+  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen">
           <img src="/images/bg-image.avif" alt="health" class="w-full h-40 object-cover" />
           <div class="p-4">
             <h3 class="font-semibold">Project Health & Hope</h3>
@@ -215,6 +215,73 @@ function advance() {
 
 let observer: IntersectionObserver | null = null;
 
+// Hover-only inertial tilt: starts on pointerenter, stops on pointerleave
+const activeMap = new WeakMap<HTMLElement, { loopId?: number; vx: number; vy: number; rx: number; ry: number }>();
+
+function makeEnterHandler(el: HTMLElement) {
+  let mouseX = 0, mouseY = 0;
+  const state = { vx: 0, vy: 0, rx: 0, ry: 0 };
+
+  const onMove = (e: PointerEvent) => {
+    const r = el.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    mouseX = (e.clientX - cx) / (r.width / 2);
+    mouseY = (e.clientY - cy) / (r.height / 2);
+  };
+
+  const loop = () => {
+    const targetRy = mouseX * 6;
+    const targetRx = -mouseY * 6;
+    state.vx += (targetRy - state.ry) * 0.12; state.vx *= 0.85; state.ry += state.vx;
+    state.vy += (targetRx - state.rx) * 0.12; state.vy *= 0.85; state.rx += state.vy;
+    el.style.transform = `perspective(900px) rotateX(${state.rx}deg) rotateY(${state.ry}deg) translateZ(0)`;
+    const id = requestAnimationFrame(loop);
+    (activeMap.get(el) as any).loopId = id;
+  };
+
+  return {
+    onMove,
+    start() {
+      activeMap.set(el, { ...state });
+      el.addEventListener('pointermove', onMove);
+      const id = requestAnimationFrame(loop);
+      (activeMap.get(el) as any).loopId = id;
+    },
+    stop() {
+      el.removeEventListener('pointermove', onMove);
+      const s = activeMap.get(el) as any;
+      if (s?.loopId) cancelAnimationFrame(s.loopId);
+      activeMap.delete(el);
+      el.style.transform = '';
+    }
+  };
+}
+
+function setupHoverTilt() {
+  const els = Array.from(document.querySelectorAll('.tilt-card, .tilt-hero')) as HTMLElement[];
+  els.forEach(el => {
+    const h = makeEnterHandler(el);
+    const onEnter = () => h.start();
+    const onLeave = () => h.stop();
+    el.addEventListener('pointerenter', onEnter);
+    el.addEventListener('pointerleave', onLeave);
+    // save cleanup
+    (el as any).__hoverTiltCleanup = () => {
+      el.removeEventListener('pointerenter', onEnter);
+      el.removeEventListener('pointerleave', onLeave);
+      h.stop();
+    };
+  });
+}
+
+function teardownHoverTilt() {
+  Array.from(document.querySelectorAll('.tilt-card, .tilt-hero')).forEach(el => {
+    const anyEl = el as any;
+    if (anyEl.__hoverTiltCleanup) anyEl.__hoverTiltCleanup();
+  });
+}
+
 onMounted(() => {
   // Setup reveal on scroll with staggered delays
   let index = 0;
@@ -237,9 +304,13 @@ onMounted(() => {
   // start carousel autoplay
   carouselTimer = window.setInterval(advance, 4000);
 
+  // setup hover-only tilt handlers
+  setupHoverTilt();
+
   onBeforeUnmount(() => {
     if (carouselTimer) window.clearInterval(carouselTimer);
     observer?.disconnect();
+  teardownHoverTilt();
   });
 });
 </script>
@@ -302,5 +373,9 @@ onMounted(() => {
 .blob-2 { animation: floatB 12s ease-in-out infinite, rotateSlow 50s linear infinite; }
 .blob-3 { animation: floatC 14s ease-in-out infinite, rotateSlow 38s linear infinite; }
 @keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* cursor & hover rules for tilt-enabled elements */
+.tilt-card, .tilt-hero { cursor: pointer; }
+@media (hover: none) and (pointer: coarse) { .tilt-card, .tilt-hero { cursor: auto; transform: none !important; } }
 
 </style>
