@@ -119,9 +119,11 @@ const login = async () => {
       const normalizedRole = user.role ? String(user.role).toLowerCase() : undefined;
       const normalizedEmail = user.email ? String(user.email).toLowerCase() : undefined;
 
+      // Ensure a sensible display name is stored so header/sidebar can show a greeting.
+      const displayName = user.name || (normalizedEmail === 'admin@devidhaam.org' || normalizedRole === 'admin' ? 'Admin' : normalizedEmail);
       const authObj = {
         email: normalizedEmail,
-        name: user.name,
+        name: displayName,
         loggedAt: Date.now(),
         role: normalizedRole,
         id: user.id,

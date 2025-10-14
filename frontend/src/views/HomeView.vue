@@ -7,7 +7,7 @@
       <div class="bg-blob blob-3"></div>
     </div>
     <!-- Hero -->
-  <section class="max-w-7xl mx-auto px-6 py-16 reveal-hidden">
+  <section class="max-w-7xl mx-auto px-6 py-16 reveal-hidden relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div>
           <p class="text-sm font-semibold text-brand-600">Devi Dhaam Trust</p>
@@ -56,39 +56,39 @@
       <p class="text-gray-700 mb-8 max-w-2xl">We provide access to essential resources, foster sustainable livelihoods, and create opportunities that allow individuals and communities to thrive.</p>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative card-sheen">
+  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative card-sheen pill-card group">
           <div class="flex items-center gap-4">
-            <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
+            <div class="p-3 bg-brand-100 text-brand-600 rounded-lg pill-icon">
               <!-- community icon -->
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M12 12a4 4 0 100-8 4 4 0 000 8z" />
               </svg>
             </div>
             <div>
-              <h3 class="font-semibold">Community Empowerment</h3>
+              <h3 class="font-semibold pill-title">Community Empowerment</h3>
               <p class="text-sm text-gray-600">Tools, training and support to help communities build resilient futures.</p>
             </div>
           </div>
         </div>
 
-  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden">
+  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden pill-card group">
           <div class="flex items-center gap-4">
-            <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
+            <div class="p-3 bg-brand-100 text-brand-600 rounded-lg pill-icon">
               <!-- health icon -->
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
             <div>
-              <h3 class="font-semibold">Holistic Healthcare</h3>
+              <h3 class="font-semibold pill-title">Holistic Healthcare</h3>
               <p class="text-sm text-gray-600">Healthcare camps and preventive care to keep families healthy and productive.</p>
             </div>
           </div>
         </div>
 
-  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden">
+  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden pill-card group">
           <div class="flex items-center gap-4">
-            <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
+            <div class="p-3 bg-brand-100 text-brand-600 rounded-lg pill-icon">
               <!-- education icon -->
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -96,7 +96,7 @@
               </svg>
             </div>
             <div>
-              <h3 class="font-semibold">Transformative Education</h3>
+              <h3 class="font-semibold pill-title">Transformative Education</h3>
               <p class="text-sm text-gray-600">Programs that focus on learning, leadership and lifelong growth.</p>
             </div>
           </div>
@@ -112,8 +112,8 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen">
-          <img src="/images/plantation.avif" alt="future leaders" class="w-full h-40 object-cover" />
+  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative initiative-card group">
+          <img src="/images/plantation.avif" alt="future leaders" class="w-full initiative-img object-cover" />
           <div class="p-4">
             <h3 class="font-semibold">Future Leaders Program</h3>
             <p class="text-sm text-gray-600 mt-2">Education, mentorship and community support to help young people thrive.</p>
@@ -121,8 +121,8 @@
           </div>
         </div>
 
-  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen">
-          <img src="/images/plantation1.avif" alt="green earth" class="w-full h-40 object-cover" />
+  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative  initiative-card group">
+          <img src="/images/plantation1.avif" alt="green earth" class="w-full initiative-img object-cover" />
           <div class="p-4">
             <h3 class="font-semibold">Green Earth Initiative</h3>
             <p class="text-sm text-gray-600 mt-2">Tree plantations, sustainable agriculture and environmental education.</p>
@@ -130,8 +130,8 @@
           </div>
         </div>
 
-  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen">
-          <img src="/images/bg-image.avif" alt="health" class="w-full h-40 object-cover" />
+  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative initiative-card group">
+          <img src="/images/bg-image.avif" alt="health" class="w-full initiative-img object-cover" />
           <div class="p-4">
             <h3 class="font-semibold">Project Health & Hope</h3>
             <p class="text-sm text-gray-600 mt-2">Medical camps and essential services for underserved areas.</p>
@@ -231,8 +231,8 @@ function makeEnterHandler(el: HTMLElement) {
   };
 
   const loop = () => {
-    const targetRy = mouseX * 6;
-    const targetRx = -mouseY * 6;
+  const targetRy = mouseX * 8;
+  const targetRx = -mouseY * 8;
     state.vx += (targetRy - state.ry) * 0.12; state.vx *= 0.85; state.ry += state.vx;
     state.vy += (targetRx - state.rx) * 0.12; state.vy *= 0.85; state.rx += state.vy;
     el.style.transform = `perspective(900px) rotateX(${state.rx}deg) rotateY(${state.ry}deg) translateZ(0)`;
@@ -341,6 +341,7 @@ onMounted(() => {
 .card-sheen::after {
   content: '';
   position: absolute;
+  pointer-events: none;
   left: -40%;
   top: -40%;
   width: 40%;
@@ -377,5 +378,21 @@ onMounted(() => {
 /* cursor & hover rules for tilt-enabled elements */
 .tilt-card, .tilt-hero { cursor: pointer; }
 @media (hover: none) and (pointer: coarse) { .tilt-card, .tilt-hero { cursor: auto; transform: none !important; } }
+
+</style>
+
+<style scoped>
+/* Pill card and initiative helpers */
+.pill-card { padding: 1.25rem; border-radius: 0.75rem; }
+.pill-card .pill-icon { width: 3rem; height: 3rem; display: inline-flex; align-items: center; justify-content: center; }
+.pill-title { font-size: 1.02rem; }
+.pill-card.group:hover { box-shadow: 0 14px 30px rgba(2,6,23,0.08); transform: translateY(-4px); }
+
+.initiative-card { transition: transform 300ms ease, box-shadow 300ms ease; }
+.initiative-card .initiative-img { height: 10rem; object-fit: cover; transition: transform 400ms ease; }
+.initiative-card.group:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(2,6,23,0.09); }
+.initiative-card.group:hover .initiative-img { transform: scale(1.03); }
+
+.reveal-hidden { will-change: opacity, transform; }
 
 </style>

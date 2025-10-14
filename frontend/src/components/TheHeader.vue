@@ -10,14 +10,25 @@
       <nav class="hidden md:flex items-center space-x-6 md:space-x-8">
         <router-link :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/') ? 'nav-active' : '']" to="/">Home</router-link>
         <router-link :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/about') ? 'nav-active' : '']" to="/about">About Us</router-link>
-        <router-link :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/projects') ? 'nav-active' : '']" to="/projects">Our Work</router-link>
-        <router-link :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/gallery') ? 'nav-active' : '']" to="/gallery">Gallery</router-link>
-        <router-link :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/contact') ? 'nav-active' : '']" to="/contact">Contact</router-link>
+    <router-link :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/projects') ? 'nav-active' : '']" to="/projects">Our Work</router-link>
+  <router-link :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/certifications') ? 'nav-active' : '']" to="/certifications">Certificates</router-link>
+  <router-link :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/gallery') ? 'nav-active' : '']" to="/gallery">Gallery</router-link>
+  <router-link :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/contact') ? 'nav-active' : '']" to="/contact">Contact</router-link>
+
+        <!-- Show Dashboard link when user is logged in. Admins go to /admin, others to /dashboard -->
+        <router-link
+          v-if="user"
+          :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/dashboard') ? 'nav-active' : '']"
+          :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
+        >
+          Dashboard
+        </router-link>
       </nav>
 
       <div class="flex items-center space-x-3">
         <template v-if="user">
-          <div class="text-gray-700 font-medium mr-2 hidden sm:block">Hi, {{ user.name }}</div>
+          <!-- If user.name is missing (common for admin seed accounts), fall back to email or 'Admin' -->
+          <div class="text-gray-700 font-medium mr-2 hidden sm:block">Hi, {{ user?.name || user?.email || (user?.role === 'admin' ? 'Admin' : '') }}</div>
           <button @click="logout" class="text-sm text-red-600 hover:text-red-700 font-medium py-1 px-2 rounded-md hover:bg-red-50 transition">Logout</button>
         </template>
         <template v-else>
@@ -42,10 +53,14 @@
     <div v-show="mobileOpen" class="md:hidden px-4 pb-4">
       <div class="flex flex-col space-y-2">
         <router-link @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/">Home</router-link>
-        <router-link @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/about">About</router-link>
+  <router-link @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/about">About</router-link>
         <router-link @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/projects">Our Work</router-link>
-        <router-link @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/gallery">Gallery</router-link>
-        <router-link @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/contact">Contact</router-link>
+        <router-link @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/certifications">Certificates</router-link>
+  <router-link @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/gallery">Gallery</router-link>
+  <router-link @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/contact">Contact</router-link>
+  
+  <!-- mobile dashboard link -->
+  <router-link v-if="user" @click.native="mobileOpen=false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'">Dashboard</router-link>
       </div>
     </div>
 
