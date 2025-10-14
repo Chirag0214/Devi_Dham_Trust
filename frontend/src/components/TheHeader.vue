@@ -3,12 +3,12 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
 
       <router-link to="/"
-        class="flex items-center  text-2xl font-bold text-brand-600 hover:text-brand-700 transition duration-150">
+        class="flex items-center pr-3 text-2xl font-bold text-brand-600 hover:text-brand-700 transition duration-150 -ml-2 cursor-pointer">
         <img src="/images/plantation.avif" alt="logo" class="h-9 w-9 rounded-md object-cover shadow-elevate" />
         <span class="leading-tight">Devi Dhaam Trust</span>
       </router-link>
 
-      <nav class="hidden md:flex items-center space-x-6 md:space-x-8">
+      <nav class="hidden md:flex items-center space-x-6 md:space-x-7">
         <router-link
           :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/') ? 'nav-active' : '']"
           to="/">Home</router-link>
@@ -30,7 +30,7 @@
 
         <!-- Show Dashboard link when user is logged in. Admins go to /admin, others to /dashboard -->
         <router-link v-if="user"
-          :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/dashboard') ? 'nav-active' : '']"
+          :class="['text-gray-600  hover:text-brand-600 transition duration-150 font-medium', isActive('/dashboard') ? 'nav-active' : '']"
           :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'">
           Dashboard
         </router-link>
