@@ -29,7 +29,13 @@
 
         <div class="relative">
           <div class="rounded-xl overflow-hidden shadow-lg">
-            <img ref="heroImg" src="/images/bg-image.avif" alt="volunteers" class="hero-img w-full h-64 object-cover sm:h-80 md:h-96" />
+            <!-- Autoplay carousel: fades between images -->
+            <div class="relative w-full h-64 sm:h-80 md:h-96">
+              <img v-for="(src, i) in carouselImages" :key="i" :src="src"
+                :alt="`slide-${i}`"
+                class="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+                :class="currentSlide === i ? 'opacity-100' : 'opacity-0'" />
+            </div>
           </div>
           <div class="absolute -bottom-8 left-6 right-6">
             <div class="bg-white border rounded-xl p-4 shadow-md flex items-center gap-4">
@@ -163,7 +169,6 @@ import PrimaryButton from '@/components/PrimaryButton.vue';
 import SectionTitle from '@/components/SectionTitle.vue';
 
 // Refs for tilt and reveal
-const heroImg = ref<HTMLElement | null>(null);
 
 function handleTilt(e: MouseEvent, el: HTMLElement) {
   const rect = el.getBoundingClientRect();
@@ -194,6 +199,20 @@ function onCardMouseLeave(e: MouseEvent) {
   resetTilt(target);
 }
 
+// Carousel state (top-level so template can access)
+const carouselImages = [
+  '/images/bg-image.avif',
+  '/images/plantation.avif',
+  '/images/children.jpg',
+  '/images/healthcamp.jpg'
+];
+const currentSlide = ref(0);
+let carouselTimer: number | null = null;
+
+function advance() {
+  currentSlide.value = (currentSlide.value + 1) % carouselImages.length;
+}
+
 let observer: IntersectionObserver | null = null;
 
 onMounted(() => {
@@ -215,20 +234,11 @@ onMounted(() => {
   // observe elements with reveal-hidden class
   document.querySelectorAll('.reveal-hidden').forEach(el => observer?.observe(el));
 
-  // parallax on hero image
-  const onHeroMove = (ev: MouseEvent) => {
-    if (!heroImg.value) return;
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const x = (ev.clientX - w / 2) / w;
-    const y = (ev.clientY - h / 2) / h;
-    heroImg.value.style.transform = `translate3d(${x * 20}px, ${y * 10}px, 0) scale(1.03)`;
-  };
-
-  window.addEventListener('mousemove', onHeroMove);
+  // start carousel autoplay
+  carouselTimer = window.setInterval(advance, 4000);
 
   onBeforeUnmount(() => {
-    window.removeEventListener('mousemove', onHeroMove);
+    if (carouselTimer) window.clearInterval(carouselTimer);
     observer?.disconnect();
   });
 });
