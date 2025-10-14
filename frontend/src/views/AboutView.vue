@@ -1,11 +1,7 @@
 <template>
   <div class="relative text-gray-900 overflow-hidden">
-    <!-- Animated background blobs (same as HomeView) -->
-    <div aria-hidden="true" class="animated-bg pointer-events-none">
-      <div class="bg-blob blob-1"></div>
-      <div class="bg-blob blob-2"></div>
-      <div class="bg-blob blob-3"></div>
-    </div>
+    <!-- Animated background (shared component) -->
+    <AnimatedBackground />
     <div class="relative z-10">
   <!-- Hero (simpler, neutral) -->
   <section class="py-20 md:py-28 overflow-hidden">
@@ -201,6 +197,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { HeartIcon, EyeIcon, ShieldCheckIcon, LightBulbIcon, XMarkIcon, HandRaisedIcon } from '@heroicons/vue/24/solid';
 import { TagIcon } from '@heroicons/vue/24/outline';
+import AnimatedBackground from '@/components/AnimatedBackground.vue';
 
 // Team members data
 const team = ref([
