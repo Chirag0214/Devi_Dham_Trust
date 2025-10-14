@@ -1,5 +1,5 @@
 <template>
-  <div class="relative bg-gray-50 text-gray-900 overflow-hidden">
+  <div class="relative text-gray-900 overflow-hidden">
     <!-- Animated background blobs (same as HomeView) -->
     <div aria-hidden="true" class="animated-bg pointer-events-none">
       <div class="bg-blob blob-1"></div>
@@ -7,8 +7,8 @@
       <div class="bg-blob blob-3"></div>
     </div>
     <div class="relative z-10">
-    <!-- Hero (simpler, neutral) -->
-    <section class="py-20 md:py-28 bg-white overflow-hidden">
+  <!-- Hero (simpler, neutral) -->
+  <section class="py-20 md:py-28 overflow-hidden">
       <div class="container mx-auto px-4 text-center stagger-parent animate-on-scroll">
         <div class="max-w-3xl mx-auto">
           <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 leading-tight text-gray-900 stagger-child">About Devi Dhamm Trust</h1>
@@ -45,7 +45,7 @@
     </section>
 
     <!-- Our story (timeline) -->
-    <section class="py-16 sm:py-24 bg-white">
+  <section class="py-16 sm:py-24">
       <div class="container mx-auto px-4">
         <div class="text-center mb-8 animate-on-scroll">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Story</h2>
@@ -92,7 +92,7 @@
     </section>
 
     <!-- Mission / Vision -->
-    <section class="py-16 sm:py-24 bg-gray-50">
+  <section class="py-16 sm:py-24">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div class="p-8 bg-white rounded-lg shadow-sm border border-gray-100 animate-on-scroll">
@@ -114,7 +114,7 @@
     </section>
 
     <!-- Impact counters -->
-    <section class="py-16 sm:py-24 bg-white">
+  <section class="py-16 sm:py-24">
       <div class="container mx-auto px-4">
         <div class="text-center mb-8 animate-on-scroll">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Impact in Numbers</h2>
@@ -130,7 +130,7 @@
     </section>
 
     <!-- Core values -->
-    <section class="py-16 sm:py-24 bg-gray-50">
+  <section class="py-16 sm:py-24">
       <div class="container mx-auto px-4">
         <div class="text-center mb-8 animate-on-scroll">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Core Values</h2>
@@ -157,7 +157,7 @@
     </section>
 
     <!-- Team -->
-    <section class="py-16 sm:py-24 bg-white">
+  <section class="py-16 sm:py-24">
       <div class="container mx-auto px-4">
         <div class="text-center mb-8 animate-on-scroll">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Meet Our Team</h2>
@@ -450,7 +450,7 @@ const handleEsc = (e: KeyboardEvent) => {
 /* Page background animated blobs */
 
 /* Animated blobs (copied from HomeView) */
-.animated-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.animated-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 .bg-blob { position: absolute; filter: blur(40px) saturate(1.2) opacity(0.18); transform-origin: center; }
 .blob-1 { width: 420px; height: 420px; background: radial-gradient(circle at 30% 30%, #3b82f6, #06b6d4); top: -80px; left: -120px; animation: floatA 10s ease-in-out infinite; }
 .blob-2 { width: 360px; height: 360px; background: radial-gradient(circle at 20% 20%, #f97316, #f43f5e); bottom: -100px; right: -80px; animation: floatB 12s ease-in-out infinite; }
