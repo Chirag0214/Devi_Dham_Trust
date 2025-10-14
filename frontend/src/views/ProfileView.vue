@@ -9,7 +9,7 @@
           <!-- Left: profile card -->
           <aside class="col-span-1 bg-white p-6 rounded shadow">
             <div class="flex flex-col items-center">
-              <div class="w-28 h-28 rounded-full bg-orange-50 flex items-center justify-center text-3xl font-bold text-orange-700">{{ initials }}</div>
+              <div class="w-28 h-28 rounded-full bg-brand-50 flex items-center justify-center text-3xl font-bold text-brand-700">{{ initials }}</div>
               <div class="mt-4 text-lg font-semibold">{{ userName }}</div>
               <div class="text-sm text-gray-500">{{ userEmail }}</div>
 
@@ -48,9 +48,9 @@
             </div>
 
             <div class="mt-5 flex items-center space-x-3">
-              <button @click="save" class="px-4 py-2 bg-orange-600 text-white rounded">Save Changes</button>
+              <button @click="save" class="px-4 py-2 bg-brand-600 text-white rounded">Save Changes</button>
               <button @click="cancel" class="px-4 py-2 border rounded">Cancel</button>
-              <button @click="openChangePassword" class="ml-auto text-sm text-orange-600">Change password</button>
+              <button @click="openChangePassword" class="ml-auto text-sm text-brand-500">Change password</button>
             </div>
 
             <div v-if="showPasswordBox" class="mt-6 border rounded p-4 bg-gray-50">
@@ -74,7 +74,7 @@
                     <div class="text-sm text-gray-500">{{ formatDate(d.date) }} • {{ d.purpose || 'General' }}</div>
                   </div>
                   <div>
-                    <button @click="printReceipt(d)" class="px-3 py-1 bg-orange-600 text-white rounded text-sm">Receipt</button>
+                    <button @click="printReceipt(d)" class="px-3 py-1 bg-brand-600 text-white rounded text-sm">Receipt</button>
                   </div>
                 </li>
               </ul>

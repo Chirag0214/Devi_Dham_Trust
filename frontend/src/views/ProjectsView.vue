@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 py-12">
     <div class="container mx-auto px-4">
-  <h1 class="text-4xl font-extrabold text-center mb-10 text-orange-800">Our Works & Causes</h1>
+  <h1 class="text-4xl font-extrabold text-center mb-10 text-brand-700">Our Works & Causes</h1>
       
       <div v-if="isLoading" class="text-center p-10">
         <p class="text-xl text-gray-600">Loading our latest projects...</p>
@@ -29,7 +29,7 @@
             <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ project.title }}</h2>
             <p class="text-gray-600 mb-6">{{ project.description }}</p>
             
-            <router-link to="#" class="text-orange-600 font-semibold hover:text-orange-800 transition duration-150 self-start">
+            <router-link to="#" class="text-brand-500 font-semibold hover:text-brand-700 transition duration-150 self-start">
               Read More & Donate →
             </router-link>
           </div>

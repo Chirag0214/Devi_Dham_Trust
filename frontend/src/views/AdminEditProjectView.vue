@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6 text-orange-700">Edit Project: {{ formData.title }}</h1>
+    <h1 class="text-3xl font-bold mb-6 text-brand-700">Edit Project: {{ formData.title }}</h1>
     
     <div v-if="isLoading" class="text-center text-xl text-gray-500">Loading project details...</div>
     <div v-else-if="error" class="text-center text-red-600 text-xl">{{ error }}</div>
@@ -35,8 +35,8 @@
         <p class="text-xs text-gray-500 mt-1">Image update ke liye naya feature banana hoga.</p>
       </div>
 
-      <button type="submit" :disabled="isSubmitting"
-          class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50">
+            <button type="submit" :disabled="isSubmitting"
+                    class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 disabled:opacity-50">
         {{ isSubmitting ? 'Updating...' : 'Save Changes' }}
       </button>
 

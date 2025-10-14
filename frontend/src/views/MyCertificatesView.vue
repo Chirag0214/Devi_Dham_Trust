@@ -23,7 +23,7 @@
           </div>
 
           <div class="flex space-x-2">
-            <button @click="openPreview(cert)" class="flex-1 px-3 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700">Preview</button>
+            <button @click="openPreview(cert)" class="flex-1 px-3 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700">Preview</button>
             <button @click="downloadCertificate(cert)" class="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Download</button>
           </div>
         </div>

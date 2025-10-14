@@ -159,7 +159,7 @@ const formatDate = (dateString: string) => {
 
             <div v-else class="bg-white shadow-xl rounded-lg overflow-hidden">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-orange-600 text-white">
+                    <thead class="bg-brand-600 text-white">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">S.No.</th>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Name</th>
@@ -198,7 +198,7 @@ const formatDate = (dateString: string) => {
                                 {{ formatDate(submission.created_at || submission.date) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
-                                <button @click.prevent="openMailClient(submission)" class="bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700">Reply</button>
+                                <button @click.prevent="openMailClient(submission)" class="bg-brand-600 text-white px-3 py-1 rounded hover:bg-brand-700">Reply</button>
                                 <button @click.prevent="deleteSubmission(submission.id)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Remove</button>
                             </td>
                         </tr>
@@ -216,7 +216,7 @@ const formatDate = (dateString: string) => {
 <style scoped>
 .loader {
     border-top-color: #f97316;
-    /* Tailwind orange-600 */
+    /* Tailwind brand-600 (replaced) */
     -webkit-animation: spinner 1.5s linear infinite;
     animation: spinner 1.5s linear infinite;
 }

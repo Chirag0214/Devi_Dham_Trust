@@ -2,7 +2,7 @@
     <div class="min-h-screen flex bg-gray-50">
         <Sidebar :user="user" :is-admin="isAdmin" />
         <main class="container mx-auto p-4">
-            <h1 class="text-3xl font-bold mb-6 text-orange-700">Manage Projects</h1>
+            <h1 class="text-3xl font-bold mb-6 text-brand-700">Manage Projects</h1>
 
             <div v-if="isLoading" class="text-center text-xl text-gray-500">Loading projects...</div>
             <div v-else-if="projects.length === 0" class="text-center text-xl text-gray-500 p-8 border rounded-lg">

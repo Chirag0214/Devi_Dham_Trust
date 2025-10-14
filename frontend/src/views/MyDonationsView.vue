@@ -23,7 +23,7 @@
                     <div class="text-sm text-gray-500">{{ formatDate(d.date) }}</div>
                   </div>
                   <div class="flex items-center space-x-2">
-                    <button @click="printReceipt(d)" class="px-3 py-1 bg-orange-600 text-white rounded text-sm">Receipt</button>
+                    <button @click="printReceipt(d)" class="px-3 py-1 bg-brand-600 text-white rounded text-sm">Receipt</button>
                   </div>
                 </li>
               </ul>

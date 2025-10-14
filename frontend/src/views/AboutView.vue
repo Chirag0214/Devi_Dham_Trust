@@ -1,22 +1,22 @@
 <template>
   <div class="bg-gray-50">
-  <section class="bg-gradient-to-r from-orange-600 to-orange-400 text-white py-20 md:py-28">
+  <section class="bg-gradient-to-r from-brand-600 to-brand-500 text-white py-20 md:py-28">
       <div class="container mx-auto px-4 text-center">
         <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight">About Devi Dhamm Trust</h1>
-  <p class="text-lg md:text-xl text-orange-100 max-w-3xl mx-auto leading-relaxed">
+  <p class="text-lg md:text-xl text-brand-50 max-w-3xl mx-auto leading-relaxed">
           Empowering underprivileged children and communities through education, healthcare, and sustainable
           development. Join us in creating measurable impact and long-term change.
         </p>
 
         <div class="mt-8 flex items-center justify-center gap-6">
           <router-link to="/donate"
-            class="inline-flex items-center gap-3 bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full shadow-2xl hover:bg-white hover:text-orange-600 transition-colors duration-300">
-            <i class="fas fa-heart mr-1"></i>
+            class="inline-flex items-center gap-3 bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full shadow-2xl hover:bg-white hover:text-brand-500 transition-colors duration-300">
+            <HeartIcon class="inline-block h-4 w-4 mr-1 text-red-500" />
             Donate Now
           </router-link>
           <router-link to="/contact"
-            class="inline-flex items-center gap-3 bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-orange-600 transition-colors duration-300">
-            <i class="fas fa-hands-helping mr-1"></i>
+            class="inline-flex items-center gap-3 bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-full hover:bg-white hover:text-brand-500 transition-colors duration-300">
+            <HandRaisedIcon class="inline-block h-4 w-4 mr-1 text-brand-500" />
             Get Involved
           </router-link>
         </div>
@@ -24,15 +24,15 @@
         <!-- Quick stats chips -->
         <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
           <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 text-left">
-            <div class="text-sm text-orange-100">Years of Service</div>
+            <div class="text-sm text-brand-50">Years of Service</div>
             <div class="text-2xl font-bold text-white">10+</div>
           </div>
           <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 text-left">
-            <div class="text-sm text-orange-100">Communities Reached</div>
+            <div class="text-sm text-brand-50">Communities Reached</div>
             <div class="text-2xl font-bold text-white">40+</div>
           </div>
           <div class="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 text-left">
-            <div class="text-sm text-orange-100">Volunteers</div>
+            <div class="text-sm text-brand-50">Volunteers</div>
             <div class="text-2xl font-bold text-white">200+</div>
           </div>
         </div>
@@ -59,10 +59,10 @@
 
           <div class="mb-8 flex justify-between items-center w-full right-timeline">
             <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-orange-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-orange-100">
+            <div class="z-10 flex items-center order-1 bg-brand-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-brand-50">
               <h1 class="mx-auto font-semibold text-lg text-white">2015</h1>
             </div>
-            <div class="order-1 bg-orange-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-orange-100">
+            <div class="order-1 bg-brand-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-brand-50">
               <h3 class="font-bold text-gray-800 text-xl">The Beginning</h3>
               <p class="text-sm leading-snug tracking-wide text-gray-600 text-opacity-100">Started by local volunteers,
                 Devi Dhamm Trust began as a small education initiative to support children in our community.</p>
@@ -71,10 +71,10 @@
 
           <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
             <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-orange-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-orange-100">
+            <div class="z-10 flex items-center order-1 bg-brand-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-brand-50">
               <h1 class="mx-auto text-white font-semibold text-lg">2018</h1>
             </div>
-            <div class="order-1 bg-orange-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-orange-100">
+            <div class="order-1 bg-brand-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-brand-50">
               <h3 class="font-bold text-gray-800 text-xl">Expanding Horizons</h3>
               <p class="text-sm leading-snug tracking-wide text-gray-600 text-opacity-100">We expanded our programs to
                 include health camps and environmental initiatives, reaching more families and creating a wider impact.
@@ -84,10 +84,10 @@
 
           <div class="mb-8 flex justify-between items-center w-full right-timeline">
             <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-orange-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-orange-100">
+            <div class="z-10 flex items-center order-1 bg-brand-600 shadow-xl w-14 h-14 rounded-full ring-4 ring-brand-50">
               <h1 class="mx-auto font-semibold text-lg text-white">Today</h1>
             </div>
-            <div class="order-1 bg-orange-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-orange-100">
+            <div class="order-1 bg-brand-50 rounded-lg shadow-xl w-full md:w-5/12 px-6 py-4 border border-brand-50">
               <h3 class="font-bold text-gray-800 text-xl">A Growing Movement</h3>
               <p class="text-sm leading-snug tracking-wide text-gray-600 text-opacity-100">With the help of our donors
                 and volunteers, we continue to scale our work, keeping the community at the heart of everything we do.
@@ -102,8 +102,8 @@
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div class="p-8 bg-white rounded-lg shadow-lg border border-gray-100 transition-transform hover:shadow-2xl hover:-translate-y-1">
-            <div class="flex items-center mb-4">
-              <i class="fas fa-bullseye text-4xl text-orange-600 mr-4"></i>
+        <div class="flex items-center mb-4">
+          <TagIcon class="text-brand-500 mr-4 h-10 w-10" />
               <h3 class="text-3xl font-bold text-gray-900">Our Mission</h3>
             </div>
             <p class="text-lg text-gray-600">To empower underprivileged children and communities with holistic
@@ -112,7 +112,7 @@
           </div>
             <div class="p-8 bg-white rounded-lg shadow-lg border border-gray-100 transition-transform hover:shadow-2xl hover:-translate-y-1">
             <div class="flex items-center mb-4">
-            <i class="fas fa-eye text-4xl text-orange-400 mr-4"></i>
+            <EyeIcon class="text-brand-300 mr-4 h-10 w-10" />
             <h3 class="text-3xl font-bold text-gray-900">Our Vision</h3>
             </div>
             <p class="text-lg text-gray-600">We envision a world where every child has the chance to thrive. We focus on
@@ -123,16 +123,16 @@
       </div>
     </section>
 
-  <section class="py-16 sm:py-24 bg-orange-600 text-white">
+  <section class="py-16 sm:py-24 bg-brand-600 text-white">
       <div class="container mx-auto px-4">
         <div class="text-center mb-12">
           <h2 class="text-3xl md:text-4xl font-bold">Our Impact in Numbers</h2>
-          <p class="mt-4 text-lg text-orange-200 max-w-2xl mx-auto">Every number tells a story of a life changed.</p>
+          <p class="mt-4 text-lg text-brand-100 max-w-2xl mx-auto">Every number tells a story of a life changed.</p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
           <div v-for="c in counters" :key="c.id" class="p-6 bg-white/5 rounded-lg">
             <div class="text-5xl md:text-6xl font-extrabold text-white" :data-target="c.value">0</div>
-            <div class="mt-2 text-lg font-medium text-orange-100 uppercase tracking-wider">{{ c.label }}</div>
+            <div class="mt-2 text-lg font-medium text-brand-50 uppercase tracking-wider">{{ c.label }}</div>
           </div>
         </div>
       </div>
@@ -146,19 +146,19 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
-            <i class="fas fa-heart text-4xl text-red-500 mb-4"></i>
+            <HeartIcon class="text-red-500 mb-4 h-10 w-10" />
             <h4 class="text-xl font-semibold text-gray-900 mb-2">Compassion</h4>
             <p class="text-gray-600">We approach our work with empathy and a deep sense of care for the communities we
               serve.</p>
           </div>
           <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
-            <i class="fas fa-shield-alt text-4xl text-blue-500 mb-4"></i>
+            <ShieldCheckIcon class="text-blue-500 mb-4 h-10 w-10" />
             <h4 class="text-xl font-semibold text-gray-900 mb-2">Integrity</h4>
             <p class="text-gray-600">We are committed to transparency and accountability in all our actions and use of
               resources.</p>
           </div>
           <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
-            <i class="fas fa-lightbulb text-4xl text-yellow-500 mb-4"></i>
+            <LightBulbIcon class="text-yellow-500 mb-4 h-10 w-10" />
             <h4 class="text-xl font-semibold text-gray-900 mb-2">Empowerment</h4>
             <p class="text-gray-600">We believe in providing tools and knowledge to help individuals build their own
               futures.</p>
@@ -177,10 +177,10 @@
           <div v-for="m in team" :key="m.id" @click="openMember(m)"
             class="group bg-white rounded-xl shadow-md p-6 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer">
               <img :src="m.img" :alt="m.name"
-              class="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-lg border-4 border-white group-hover:border-orange-200 transition-all duration-300" />
+              class="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-lg border-4 border-white group-hover:border-brand-100 transition-all duration-300" />
             <h4 class="text-xl font-semibold text-gray-900">{{ m.name }}</h4>
             <div class="mt-2">
-              <span class="inline-block bg-orange-50 text-orange-700 text-sm font-medium px-3 py-1 rounded-full">{{ m.role }}</span>
+              <span class="inline-block bg-brand-50 text-brand-700 text-sm font-medium px-3 py-1 rounded-full">{{ m.role }}</span>
             </div>
           </div>
         </div>
@@ -194,14 +194,14 @@
           :class="selectedMember ? 'scale-100' : 'scale-95'">
           <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition" @click="closeMember"
             aria-label="Close modal">
-            <i class="fas fa-times fa-lg"></i>
+            <XMarkIcon class="h-5 w-5" />
           </button>
           <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <img :src="selectedMember.img" :alt="selectedMember.name"
-              class="w-36 h-36 rounded-full object-cover border-4 border-orange-200 shadow-md" />
+              class="w-36 h-36 rounded-full object-cover border-4 border-brand-100 shadow-md" />
             <div class="text-center sm:text-left">
               <h3 class="text-2xl font-bold text-gray-900">{{ selectedMember.name }}</h3>
-              <p class="text-orange-600 font-semibold">{{ selectedMember.role }}</p>
+              <p class="text-brand-500 font-semibold">{{ selectedMember.role }}</p>
               <p class="mt-4 text-gray-700 leading-relaxed">{{ selectedMember.bio }}</p>
             </div>
           </div>
@@ -213,6 +213,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
+import { HeartIcon, EyeIcon, ShieldCheckIcon, LightBulbIcon, XMarkIcon, HandRaisedIcon } from '@heroicons/vue/24/solid';
+import { TagIcon } from '@heroicons/vue/24/outline';
 
 // Team members data
 const team = ref([
@@ -318,16 +320,16 @@ const handleEsc = (e: KeyboardEvent) => {
   width: 50%;
   left: 0;
   top: 1.5rem;
-  border-top: 2px dashed #ffd8a8; /* orange-200 */
+  border-top: 2px dashed #fcefe6; /* brand-100 (approx) */
 }
 
-.left-timeline::before {
+  .left-timeline::before {
   content: '';
   position: absolute;
   width: 50%;
   right: 0;
   top: 1.5rem;
-  border-top: 2px dashed #ffd8a8; /* orange-200 */
+  border-top: 2px dashed #fcefe6; /* brand-100 (approx) */
 }
 
 @media (max-width: 767px) {

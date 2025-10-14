@@ -19,7 +19,7 @@
           </div>
 
           <div class="flex">
-            <button @click="openPreview(cert)" class="w-full px-3 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700">Preview</button>
+            <button @click="openPreview(cert)" class="w-full px-3 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700">Preview</button>
           </div>
         </div>
       </section>
