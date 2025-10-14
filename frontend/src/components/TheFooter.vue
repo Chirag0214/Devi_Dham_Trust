@@ -1,6 +1,6 @@
 <template>
-  <footer class="bg-gray-900 text-white py-12">
-    <div class="container grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+  <footer class="bg-gray-900 text-white py-6">
+    <div class="container grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
       <div>
   <h3 class="text-xl font-bold mb-4 text-brand-300">Devi Dhamm Trust</h3>
         <p class="text-gray-400 text-sm leading-relaxed max-w-xs">
@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div class="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
+    <div class="border-t border-gray-800 mt-6 pt-4 text-center text-gray-500 text-sm">
       &copy; {{ currentYear }} Devi Dhamm Trust. All rights reserved.
     </div>
   </footer>
