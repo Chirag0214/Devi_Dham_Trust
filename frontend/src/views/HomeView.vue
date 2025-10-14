@@ -50,8 +50,7 @@
       <p class="text-gray-700 mb-8 max-w-2xl">We provide access to essential resources, foster sustainable livelihoods, and create opportunities that allow individuals and communities to thrive.</p>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="e => handleTilt(e, $event.currentTarget)" @mouseleave="e => resetTilt($event.currentTarget)">
-              <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
+        <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
           <div class="flex items-center gap-4">
             <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
               <!-- community icon -->
@@ -66,7 +65,6 @@
           </div>
         </div>
 
-  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden" @mousemove="e => handleTilt(e, $event.currentTarget)" @mouseleave="e => resetTilt($event.currentTarget)">
         <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
           <div class="flex items-center gap-4">
             <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
@@ -82,7 +80,6 @@
           </div>
         </div>
 
-  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden" @mousemove="e => handleTilt(e, $event.currentTarget)" @mouseleave="e => resetTilt($event.currentTarget)">
         <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
           <div class="flex items-center gap-4">
             <div class="p-3 bg-brand-100 text-brand-600 rounded-lg">
@@ -109,7 +106,7 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="e => handleTilt(e, $event.currentTarget)" @mouseleave="e => resetTilt($event.currentTarget)">
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
           <img src="/images/plantation.avif" alt="future leaders" class="w-full h-40 object-cover" />
           <div class="p-4">
             <h3 class="font-semibold">Future Leaders Program</h3>
@@ -118,7 +115,7 @@
           </div>
         </div>
 
-  <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="e => handleTilt(e, $event.currentTarget)" @mouseleave="e => resetTilt($event.currentTarget)">
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
           <img src="/images/plantation1.avif" alt="green earth" class="w-full h-40 object-cover" />
           <div class="p-4">
             <h3 class="font-semibold">Green Earth Initiative</h3>
@@ -127,10 +124,7 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden" @mousemove="e => handleTilt(e, $event.currentTarget)" @mouseleave="e => resetTilt($event.currentTarget)">
-    <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
-    <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
-    <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm tilt-card reveal-hidden relative card-sheen" @mousemove="onCardMouseMove" @mouseleave="onCardMouseLeave">
           <img src="/images/bg-image.avif" alt="health" class="w-full h-40 object-cover" />
           <div class="p-4">
             <h3 class="font-semibold">Project Health & Hope</h3>
@@ -186,6 +180,18 @@ function handleTilt(e: MouseEvent, el: HTMLElement) {
 
 function resetTilt(el: HTMLElement) {
   el.style.transform = '';
+}
+
+function onCardMouseMove(e: MouseEvent) {
+  const target = e.currentTarget as HTMLElement | null;
+  if (!target) return;
+  handleTilt(e, target);
+}
+
+function onCardMouseLeave(e: MouseEvent) {
+  const target = e.currentTarget as HTMLElement | null;
+  if (!target) return;
+  resetTilt(target);
 }
 
 let observer: IntersectionObserver | null = null;
