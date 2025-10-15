@@ -4,7 +4,7 @@
 
       <router-link to="/"
         class="flex items-center pr-3 text-2xl font-bold text-brand-600 hover:text-brand-700 transition duration-150 -ml-2 cursor-pointer">
-        <img src="/images/plantation.avif" alt="logo" class="h-9 w-9 rounded-md object-cover shadow-elevate mr-2" />
+        <img src="/images/temple.jpg" alt="logo" class="h-9 w-9 rounded-md object-cover shadow-elevate mr-2" />
         <span class="leading-tight">Devi Dhaam Trust</span>
       </router-link>
 
@@ -234,5 +234,21 @@ window.addEventListener('auth-action', () => {
   to {
     transform: scaleX(1);
   }
+}
+
+/* Accessibility: don't show the browser focus rectangle when links/buttons are clicked by mouse,
+   but keep a visible indicator for keyboard users. Uses :focus-visible so keyboard users still see focus.
+*/
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Provide a clear keyboard focus ring for accessibility */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid rgba(99,102,241,0.18); /* subtle soft ring */
+  outline-offset: 2px;
 }
 </style>

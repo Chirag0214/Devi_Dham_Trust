@@ -41,6 +41,10 @@
                 <label class="block mb-2 text-sm font-medium">Phone</label>
                 <input v-model="form.phone" class="w-full border px-3 py-2 rounded" />
               </div>
+              <div v-if="isAdmin">
+                <label class="block mb-2 text-sm font-medium">Role</label>
+                <input v-model="form.role" disabled class="w-full border px-3 py-2 rounded bg-gray-50" />
+              </div>
               <div>
                 <label class="block mb-2 text-sm font-medium">Member ID</label>
                 <input v-model="memberId" disabled class="w-full border px-3 py-2 rounded bg-gray-50" />
@@ -99,7 +103,7 @@ const isAdmin = computed(() => {
   return !!(user.value && (user.value.role === 'admin' || user.value.email === 'admin@devidhaam.org'));
 });
 
-const form = reactive({ name: user.value?.name || '', email: user.value?.email || '', phone: '' });
+const form = reactive({ name: user.value?.name || '', email: user.value?.email || '', phone: (user.value as any)?.phone || '', role: (user.value as any)?.role || (isAdmin.value ? 'admin' : 'member') });
 const pw = reactive({ current: '', new: '' });
 const showPasswordBox = ref(false);
 
@@ -187,13 +191,13 @@ onMounted(() => {
 
 function save() {
   // Try to persist profile to backend if token present
-  const updated = { ...(user.value || {}), name: form.name, email: form.email };
+  const updated = { ...(user.value || {}), name: form.name, email: form.email, phone: form.phone, role: form.role };
   const token = (user.value as any)?.token;
   if (token) {
     fetch('http://localhost:3000/api/me', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ name: form.name, email: form.email }),
+      body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, role: form.role }),
     }).then(async (res) => {
       if (res.ok) {
         const d = await res.json();

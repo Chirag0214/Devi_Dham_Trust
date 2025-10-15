@@ -1,12 +1,12 @@
 <template>
   <aside v-if="isAdmin" :class="[collapsed ? 'w-16' : 'w-64', 'bg-[#2f4552] text-white flex flex-col transition-all duration-200 overflow-hidden']">
     <div class="px-4 py-6 border-b border-black/10">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-[#0ea5a4] rounded flex items-center justify-center">+</div>
-        <div v-show="!collapsed" class="text-sm font-semibold">Dashboard</div>
+        <router-link :to="'/profile'" class="flex items-center gap-3 no-underline">
+          <div class="w-8 h-8 bg-[#0ea5a4] rounded flex items-center justify-center">+</div>
+          <div v-show="!collapsed" class="text-sm font-semibold">Profile</div>
+    </router-link>
 
-    </div>
-    </div>
+  </div>
 
     <nav class="flex-1 overflow-auto py-4">
       <!-- make ul fill nav height and distribute items according to sidebar height -->
