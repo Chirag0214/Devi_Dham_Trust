@@ -48,8 +48,9 @@
           <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">From a small seed of an idea to a growing tree of impact.</p>
         </div>
 
-        <div class="relative stagger-parent">
-          <div class="absolute left-1/2 h-full border-l-2 border-gray-100 hidden md:block"></div>
+          <div class="relative stagger-parent">
+          <!-- center vertical timeline line: make it darker to match the dashed connectors -->
+          <div class="absolute left-1/2 h-full border-l-2 border-gray-700 hidden md:block"></div>
 
           <div class="mb-8 flex justify-between items-center w-full right-timeline animate-on-scroll stagger-parent">
             <div class="order-1 md:w-5/12"></div>
@@ -368,7 +369,8 @@ const handleEsc = (e: KeyboardEvent) => {
   width: 50%;
   left: 0;
   top: 1.5rem;
-  border-top: 2px dashed #f3f4f6; /* muted */
+  /* Make the dashed timeline more visible (dark gray). */
+  border-top: 2px dashed #374151; /* gray-700 */
 }
 
 .left-timeline::before {
@@ -377,7 +379,8 @@ const handleEsc = (e: KeyboardEvent) => {
   width: 50%;
   right: 0;
   top: 1.5rem;
-  border-top: 2px dashed #f3f4f6; /* muted */
+  /* Make the dashed timeline more visible (dark gray). */
+  border-top: 2px dashed #374151; /* gray-700 */
 }
 
 @media (max-width: 767px) {
