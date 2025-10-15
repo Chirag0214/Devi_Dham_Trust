@@ -28,10 +28,10 @@
           :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/contact') ? 'nav-active' : '']"
           to="/contact">Contact</router-link>
 
-        <!-- Show Dashboard link when user is logged in. Admins go to /admin, others to /dashboard -->
-        <router-link v-if="user"
+        <!-- Show Dashboard link when a non-admin user is logged in. Admin users are redirected to /admin and don't need the Dashboard nav item. -->
+        <router-link v-if="user && !(user.role === 'admin' || user.email === 'admin@devidhaam.org')"
           :class="['text-gray-600  hover:text-brand-600 transition duration-150 font-medium', isActive('/dashboard') ? 'nav-active' : '']"
-          :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'">
+          :to="'/dashboard'">
           Dashboard
         </router-link>
       </nav>
@@ -39,22 +39,30 @@
       <div class="flex items-center space-x-3">
         <template v-if="user">
           <!-- User menu: clickable name opens dropdown with Dashboard and Logout -->
-          <div class="relative">
+          <div class="relative" ref="userMenuRef">
             <button @click="toggleUserMenu"
-              class="flex items-center text-gray-700 font-medium mr-2 hidden sm:inline-flex space-x-2 focus:outline-none">
-              <span>Hi, {{ user?.name || user?.email || (user?.role === 'admin' ? 'Admin' : '') }}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+              class="flex items-center text-gray-700 font-medium mr-2 hidden sm:inline-flex space-x-2 focus:outline-none hover:bg-gray-50 px-2 py-1 rounded-md"
+              :aria-expanded="userMenuOpen" aria-haspopup="true" type="button">
+              <!-- avatar -->
+              <div class="h-7 w-7 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-sm font-semibold mr-1 shadow-sm">
+                {{ displayInitial }}
+              </div>
+              <span class="select-none">Hi, {{ user?.name || user?.email || (user?.role === 'admin' ? 'Admin' : '') }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 text-gray-500 caret', userMenuOpen ? 'open' : '']" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd" />
               </svg>
             </button>
 
             <!-- Dropdown -->
-            <div v-if="userMenuOpen" ref="userMenuRef"
-              class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
-              <router-link :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @click="userMenuOpen = false">Dashboard</router-link>
-              <button @click="handleLogout" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</button>
-            </div>
+            <transition name="dropdown">
+              <div v-if="userMenuOpen"
+                class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-xl py-1 z-50 ring-1 ring-black ring-opacity-5"
+                role="menu" aria-label="User menu">
+                <router-link :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" @click="userMenuOpen = false">Dashboard</router-link>
+                <button @click="handleLogout" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50" role="menuitem">Logout</button>
+              </div>
+            </transition>
           </div>
         </template>
         <template v-else>
@@ -95,10 +103,10 @@
         <router-link @click.native="mobileOpen = false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50"
           to="/contact">Contact</router-link>
 
-        <!-- mobile dashboard link -->
-        <router-link v-if="user" @click.native="mobileOpen = false"
+        <!-- mobile dashboard link for non-admin users only -->
+        <router-link v-if="user && !(user.role === 'admin' || user.email === 'admin@devidhaam.org')" @click.native="mobileOpen = false"
           class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50"
-          :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'">Dashboard</router-link>
+          :to="'/dashboard'">Dashboard</router-link>
       </div>
     </div>
 
@@ -126,7 +134,7 @@
 </template>
 <script setup lang="ts">
 import PrimaryButton from './PrimaryButton.vue';
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import auth, { clearAuth } from '@/stores/auth';
 
@@ -167,6 +175,14 @@ const logout = () => {
 const toggleUserMenu = () => {
   userMenuOpen.value = !userMenuOpen.value;
 };
+
+const displayInitial = computed(() => {
+  const current = (user && (user as any).value) || null;
+  const name = current?.name || current?.email || '';
+  if (!name) return '';
+  const first = String(name).trim().charAt(0).toUpperCase();
+  return first;
+});
 
 const handleLogout = () => {
   // close menu immediately and perform logout flow
@@ -274,6 +290,30 @@ window.addEventListener('auth-action', () => {
   background: linear-gradient(90deg, #fb923c, #f97316);
   transform-origin: left center;
   animation: navUnderline 0.35s ease forwards;
+}
+
+/* Dropdown animation */
+.dropdown-enter-from {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+}
+.dropdown-enter-active {
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
+}
+.dropdown-leave-active {
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+/* caret rotation when open */
+.caret {
+  transition: transform 160ms ease;
+}
+.caret.open {
+  transform: rotate(180deg);
 }
 
 @keyframes navUnderline {
