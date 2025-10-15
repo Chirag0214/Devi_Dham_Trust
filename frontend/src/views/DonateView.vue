@@ -14,19 +14,35 @@ import { QrCodeIcon, BuildingLibraryIcon, GlobeAltIcon } from '@heroicons/vue/24
           <form @submit.prevent="submitDetails" class="space-y-4">
             <div>
               <label for="donor-name" class="block text-sm font-medium text-gray-700">Full Name</label>
-              <input v-model="donor.name" type="text" id="donor-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+              <input v-model="donor.name" type="text" id="donor-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="As on PAN / Receipt">
             </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="donor-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                <input v-model="donor.email" type="email" id="donor-email" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="you@example.com">
+              </div>
+              <div>
+                <label for="donor-mobile" class="block text-sm font-medium text-gray-700">Mobile Number</label>
+                <input v-model="donor.mobile" type="tel" id="donor-mobile" required pattern="[0-9]{10}" maxlength="10" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="10-digit mobile">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="donor-pan" class="block text-sm font-medium text-gray-700">PAN Number</label>
+                <input v-model="donor.pan" @input="onPanInput" type="text" id="donor-pan" required maxlength="10" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 uppercase" placeholder="ABCDE1234F">
+                <p class="text-xs text-gray-500 mt-1">PAN will be saved/displayed in UPPERCASE.</p>
+              </div>
+              <div>
+                <label for="donation-amount" class="block text-sm font-medium text-gray-700">Donation Amount (₹)</label>
+                <input v-model.number="donor.amount" type="number" id="donation-amount" min="100" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="Minimum ₹100">
+              </div>
+            </div>
+
             <div>
-              <label for="donor-email" class="block text-sm font-medium text-gray-700">Email Address</label>
-              <input v-model="donor.email" type="email" id="donor-email" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
+              <button type="button" @click="pay" class="w-full px-4 py-2 bg-brand-600 text-white font-medium rounded-md hover:bg-brand-700 transition">Pay ₹{{ donor.amount }}</button>
             </div>
-            <div>
-              <label for="donation-amount" class="block text-sm font-medium text-gray-700">Donation Amount (₹)</label>
-              <input v-model.number="donor.amount" type="number" id="donation-amount" min="100" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2">
-            </div>
-            <button type="submit" class="w-full px-4 py-2 bg-brand-600 text-white font-medium rounded-md hover:bg-brand-700 transition">
-              Next: Select Payment Method
-            </button>
           </form>
         </div>
 
@@ -110,9 +126,11 @@ import { ref } from 'vue';
 
 // Reactive state for donor form
 const donor = reactive({
-    name: '',
-    email: '',
-    amount: 500 // Default amount
+  name: '',
+  email: '',
+  pan: '',
+  mobile: '',
+  amount: 500 // Default amount
 });
 
 // Error state for payment
@@ -120,8 +138,8 @@ const payError = ref('');
 
 // Mock function for submitting form details
 function submitDetails() {
-    if (donor.name && donor.email && donor.amount >= 100) {
-        alert(`Thank you ${donor.name}! Please proceed to step 2 or 3 to complete your donation of ₹${donor.amount}.`);
+  if (donor.name && donor.email && donor.amount >= 100 && donor.pan && donor.mobile && String(donor.mobile).length === 10) {
+    alert(`Thank you ${donor.name}! Please proceed to step 2 or 3 to complete your donation of ₹${donor.amount}.`);
         // **********************************************
         // TODO: Iske baad user ko payment steps par le jaana hai.
         // Ya toh form ko hide karke payment method ko highlight karein,
@@ -143,7 +161,18 @@ function copyToClipboard(text: string, fieldName: string) {
 
 // Dummy pay function for test payment button
 function pay() {
-    alert(`Test payment of ₹${donor.amount} initiated! (No real transaction will occur.)`);
+  if (!donor.name || !donor.email || !donor.pan || !donor.mobile || donor.amount < 100) {
+    alert('Please complete the donor details correctly before proceeding to payment.');
+    return;
+  }
+  alert(`Test payment of ₹${donor.amount} initiated! (No real transaction will occur.)`);
+}
+
+// Ensure PAN input is uppercased and trimmed
+function onPanInput(e: Event) {
+  const target = e.target as HTMLInputElement;
+  target.value = target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  donor.pan = target.value;
 }
 </script>
 
