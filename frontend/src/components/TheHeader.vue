@@ -64,7 +64,7 @@
               </div>
             </transition>
           </div>
-        </template>
+        </template> 
         <template v-else>
           <router-link to="/login"
             class="text-gray-600 font-medium py-2 px-3 rounded-md hover:bg-gray-100 transition duration-150">Login</router-link>
