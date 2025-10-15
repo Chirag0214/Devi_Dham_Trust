@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-gray-900 text-white py-6">
+  <footer class="bg-gray-900 text-white py-6 relative z-20">
     <div class="container grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
       <div>
   <h3 class="text-xl font-bold mb-4 text-brand-300">Devi Dhamm Trust</h3>
