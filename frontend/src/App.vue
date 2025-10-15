@@ -1,6 +1,5 @@
 <template>
   <div id="app" class="min-h-screen flex flex-col bg-gray-50 font-sans antialiased text-gray-800 relative">
-    <AnimatedBackground />
     <div class="relative z-10 w-full">
       <TheHeader />
 
@@ -20,7 +19,6 @@
 <script setup lang="ts">
 import TheHeader from '@/components/TheHeader.vue';
 import TheFooter from '@/components/TheFooter.vue';
-import AnimatedBackground from '@/components/AnimatedBackground.vue';
 </script>
 
 <style>

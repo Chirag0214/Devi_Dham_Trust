@@ -16,23 +16,27 @@ const blob1 = computed(() => {
   // allow explicit numeric override for green alpha (0..1)
   const explicit = typeof props.greenAlpha === 'number' ? props.greenAlpha : undefined;
   if (props.soften) {
-    const a1 = explicit ?? 0.55;
-    const a2 = Math.max(0, (explicit ? explicit - 0.2 : 0.35));
-    return `radial-gradient(circle at 30% 30%, rgba(16,185,129,${a1}), rgba(16,185,129,${a2}) 40%, rgba(20,184,166,0.03) 70%)`;
+    // slightly lighter but still very visible: raise green luminance and keep strong alpha
+    const a1 = explicit ?? 0.82; // a touch lower than before so it's lighter but visible
+    const a2 = Math.max(0, (explicit ? Math.max(0, explicit - 0.10) : 0.68));
+    // lighter, fresher green tones
+    return `radial-gradient(circle at 30% 30%, rgba(38,160,110,${a1}), rgba(34,145,100,${a2}) 40%, rgba(34,160,110,0.10) 70%)`;
   }
-  return 'radial-gradient(circle at 30% 30%, rgba(16,185,129,0.95), rgba(16,185,129,0.65) 40%, rgba(20,184,166,0.05) 70%)';
+  // non-soft mode: lighter vivid-green with high visibility
+  return 'radial-gradient(circle at 30% 30%, rgba(40,170,120,0.96), rgba(34,145,100,0.86) 40%, rgba(34,160,110,0.12) 70%)';
 });
 
 const blob2 = computed(() => {
   if (props.soften) {
-    return 'radial-gradient(circle at 70% 30%, rgba(14,165,233,0.55), rgba(14,165,233,0.32) 40%, rgba(56,189,248,0.02) 70%)';
+    // slightly darker blue and higher opacity
+    return 'radial-gradient(circle at 70% 30%, rgba(12,140,198,0.68), rgba(12,140,198,0.46) 40%, rgba(48,160,210,0.03) 70%)';
   }
-  return 'radial-gradient(circle at 70% 30%, rgba(14,165,233,0.95), rgba(14,165,233,0.55) 40%, rgba(56,189,248,0.03) 70%)';
+  return 'radial-gradient(circle at 70% 30%, rgba(12,140,198,0.98), rgba(12,140,198,0.68) 40%, rgba(48,160,210,0.05) 70%)';
 });
 
 const blob3 = computed(() => {
-  // keep pink/purple as-is for now
-  return 'radial-gradient(circle at 20% 80%, rgba(236,72,153,0.88), rgba(236,72,153,0.45) 40%, rgba(249,115,22,0.03) 70%)';
+  // slightly darker pink/purple tones and stronger mid alpha
+  return 'radial-gradient(circle at 20% 80%, rgba(200,61,130,0.92), rgba(200,61,130,0.60) 40%, rgba(240,100,20,0.04) 70%)';
 });
 
 const bgVars = computed(() => ({
@@ -46,7 +50,8 @@ const bgVars = computed(() => ({
 <style>
 /* Make these styles global so the fixed background sits behind app content and animations run */
 .animated-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
-.animated-bg .bg-blob { position: absolute; filter: blur(48px) saturate(1.2); opacity: 0.55; transform: translateZ(0); will-change: transform, opacity; border-radius: 50%; }
+.animated-bg .bg-blob { position: absolute; filter: blur(48px) saturate(1.3); opacity: 0.68; transform: translateZ(0); will-change: transform, opacity; border-radius: 50%; }
+.animated-bg .blob-1 { opacity: 0.88; }
 .animated-bg .blob-1 { width: 520px; height: 520px; left: -8%; top: -12%; background: var(--blob-1); animation: blobMove1 14s ease-in-out infinite; }
 .animated-bg .blob-2 { width: 420px; height: 420px; right: -6%; bottom: -8%; background: var(--blob-2); animation: blobMove2 18s ease-in-out infinite; }
 .animated-bg .blob-3 { width: 360px; height: 360px; left: 30%; bottom: -16%; background: var(--blob-3); animation: blobMove3 20s ease-in-out infinite; }

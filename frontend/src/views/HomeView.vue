@@ -1,11 +1,7 @@
 <template>
   <div class="relative bg-gray-50 text-gray-900 overflow-hidden">
-    <!-- Animated background blobs -->
-    <div aria-hidden="true" class="animated-bg pointer-events-none">
-      <div class="bg-blob blob-1"></div>
-      <div class="bg-blob blob-2"></div>
-      <div class="bg-blob blob-3"></div>
-    </div>
+    <!-- Shared animated background (same as About) -->
+    <AnimatedBackground :soften="true" :greenAlpha="0.35" />
     <!-- Hero -->
   <section class="max-w-7xl mx-auto px-6 py-16 reveal-hidden relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -55,12 +51,7 @@
       <h2 class="text-2xl font-bold mb-6">Our Guiding Mission</h2>
       <p class="text-gray-700 mb-8 max-w-2xl">We provide access to essential resources, foster sustainable livelihoods, and create opportunities that allow individuals and communities to thrive.</p>
 
-  <!-- subtle professional pink blob behind the cards -->
-  <div class="mission-pink-blob" aria-hidden="true"></div>
-  <!-- right-side blended accent (pink + blue) -->
-  <div class="mission-right-accent" aria-hidden="true"></div>
-  <!-- extra right-side pink boost -->
-  <div class="mission-right-pink" aria-hidden="true"></div>
+
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 relative z-10">
   <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative pill-card group">
@@ -174,6 +165,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import PrimaryButton from '@/components/PrimaryButton.vue';
 import SectionTitle from '@/components/SectionTitle.vue';
+import AnimatedBackground from '@/components/AnimatedBackground.vue';
 
 // Refs for tilt and reveal
 
@@ -323,23 +315,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.animated-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
-.bg-blob { position: absolute; filter: blur(40px) saturate(1.2) opacity(0.18); transform-origin: center; }
-.blob-1 { width: 420px; height: 420px; background: radial-gradient(circle at 30% 30%, #3b82f6, #06b6d4); top: -80px; left: -120px; animation: floatA 10s ease-in-out infinite; }
-.blob-2 { width: 360px; height: 360px; background: radial-gradient(circle at 20% 20%, #f97316, #f43f5e); bottom: -100px; right: -80px; animation: floatB 12s ease-in-out infinite; }
-.blob-3 { width: 280px; height: 280px; background: radial-gradient(circle at 40% 40%, #10b981, #7c3aed); top: 180px; right: -60px; animation: floatC 14s ease-in-out infinite; }
-
-@keyframes floatA { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(18px) rotate(6deg); } 100% { transform: translateY(0) rotate(0deg); } }
-@keyframes floatB { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(-6deg); } 100% { transform: translateY(0) rotate(0deg); } }
-@keyframes floatC { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(12px) rotate(4deg); } 100% { transform: translateY(0) rotate(0deg); } }
-
 .reveal-hidden { opacity: 0; transform: translateY(16px) scale(0.995); transition: opacity 600ms ease, transform 700ms cubic-bezier(.2,.9,.3,1); }
 .reveal-visible { opacity: 1; transform: translateY(0) scale(1); }
 
 .tilt-card { transition: transform 300ms cubic-bezier(.2,.9,.3,1); will-change: transform; }
 .hero-img { transition: transform 600ms cubic-bezier(.2,.9,.3,1); will-change: transform; }
-
-.animated-bg .bg-blob { border-radius: 50%; }
 
 </style>
 
