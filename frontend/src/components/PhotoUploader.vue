@@ -49,7 +49,17 @@
         <span v-else>Upload Photo</span>
       </button>
 
-      <p v-if="message" :class="['text-sm font-medium mt-3', isError ? 'text-red-600' : 'text-green-600']">{{ message }}</p>
+      <!-- Toast for success / error messages -->
+      <div aria-live="polite" class="fixed top-6 right-6 z-50">
+        <transition name="toast-fade">
+          <div v-if="toastVisible" :class="['px-4 py-3 rounded-lg shadow-lg max-w-sm', toastType === 'error' ? 'bg-red-600 text-white' : 'bg-green-600 text-white']">
+            <div class="flex items-start gap-3">
+              <div class="flex-1 text-sm font-medium">{{ toastMessage }}</div>
+              <button @click="hideToast" class="text-white opacity-80 hover:opacity-100">✕</button>
+            </div>
+          </div>
+        </transition>
+      </div>
 
     </form>
   </div>
@@ -65,6 +75,10 @@ const category = ref('General');
 const isUploading = ref(false);
 const message = ref('');
 const isError = ref(false);
+const toastVisible = ref(false);
+const toastMessage = ref('');
+const toastType = ref<'success' | 'error'>('success');
+let toastTimer: ReturnType<typeof setTimeout> | null = null;
 const fileInput = ref<HTMLInputElement | null>(null);
 
 const onFileChange = (e: Event) => {
@@ -117,8 +131,12 @@ const handleSubmit = async () => {
     const result = await response.json();
 
     if (response.ok) {
-      message.value = `Success! ${result.message} Gallery page par dikhne ke liye refresh karein.`;
-      isError.value = false;
+      // Show animated toast instead of inline message
+      const successText = result?.message || 'Photo uploaded successfully.';
+      toastMessage.value = 'Photos added in gallery — ' + successText;
+      toastType.value = 'success';
+      showToast();
+
       // Form reset
       caption.value = '';
       category.value = 'General';
@@ -130,10 +148,35 @@ const handleSubmit = async () => {
       throw new Error(result.message || 'Server error occurred.');
     }
   } catch (error: any) {
-    message.value = `Error: ${error.message}`;
-    isError.value = true;
+    // Show error in toast
+    toastMessage.value = `Error: ${error.message}`;
+    toastType.value = 'error';
+    showToast();
   } finally {
     isUploading.value = false;
   }
 };
+
+const showToast = (duration = 4200) => {
+  toastVisible.value = true;
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toastVisible.value = false;
+    toastTimer = null;
+  }, duration);
+};
+
+const hideToast = () => {
+  toastVisible.value = false;
+  if (toastTimer) {
+    clearTimeout(toastTimer);
+    toastTimer = null;
+  }
+};
 </script>
+
+<style scoped>
+.toast-fade-enter-active, .toast-fade-leave-active { transition: opacity 300ms ease, transform 300ms ease; }
+.toast-fade-enter-from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+.toast-fade-leave-to { opacity: 0; transform: translateY(-8px) scale(0.98); }
+</style>
