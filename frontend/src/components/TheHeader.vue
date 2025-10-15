@@ -38,11 +38,24 @@
 
       <div class="flex items-center space-x-3">
         <template v-if="user">
-          <!-- If user.name is missing (common for admin seed accounts), fall back to email or 'Admin' -->
-          <div class="text-gray-700 font-medium mr-2 hidden sm:block">Hi, {{ user?.name || user?.email || (user?.role
-            === 'admin' ? 'Admin' : '') }}</div>
-          <button @click="logout"
-            class="text-sm text-red-600 hover:text-red-700 font-medium py-1 px-2 rounded-md hover:bg-red-50 transition">Logout</button>
+          <!-- User menu: clickable name opens dropdown with Dashboard and Logout -->
+          <div class="relative">
+            <button @click="toggleUserMenu"
+              class="flex items-center text-gray-700 font-medium mr-2 hidden sm:inline-flex space-x-2 focus:outline-none">
+              <span>Hi, {{ user?.name || user?.email || (user?.role === 'admin' ? 'Admin' : '') }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd" />
+              </svg>
+            </button>
+
+            <!-- Dropdown -->
+            <div v-if="userMenuOpen" ref="userMenuRef"
+              class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
+              <router-link :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" @click="userMenuOpen = false">Dashboard</router-link>
+              <button @click="handleLogout" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50">Logout</button>
+            </div>
+          </div>
         </template>
         <template v-else>
           <router-link to="/login"
@@ -113,7 +126,7 @@
 </template>
 <script setup lang="ts">
 import PrimaryButton from './PrimaryButton.vue';
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import auth, { clearAuth } from '@/stores/auth';
 
@@ -121,6 +134,9 @@ const user = auth; // reactive shared auth
 const router = useRouter();
 const route = useRoute();
 const mobileOpen = ref(false);
+// User menu state
+const userMenuOpen = ref(false);
+const userMenuRef = ref<HTMLElement | null>(null);
 
 const isActive = (path: string) => {
   // treat root specially
@@ -147,6 +163,40 @@ const logout = () => {
     showToast.value = false;
   }, 1100);
 };
+
+const toggleUserMenu = () => {
+  userMenuOpen.value = !userMenuOpen.value;
+};
+
+const handleLogout = () => {
+  // close menu immediately and perform logout flow
+  userMenuOpen.value = false;
+  logout();
+};
+
+// close menu when clicking outside or pressing Escape
+const onDocumentClick = (e: MouseEvent) => {
+  const el = userMenuRef.value;
+  if (!el) return;
+  const target = e.target as Node | null;
+  if (target && !el.contains(target)) {
+    userMenuOpen.value = false;
+  }
+};
+
+const onDocumentKey = (e: KeyboardEvent) => {
+  if (e.key === 'Escape') userMenuOpen.value = false;
+};
+
+onMounted(() => {
+  document.addEventListener('click', onDocumentClick);
+  document.addEventListener('keydown', onDocumentKey);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', onDocumentClick);
+  document.removeEventListener('keydown', onDocumentKey);
+});
 
 // Listen for auth actions (login/signup) and show a short 1s toast
 window.addEventListener('auth-action', () => {
