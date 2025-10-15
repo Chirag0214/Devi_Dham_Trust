@@ -410,10 +410,10 @@ onMounted(() => {
   width: 520px; /* larger */
   height: 280px;
   border-radius: 44%;
-  /* stronger pink stops (boosted) */
-  background: radial-gradient(circle at 24% 30%, rgba(236,72,153,0.46), rgba(251,146,60,0.16) 34%, rgba(236,72,153,0.18) 70%);
-  /* soften: slightly reduce blur to improve visibility while keeping softness */
-  filter: blur(44px) saturate(1.28);
+  /* slightly reduced pink for balance */
+  background: radial-gradient(circle at 24% 30%, rgba(236,72,153,0.32), rgba(251,146,60,0.12) 34%, rgba(236,72,153,0.12) 70%);
+  /* keep soft but slightly less saturated blur */
+  filter: blur(46px) saturate(1.12);
   opacity: 1;
   pointer-events: none;
   z-index: 0;
@@ -430,10 +430,10 @@ onMounted(() => {
   width: 360px;
   height: 240px;
   border-radius: 46%;
-  /* bias more blue and boost opacity */
-  background: radial-gradient(circle at 30% 30%, rgba(14,165,233,0.22), rgba(59,130,246,0.14) 30%, rgba(236,72,153,0.08) 55%, rgba(59,130,246,0.04) 72%);
-  /* soften: increase blur but make slightly stronger visually */
-  filter: blur(56px) saturate(1.05);
+  /* bias more blue and boost opacity — stronger blue emphasis */
+  background: radial-gradient(circle at 30% 30%, rgba(14,165,233,0.32), rgba(59,130,246,0.22) 30%, rgba(236,72,153,0.06) 55%, rgba(59,130,246,0.08) 72%);
+  /* reduce blur so blue reads stronger while keeping softness */
+  filter: blur(44px) saturate(1.12);
   opacity: 1;
   pointer-events: none;
   z-index: 0;
