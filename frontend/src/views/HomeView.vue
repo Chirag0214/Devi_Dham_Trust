@@ -55,8 +55,15 @@
       <h2 class="text-2xl font-bold mb-6">Our Guiding Mission</h2>
       <p class="text-gray-700 mb-8 max-w-2xl">We provide access to essential resources, foster sustainable livelihoods, and create opportunities that allow individuals and communities to thrive.</p>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative card-sheen pill-card group">
+  <!-- subtle professional pink blob behind the cards -->
+  <div class="mission-pink-blob" aria-hidden="true"></div>
+  <!-- right-side blended accent (pink + blue) -->
+  <div class="mission-right-accent" aria-hidden="true"></div>
+  <!-- extra right-side pink boost -->
+  <div class="mission-right-pink" aria-hidden="true"></div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 relative z-10">
+  <div class="bg-white rounded-xl p-6 shadow-sm tilt-card reveal-hidden relative pill-card group">
           <div class="flex items-center gap-4">
             <div class="p-3 bg-brand-100 text-brand-600 rounded-lg pill-icon">
               <!-- community icon -->
@@ -394,5 +401,83 @@ onMounted(() => {
 .initiative-card.group:hover .initiative-img { transform: scale(1.03); }
 
 .reveal-hidden { will-change: opacity, transform; }
+
+/* subtle pink decorative blob behind mission cards */
+.mission-pink-blob {
+  position: absolute;
+  left: -6%; /* moved left */
+  top: -34px;
+  width: 520px; /* larger */
+  height: 280px;
+  border-radius: 44%;
+  /* stronger pink stops (boosted) */
+  background: radial-gradient(circle at 24% 30%, rgba(236,72,153,0.46), rgba(251,146,60,0.16) 34%, rgba(236,72,153,0.18) 70%);
+  /* soften: slightly reduce blur to improve visibility while keeping softness */
+  filter: blur(44px) saturate(1.28);
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) { .mission-pink-blob { display: none; } }
+@media (hover: none) and (pointer: coarse) { .mission-pink-blob { display: none; } }
+
+/* right-side accent: soft blend of blue + pink */
+.mission-right-accent {
+  position: absolute;
+  right: 6%;
+  top: 18px;
+  width: 360px;
+  height: 240px;
+  border-radius: 46%;
+  /* bias more blue and boost opacity */
+  background: radial-gradient(circle at 30% 30%, rgba(14,165,233,0.22), rgba(59,130,246,0.14) 30%, rgba(236,72,153,0.08) 55%, rgba(59,130,246,0.04) 72%);
+  /* soften: increase blur but make slightly stronger visually */
+  filter: blur(56px) saturate(1.05);
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) { .mission-right-accent { display: none; } }
+
+/* slow drifting animations */
+@keyframes driftSlowLeft {
+  0% { transform: translate3d(0,0,0); }
+  50% { transform: translate3d(-14px,-10px,0); }
+  100% { transform: translate3d(0,0,0); }
+}
+@keyframes driftSlowRight {
+  0% { transform: translate3d(0,0,0); }
+  50% { transform: translate3d(12px,-8px,0); }
+  100% { transform: translate3d(0,0,0); }
+}
+
+.mission-pink-blob { animation: driftSlowLeft 28s ease-in-out infinite; }
+.mission-right-accent { animation: driftSlowRight 34s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mission-pink-blob, .mission-right-accent { animation: none !important; }
+}
+@media (hover: none) and (pointer: coarse) { .mission-right-accent { display: none; } }
+
+/* extra pink boost on right */
+.mission-right-pink {
+  position: absolute;
+  right: 14%;
+  top: 6px;
+  width: 220px;
+  height: 180px;
+  border-radius: 46%;
+  background: radial-gradient(circle at 30% 30%, rgba(236,72,153,0.36), rgba(236,72,153,0.18) 50%, transparent 75%);
+  filter: blur(36px) saturate(1.3);
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
+  animation: driftSlowRight 32s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) { .mission-right-pink { display: none; animation: none !important; } }
+@media (hover: none) and (pointer: coarse) { .mission-right-pink { display: none; } }
 
 </style>
