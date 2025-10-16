@@ -136,6 +136,31 @@ img, picture, video, canvas {
 	.fixed .max-w-xl { max-width: 36rem !important; }
 }
 
+/* Opt-in global override: if you add class `force-animations-on-mobile` to <body>,
+	 re-enable decorative animations (background blobs, float badges, card sheen, tilt)
+	 on small/coarse devices. This keeps defaults safe while allowing pages to opt-in. */
+@media (max-width: 767px), (hover: none) and (pointer: coarse) {
+	body.force-animations-on-mobile .animated-bg, body.force-animations-on-mobile .animated-bg .bg-blob {
+		display: block !important;
+		opacity: 0.82 !important;
+	}
+
+	/* re-enable float/badge/pulse visuals */
+	body.force-animations-on-mobile .animate-float,
+	body.force-animations-on-mobile .card-sheen::after,
+	body.force-animations-on-mobile .pulse-cta::before {
+		display: block !important;
+		opacity: 1 !important;
+	}
+
+	/* allow tilt transforms on touch devices when explicitly enabled */
+	body.force-animations-on-mobile .tilt-card,
+	body.force-animations-on-mobile .tilt-hero {
+		transform: none; /* initial state; JS-based tilt will apply transforms */
+		cursor: pointer !important;
+	}
+}
+
 /* Prevent accidental horizontal scrolling caused by small negative margins or absolute elements */
 html, body { overflow-x: hidden; }
 

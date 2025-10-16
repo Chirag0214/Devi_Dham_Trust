@@ -1,7 +1,7 @@
 <template>
   <div class="relative bg-gray-50 text-gray-900 overflow-hidden">
-    <!-- Shared animated background (same as About) -->
-    <AnimatedBackground :soften="true" :greenAlpha="0.35" />
+  <!-- Shared animated background (same as About) - opt-in to show on mobile -->
+  <AnimatedBackground :soften="true" :greenAlpha="0.35" :forceShowOnMobile="true" />
     <!-- Hero -->
   <section class="max-w-7xl mx-auto px-6 py-16 reveal-hidden relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">

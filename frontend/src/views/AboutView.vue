@@ -1,7 +1,7 @@
 <template>
   <div class="relative text-gray-900 overflow-hidden">
-  <!-- Animated background (shared component) -->
-  <AnimatedBackground :soften="true" :greenAlpha="0.35" />
+  <!-- Animated background (shared component) - opt-in to show on mobile -->
+  <AnimatedBackground :soften="true" :greenAlpha="0.35" :forceShowOnMobile="true" />
     <div class="relative z-10">
   <!-- Hero (simpler, neutral) -->
   <section class="py-20 md:py-28 overflow-hidden">

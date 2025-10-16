@@ -1,5 +1,5 @@
 <template>
-  <div aria-hidden="true" class="animated-bg pointer-events-none" :style="bgVars">
+  <div aria-hidden="true" :class="['animated-bg pointer-events-none', { 'force-show-mobile': props.forceShowOnMobile }]" :style="bgVars">
     <div class="bg-blob blob-1"></div>
     <div class="bg-blob blob-2"></div>
     <div class="bg-blob blob-3"></div>
@@ -9,8 +9,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-// Allow parent views to ask for a softer (lighter) color treatment and optionally override green alpha
-const props = defineProps<{ soften?: boolean; greenAlpha?: number }>();
+// Allow parent views to ask for a softer (lighter) color treatment, optionally override green alpha,
+// and optionally force the animated background to show on small / coarse-pointer devices.
+const props = defineProps<{ soften?: boolean; greenAlpha?: number; forceShowOnMobile?: boolean }>();
 
 const blob1 = computed(() => {
   // allow explicit numeric override for green alpha (0..1)
@@ -64,5 +65,19 @@ const bgVars = computed(() => ({
 
 /* Hide on coarse touch devices to reduce visual noise */
 @media (hover: none) and (pointer: coarse) { .animated-bg { display: none; } }
+
+</style>
+
+<style>
+/* Opt-in override: when parent explicitly requests, show the animated background on small/coarse devices.
+   This uses higher-specificity rules and !important to counter the global small-screen hide rules. */
+@media (hover: none) and (pointer: coarse) {
+  .animated-bg.force-show-mobile { display: block !important; }
+  .animated-bg.force-show-mobile .bg-blob { display: block !important; opacity: 0.72; }
+}
+
+@media (max-width: 767px) {
+  .animated-bg.force-show-mobile .bg-blob { display: block !important; }
+}
 
 </style>
