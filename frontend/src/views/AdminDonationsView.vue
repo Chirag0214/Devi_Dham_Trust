@@ -4,7 +4,7 @@
 
     <main class="flex-1 p-8">
       <h1 class="text-2xl font-bold mb-6">Donations</h1>
-      <p>Yahan par donations ka data dikhega.</p>
+      
     </main>
   </div>
 </template>

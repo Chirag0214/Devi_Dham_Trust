@@ -28,9 +28,9 @@
             </span>
             <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ project.title }}</h2>
             <p class="text-gray-600 mb-6">{{ project.description }}</p>
-            
-            <router-link to="#" class="text-brand-500 font-semibold hover:text-brand-700 transition duration-150 self-start">
-              Read More & Donate →
+
+            <router-link to="/donate" class="text-brand-500 font-semibold hover:text-brand-700 transition duration-150 self-start">
+               Donate Now→
             </router-link>
           </div>
         </div>
