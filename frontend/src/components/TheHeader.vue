@@ -126,13 +126,11 @@
           </div>
         </template> 
         <template v-else>
-          <router-link
-            :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/login') ? 'nav-active' : '']"
-            to="/login">Login</router-link>
+          <button @click="openLoginModal"
+            class="text-gray-600 hover:text-brand-600 transition duration-150 font-medium px-2 py-1 rounded-md focus:outline-none">Login</button>
             <i>/</i>
-          <router-link
-            :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/signup') ? 'nav-active' : '']"
-            to="/signup">Register</router-link>
+          <button @click="openRegisterModal"
+            class="text-gray-600 hover:text-brand-600 transition duration-150 font-medium px-2 py-1 rounded-md focus:outline-none">Register</button>
         </template>
 
         <PrimaryButton to="/donate">🤝 Donate</PrimaryButton>
@@ -170,8 +168,8 @@
 
         <!-- mobile auth links when not logged in -->
         <template v-if="!user">
-          <router-link @click.native="mobileOpen = false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/login">Login</router-link>
-          <router-link @click.native="mobileOpen = false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/signup">Register</router-link>
+          <button @click.native="mobileOpen = false; openLoginModal()" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50 text-left">Login</button>
+          <button @click.native="mobileOpen = false; openRegisterModal()" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50 text-left">Register</button>
         </template>
 
         <!-- mobile dashboard link for non-admin users only -->
@@ -180,6 +178,91 @@
           :to="'/dashboard'">Dashboard</router-link>
       </div>
     </div>
+
+    <!-- Login Modal -->
+    <div v-if="loginModalOpen">
+      <!-- backdrop with blur -->
+      <div class="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40" @click="closeLoginModal"></div>
+      <div class="fixed inset-0 flex items-start justify-center pt-20 z-50 px-4">
+        <div class="max-w-md w-full space-y-6 p-6 bg-white rounded-2xl shadow-2xl">
+          <div class="flex justify-center">
+            <div class="h-16 w-16 rounded-full bg-brand-50 flex items-center justify-center">
+              <svg class="h-10 w-10 text-brand-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+          </div>
+          <h3 class="text-center text-2xl font-semibold">Sign in to your account</h3>
+
+          <form @submit.prevent="modalLogin" class="space-y-4">
+            <div>
+              <label for="modal-email" class="sr-only">Email</label>
+              <input id="modal-email" v-model="modalForm.email" type="email" required placeholder="Email address"
+                class="w-full px-3 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <div>
+              <label for="modal-password" class="sr-only">Password</label>
+              <input id="modal-password" v-model="modalForm.password" :type="modalShowPassword ? 'text' : 'password'" required placeholder="Password"
+                class="w-full px-3 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <div class="flex items-center justify-between">
+              <label class="flex items-center text-sm">
+                <input type="checkbox" v-model="modalShowPassword" class="h-4 w-4 text-brand-500" />
+                <span class="ml-2 text-gray-600">Show password</span>
+              </label>
+              <button type="button" class="text-sm text-brand-600" @click="closeLoginModal">Cancel</button>
+            </div>
+            <div>
+              <PrimaryButton type="submit" class="w-full">Sign in</PrimaryButton>
+            </div>
+            <div v-if="modalError" class="text-sm text-red-600 font-medium">{{ modalError }}</div>
+          </form>
+          <p class="text-center text-sm text-gray-600">Don't have an account? <button @click="() => { closeLoginModal(); openRegisterModal(); }" class="text-brand-600">Sign up</button></p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Register Modal -->
+    <div v-if="registerModalOpen">
+      <div class="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm z-40" @click="closeRegisterModal"></div>
+      <div class="fixed inset-0 flex items-start justify-center pt-16 z-50 px-4">
+        <div class="max-w-md w-full space-y-4 p-6 bg-white rounded-2xl shadow-2xl">
+          <div class="flex justify-center">
+            <div class="h-16 w-16 rounded-full bg-brand-50 flex items-center justify-center">
+              <svg class="h-10 w-10 text-brand-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+          </div>
+          <h3 class="text-center text-2xl font-semibold">Create a new account</h3>
+          <form @submit.prevent="modalRegister" class="space-y-3">
+            <div>
+              <input v-model="registerForm.name" type="text" required placeholder="Full name" class="w-full px-3 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <div>
+              <input v-model="registerForm.email" type="email" required placeholder="Email address" class="w-full px-3 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <div>
+              <input v-model="registerForm.password" :type="registerShowPassword ? 'text' : 'password'" required placeholder="Password" class="w-full px-3 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <div>
+              <input v-model="registerForm.confirmPassword" :type="registerShowPassword ? 'text' : 'password'" required placeholder="Confirm Password" class="w-full px-3 py-3 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+            <div class="flex items-center justify-between">
+              <label class="flex items-center text-sm"><input type="checkbox" v-model="registerShowPassword" class="h-4 w-4 text-brand-500" /><span class="ml-2 text-gray-600">Show password</span></label>
+              <button type="button" class="text-sm text-brand-600" @click="closeRegisterModal">Cancel</button>
+            </div>
+            <div>
+              <PrimaryButton type="submit" class="w-full">Sign up</PrimaryButton>
+            </div>
+            <div v-if="registerError" class="text-sm text-red-600">{{ registerError }}</div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signup success toast (short) -->
+    <transition name="toast-pop">
+      <div v-if="registerSuccessToast" class="fixed right-6 top-28 bg-brand-600 text-white shadow-lg px-4 py-2 rounded-md z-50 toast-pop">
+        <div class="text-sm font-medium">Account created — please sign in</div>
+      </div>
+    </transition>
 
     <!-- Logout toast -->
     <div v-if="showToast"
@@ -207,7 +290,7 @@
 import PrimaryButton from './PrimaryButton.vue';
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import auth, { clearAuth } from '@/stores/auth';
+import auth, { clearAuth, setAuth } from '@/stores/auth';
 
 const user = auth; // reactive shared auth
 const router = useRouter();
@@ -220,6 +303,25 @@ const userMenuRef = ref<HTMLElement | null>(null);
 const aboutOpen = ref(false);
 const aboutMenuRef = ref<HTMLElement | null>(null);
 // (removed auth dropdown state)
+
+// Login modal state
+const loginModalOpen = ref(false);
+const modalForm = ref({ email: '', password: '' });
+const modalError = ref('');
+const modalShowPassword = ref(false);
+
+const openLoginModal = () => {
+  loginModalOpen.value = true;
+  // reset form
+  modalForm.value.email = '';
+  modalForm.value.password = '';
+  modalError.value = '';
+};
+
+const closeLoginModal = () => {
+  loginModalOpen.value = false;
+  modalError.value = '';
+};
 
 const isActive = (path: string) => {
   // treat root specially
@@ -283,6 +385,7 @@ const onDocumentKey = (e: KeyboardEvent) => {
     userMenuOpen.value = false;
     aboutOpen.value = false;
     // auth dropdown removed
+    if (loginModalOpen.value) closeLoginModal();
   }
 };
 
@@ -303,6 +406,112 @@ window.addEventListener('auth-action', () => {
     showActionToast.value = false;
   }, 1000);
 });
+
+// Modal login API
+const API_URL = 'http://localhost:3000/api/login';
+const modalLogin = async () => {
+  modalError.value = '';
+  try {
+    const resp = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: modalForm.value.email, password: modalForm.value.password }),
+    });
+    let data;
+    try { data = await resp.json(); } catch (e) { modalError.value = 'Server returned invalid response.'; return; }
+    if (resp.ok) {
+      const userObj = data.user;
+      const token = data.token;
+      const normalizedRole = userObj.role ? String(userObj.role).toLowerCase() : undefined;
+      const normalizedEmail = userObj.email ? String(userObj.email).toLowerCase() : undefined;
+      const displayName = userObj.name || (normalizedEmail === 'admin@devidhaam.org' || normalizedRole === 'admin' ? 'Admin' : normalizedEmail);
+      const authObj = { email: normalizedEmail, name: displayName, loggedAt: Date.now(), role: normalizedRole, id: userObj.id, token };
+      setAuth(authObj as any);
+      window.dispatchEvent(new Event('auth-action'));
+  // close modal and redirect to appropriate dashboard
+  closeLoginModal();
+  const isAdmin = (normalizedRole === 'admin') || (normalizedEmail === 'admin@devidhaam.org');
+  router.push(isAdmin ? '/admin' : '/dashboard');
+    } else {
+      modalError.value = data.message || `Login failed (${resp.status})`;
+    }
+  } catch (err) {
+    console.error('Modal login error', err);
+    modalError.value = 'Network error: cannot reach server.';
+  }
+};
+
+// Register modal state & handler
+const registerModalOpen = ref(false);
+const registerForm = ref({ name: '', email: '', password: '', confirmPassword: '' });
+const registerError = ref('');
+const registerShowPassword = ref(false);
+const registerSuccessToast = ref(false);
+
+const openRegisterModal = () => {
+  registerModalOpen.value = true;
+  registerForm.value = { name: '', email: '', password: '', confirmPassword: '' };
+  registerError.value = '';
+};
+
+const closeRegisterModal = () => {
+  registerModalOpen.value = false;
+  registerError.value = '';
+};
+
+const modalRegister = async () => {
+  registerError.value = '';
+  // Basic client-side validation
+  if (!registerForm.value.name || !String(registerForm.value.name).trim()) {
+    registerError.value = 'Please enter your full name.';
+    return;
+  }
+  if (!registerForm.value.email || !String(registerForm.value.email).trim()) {
+    registerError.value = 'Please enter your email address.';
+    return;
+  }
+  if (registerForm.value.password !== registerForm.value.confirmPassword) {
+    registerError.value = 'Passwords do not match!';
+    return;
+  }
+  try {
+    const resp = await fetch('http://localhost:3000/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: registerForm.value.name, email: registerForm.value.email, password: registerForm.value.password }),
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (resp.ok) {
+      // If server returns token+user, auto-login, else show success toast and redirect to login
+      if (data.user && data.token) {
+        const userObj = data.user;
+        const token = data.token;
+        const normalizedRole = userObj.role ? String(userObj.role).toLowerCase() : undefined;
+        const normalizedEmail = userObj.email ? String(userObj.email).toLowerCase() : undefined;
+        const displayName = userObj.name || (normalizedEmail === 'admin@devidhaam.org' || normalizedRole === 'admin' ? 'Admin' : normalizedEmail);
+        const authObj = { email: normalizedEmail, name: displayName, loggedAt: Date.now(), role: normalizedRole, id: userObj.id, token };
+        setAuth(authObj as any);
+        window.dispatchEvent(new Event('auth-action'));
+        closeRegisterModal();
+        const isAdmin = (normalizedRole === 'admin') || (normalizedEmail === 'admin@devidhaam.org');
+        router.push(isAdmin ? '/admin' : '/dashboard');
+      } else {
+        // Close register modal and open the new login modal (don't navigate to /login route)
+        closeRegisterModal();
+        registerSuccessToast.value = true;
+        setTimeout(() => {
+          registerSuccessToast.value = false;
+          openLoginModal();
+        }, 900);
+      }
+    } else {
+      registerError.value = data.message || `Registration failed (${resp.status})`;
+    }
+  } catch (err) {
+    console.error('Registration error', err);
+    registerError.value = 'Network error: cannot reach server.';
+  }
+};
 </script>
 
 <style scoped>
@@ -422,5 +631,24 @@ a:focus-visible,
 button:focus-visible {
   outline: 3px solid rgba(99,102,241,0.18); /* subtle soft ring */
   outline-offset: 2px;
+}
+
+/* Signup toast animation */
+.toast-pop {
+  transform-origin: right center;
+}
+.toast-pop-enter-from {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.96);
+}
+.toast-pop-enter-active {
+  transition: opacity 220ms ease, transform 220ms cubic-bezier(.2,.9,.2,1);
+}
+.toast-pop-leave-to {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.96);
+}
+.toast-pop-leave-active {
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 </style>
