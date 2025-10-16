@@ -101,10 +101,23 @@
                 {{ displayInitial }}
               </div>
               <span class="select-none">Hi, {{ user?.name || user?.email || (user?.role === 'admin' ? 'Admin' : '') }}</span>
+              <!-- role badge for desktop/tablet -->
+              <span v-if="user" class="hidden sm:inline-flex items-center ml-2 px-2 py-0.5 text-xs font-semibold rounded-md bg-gray-100 text-gray-800">
+                {{ (user.role === 'admin' || user.email === 'admin@devidhaam.org') ? 'Admin' : 'User' }}
+              </span>
               <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 text-gray-500 caret', userMenuOpen ? 'open' : '']" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd" />
               </svg>
             </button>
+
+            <!-- role badge for mobile (visible on small screens) -->
+            <div v-if="user" class="sm:hidden flex items-center mr-2">
+              <router-link :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
+                @click.native="mobileOpen = false"
+                class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-md bg-brand-50 text-brand-600 hover:bg-brand-100">
+                {{ (user.role === 'admin' || user.email === 'admin@devidhaam.org') ? 'Admin' : 'User' }}
+              </router-link>
+            </div>
 
             <!-- Dropdown -->
             <transition name="dropdown">
@@ -133,7 +146,8 @@
             class="text-gray-600 hover:text-brand-600 transition duration-150 font-medium px-2 py-1 rounded-md focus:outline-none">Register</button>
         </template>
 
-        <PrimaryButton to="/donate">🤝 Donate</PrimaryButton>
+        <!-- Donate button: smaller on mobile, normal size on md+ -->
+        <PrimaryButton to="/donate" class="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base">🤝 Donate</PrimaryButton>
 
         <!-- Mobile menu button -->
         <button @click="mobileOpen = !mobileOpen" aria-label="Toggle menu"
