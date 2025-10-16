@@ -5,10 +5,13 @@
 
       <div class="relative overflow-hidden rounded-lg shadow-2xl">
 
-        <Transition :name="transitionName" mode="in-out">
-          <div v-if="currentPhoto" :key="currentIndex" class="w-full h-[36rem]">
-
-            <img :src="currentPhoto.src" :alt="currentPhoto.caption" class="w-full h-full object-cover object-center" />
+        <!-- Use out-in mode so leave finishes before enter starts (no overlap) and
+             apply v-if/key directly to the slide container so transition classes
+             target the element that has the dark background. This prevents the
+             page background from showing during transforms. -->
+        <Transition :name="transitionName" mode="out-in">
+          <div v-if="currentPhoto" :key="currentPhoto?.id ?? currentIndex" class="w-full h-[36rem] slide-wrapper">
+            <img :src="currentPhoto.src" :alt="currentPhoto.caption" class="slide-image" />
 
             <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-4">
               <p class="text-white text-lg font-medium">{{ currentPhoto.caption }}</p>
@@ -136,21 +139,9 @@ const setIndex = (index: number) => {
   transition: all 0.45s ease-in-out;
 }
 
-/* Ensure entering/leaving slides are absolutely positioned to overlap */
-.slide-left-enter-from,
-.slide-left-enter-to,
-.slide-left-leave-from,
-.slide-left-leave-to,
-.slide-right-enter-from,
-.slide-right-enter-to,
-.slide-right-leave-from,
-.slide-right-leave-to {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
+/* With `mode="out-in"` we no longer need to absolutely position the
+   slides. The single slide will be clipped by the .slide-wrapper overflow
+   during translateX animations, avoiding any peek of the previous slide. */
 
 /* Important: make the outgoing (leave) slide render above the incoming (enter) slide
    so the current image remains visible while the next one animates in underneath. */
@@ -161,48 +152,60 @@ const setIndex = (index: number) => {
 .slide-right-enter-from {
   opacity: 0;
   transform: translateX(100%);
-  z-index: 10;
 }
 .slide-right-enter-to {
   opacity: 1;
   transform: translateX(0);
-  z-index: 10;
 }
 .slide-right-leave-from {
   opacity: 1;
   transform: translateX(0);
-  z-index: 20;
 }
 .slide-right-leave-to {
   opacity: 0;
   transform: translateX(-100%);
-  z-index: 20;
 }
 
 /* Left arrow: incoming from left (enter), outgoing moves right (leave) */
 .slide-left-enter-from {
   opacity: 0;
   transform: translateX(-100%);
-  z-index: 10;
 }
 .slide-left-enter-to {
   opacity: 1;
   transform: translateX(0);
-  z-index: 10;
 }
 .slide-left-leave-from {
   opacity: 1;
   transform: translateX(0);
-  z-index: 20;
 }
 .slide-left-leave-to {
   opacity: 0;
   transform: translateX(100%);
-  z-index: 20;
 }
 
 /* Keep container height stable during transitions */
 .relative > .w-full.h-\[36rem\] {
   position: relative;
+}
+
+/* slide wrapper positioning and background to hide page color during transforms */
+.slide-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000; /* neutral dark background so any gaps aren't the page bg */
+}
+
+.slide-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 </style>

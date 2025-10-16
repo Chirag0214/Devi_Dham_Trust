@@ -12,18 +12,71 @@
         <router-link
           :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/') ? 'nav-active' : '']"
           to="/">Home</router-link>
-        <router-link
-          :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/about') ? 'nav-active' : '']"
-          to="/about">About Us</router-link>
+
+        <!-- About with hover dropdown -->
+        <div class="relative" ref="aboutMenuRef">
+          <button
+            @mouseenter="aboutOpen = true"
+            @mouseleave="aboutOpen = false"
+            @focus="aboutOpen = true"
+            @blur="aboutOpen = false"
+            @click.prevent
+            class="flex items-center text-gray-600 hover:text-brand-600 transition duration-150 font-medium focus:outline-none"
+            aria-haspopup="true"
+            :aria-expanded="aboutOpen"
+            type="button">
+            <span>About Us</span>
+            <svg xmlns="http://www.w3.org/2000/svg" :class="['h-4 w-4 text-gray-500 ml-1 caret', aboutOpen ? 'open' : '']" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" clip-rule="evenodd" />
+            </svg>
+          </button>
+
+          <!-- show on hover/focus; keep using transition classes already defined -->
+          <transition name="dropdown">
+            <div v-if="aboutOpen"
+              @mouseenter="aboutOpen = true"
+              @mouseleave="aboutOpen = false"
+              class="absolute left-0 mt-2 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50 ring-1 ring-black ring-opacity-5"
+              role="menu" aria-label="About menu">
+              <div class="flex items-center space-x-1 px-2 whitespace-nowrap">
+                <router-link
+                  to="/about"
+                  @click="aboutOpen = false"
+                  :class="[ 'px-4 py-2 text-sm rounded-md transition-colors duration-150', isActive('/about') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-brand-50 hover:text-brand-700']"
+                  role="menuitem">About</router-link>
+
+                <router-link
+                  to="/projects"
+                  @click="aboutOpen = false"
+                  :class="[ 'px-4 py-2 text-sm rounded-md transition-colors duration-150', isActive('/projects') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-brand-50 hover:text-brand-700']"
+                  role="menuitem">Our Work</router-link>
+
+                <router-link
+                  to="/certifications"
+                  @click="aboutOpen = false"
+                  :class="[ 'px-4 py-2 text-sm rounded-md transition-colors duration-150', isActive('/certifications') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-brand-50 hover:text-brand-700']"
+                  role="menuitem">Certificates</router-link>
+
+                <router-link
+                  to="/gallery"
+                  @click="aboutOpen = false"
+                  :class="[ 'px-4 py-2 text-sm rounded-md transition-colors duration-150', isActive('/gallery') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-brand-50 hover:text-brand-700']"
+                  role="menuitem">Gallery</router-link>
+              </div>
+            </div>
+          </transition>
+        </div>
+
         <router-link
           :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/projects') ? 'nav-active' : '']"
-          to="/projects">Our Work</router-link>
+          to="/projects" class="sr-only">Projects (link)</router-link>
         <router-link
           :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/certifications') ? 'nav-active' : '']"
-          to="/certifications">Certificates</router-link>
+          to="/certifications" class="sr-only">Certificates (link)</router-link>
         <router-link
           :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/gallery') ? 'nav-active' : '']"
-          to="/gallery">Gallery</router-link>
+          to="/gallery" class="sr-only">Gallery (link)</router-link>
+
         <router-link
           :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/contact') ? 'nav-active' : '']"
           to="/contact">Contact</router-link>
@@ -39,7 +92,7 @@
       <div class="flex items-center space-x-3">
         <template v-if="user">
           <!-- User menu: clickable name opens dropdown with Dashboard and Logout -->
-          <div class="relative" ref="userMenuRef">
+          <div class="relative" ref="userMenuRef" @mouseenter="userMenuOpen = true" @mouseleave="userMenuOpen = false">
             <button @click="toggleUserMenu"
               class="flex items-center text-gray-700 font-medium mr-2 hidden sm:inline-flex space-x-2 focus:outline-none hover:bg-gray-50 px-2 py-1 rounded-md"
               :aria-expanded="userMenuOpen" aria-haspopup="true" type="button">
@@ -56,18 +109,30 @@
             <!-- Dropdown -->
             <transition name="dropdown">
               <div v-if="userMenuOpen"
-                class="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-xl py-1 z-50 ring-1 ring-black ring-opacity-5"
+                @mouseenter="userMenuOpen = true"
+                @mouseleave="userMenuOpen = false"
+                class="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50 ring-1 ring-black ring-opacity-5"
                 role="menu" aria-label="User menu">
-                <router-link :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" @click="userMenuOpen = false">Dashboard</router-link>
-                <button @click="handleLogout" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50" role="menuitem">Logout</button>
+                <div class="flex items-center flex-col px-2 space-y-1">
+                  <router-link :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
+                    @click="userMenuOpen = false"
+                    :class="[ 'w-full text-left px-4 py-2 text-sm rounded-md transition-colors duration-150', (user.role === 'admin' || user.email === 'admin@devidhaam.org') ? (isActive('/admin') || isActive('/dashboard') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-brand-50 hover:text-brand-700') : (isActive('/dashboard') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-brand-50 hover:text-brand-700') ]"
+                    role="menuitem">Dashboard</router-link>
+
+                  <button @click="() => { userMenuOpen = false; handleLogout(); }" class="w-full text-left px-4 py-2 text-sm rounded-md transition-colors duration-150 text-red-600 hover:bg-red-50" role="menuitem">Logout</button>
+                </div>
               </div>
             </transition>
           </div>
         </template> 
         <template v-else>
-          <router-link to="/login"
-            class="text-gray-600 font-medium py-2 px-3 rounded-md hover:bg-gray-100 transition duration-150">Login</router-link>
+          <router-link
+            :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/login') ? 'nav-active' : '']"
+            to="/login">Login</router-link>
+            <i>/</i>
+          <router-link
+            :class="['text-gray-600 hover:text-brand-600 transition duration-150 font-medium', isActive('/signup') ? 'nav-active' : '']"
+            to="/signup">Register</router-link>
         </template>
 
         <PrimaryButton to="/donate">🤝 Donate</PrimaryButton>
@@ -102,6 +167,12 @@
           to="/gallery">Gallery</router-link>
         <router-link @click.native="mobileOpen = false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50"
           to="/contact">Contact</router-link>
+
+        <!-- mobile auth links when not logged in -->
+        <template v-if="!user">
+          <router-link @click.native="mobileOpen = false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/login">Login</router-link>
+          <router-link @click.native="mobileOpen = false" class="py-2 px-3 rounded-md text-gray-700 hover:bg-gray-50" to="/signup">Register</router-link>
+        </template>
 
         <!-- mobile dashboard link for non-admin users only -->
         <router-link v-if="user && !(user.role === 'admin' || user.email === 'admin@devidhaam.org')" @click.native="mobileOpen = false"
@@ -145,6 +216,10 @@ const mobileOpen = ref(false);
 // User menu state
 const userMenuOpen = ref(false);
 const userMenuRef = ref<HTMLElement | null>(null);
+// About dropdown state
+const aboutOpen = ref(false);
+const aboutMenuRef = ref<HTMLElement | null>(null);
+// (removed auth dropdown state)
 
 const isActive = (path: string) => {
   // treat root specially
@@ -190,18 +265,25 @@ const handleLogout = () => {
   logout();
 };
 
-// close menu when clicking outside or pressing Escape
+// close menus when clicking outside or pressing Escape
 const onDocumentClick = (e: MouseEvent) => {
-  const el = userMenuRef.value;
-  if (!el) return;
   const target = e.target as Node | null;
-  if (target && !el.contains(target)) {
+  // close user menu if click outside
+  if (userMenuRef.value && target && !userMenuRef.value.contains(target)) {
     userMenuOpen.value = false;
+  }
+  // close about dropdown if click outside
+  if (aboutMenuRef.value && target && !aboutMenuRef.value.contains(target)) {
+    aboutOpen.value = false;
   }
 };
 
 const onDocumentKey = (e: KeyboardEvent) => {
-  if (e.key === 'Escape') userMenuOpen.value = false;
+  if (e.key === 'Escape') {
+    userMenuOpen.value = false;
+    aboutOpen.value = false;
+    // auth dropdown removed
+  }
 };
 
 onMounted(() => {
