@@ -123,8 +123,12 @@ const initials = computed(() => {
   else if (up.endsWith('TE') && name.length > 2) name = name.slice(0, -2);
   const parts = name.split(/\s+/).filter(Boolean);
   if (parts.length === 0) return 'M';
-  if (parts.length === 1) return parts[0].slice(0,2).toUpperCase();
-  return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+  if (parts.length === 1) return (parts[0] ?? '').slice(0,2).toUpperCase();
+  const first = parts[0] || '';
+  const last = parts[parts.length - 1] || '';
+  const fch = first.charAt(0) || '';
+  const lach = last.charAt(0) || '';
+  return (fch + lach).toUpperCase();
 });
 
 // Clean display name: remove leading or trailing "TE" only when present (case-insensitive)
