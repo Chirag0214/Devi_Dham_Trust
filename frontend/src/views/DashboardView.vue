@@ -20,18 +20,25 @@
         </svg>
         
 
-  <div class="p-8 md:p-12 relative">
-             <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 text-center mb-4"><u>Welcome ,{{ displayName }}</u></h1>
-         </div>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
+  <div class="p-6 md:p-8 relative max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row items-center md:items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 bg-gradient-to-br from-indigo-400 to-green-300 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-md">
+          <span>{{ initials }}</span>
+        </div>
+        <div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900">Welcome <span class="text-brand-600">{{ displayName }}</span></h1>
+          <p class="text-sm text-gray-600 mt-1 hidden md:block">Here's your dashboard — quick actions to manage your account and donations.</p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
       </div>
       
          <!-- Quick action cards (mirror user sidebar options) -->
       <section class="mb-6">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
           <router-link to="/profile" class="card-cta card-anim card-indigo" aria-label="Open Profile">
             <div class="flex items-center justify-between w-full h-44 md:h-40">
               <div class="flex items-center space-x-4">
@@ -106,6 +113,29 @@ const isAdmin = computed(() => {
 // friendly display name used in template (avoids accessing ref.value in template)
 const displayName = computed(() => {
   return (user.value && (user.value.name || user.value.email)) ? (user.value.name || user.value.email) : 'Member';
+});
+
+// initials for avatar fallback (two letters) — derive from cleaned name so 'TE' is stripped
+const initials = computed(() => {
+  let name = (displayName.value || 'M').toString();
+  const up = name.toUpperCase();
+  if (up.startsWith('TE') && name.length > 2) name = name.slice(2);
+  else if (up.endsWith('TE') && name.length > 2) name = name.slice(0, -2);
+  const parts = name.split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'M';
+  if (parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+  return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+});
+
+// Clean display name: remove leading or trailing "TE" only when present (case-insensitive)
+const cleanName = computed(() => {
+  const name = (displayName.value || '').toString();
+  if (!name) return name;
+  const up = name.toUpperCase();
+  // remove leading 'TE' or trailing 'TE' but only if present exactly
+  if (up.startsWith('TE') && name.length > 2) return name.slice(2);
+  if (up.endsWith('TE') && name.length > 2) return name.slice(0, -2);
+  return name;
 });
 
 // control hero visibility to avoid paint flash
