@@ -110,12 +110,13 @@
               </svg>
             </button>
 
-            <!-- role badge for mobile (visible on small screens). Tap to open user menu (hover not available on touch). -->
+            <!-- role badge for mobile (visible on small screens) -->
             <div v-if="user" class="sm:hidden flex items-center mr-2">
-              <button @click.stop="toggleUserMenu" :aria-expanded="userMenuOpen" aria-haspopup="true"
-                class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-md bg-brand-50 text-brand-600 hover:bg-brand-100 focus:outline-none">
+              <router-link :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
+                @click.native="mobileOpen = false"
+                class="inline-flex items-center px-2 py-1 text-xs font-semibold rounded-md bg-brand-50 text-brand-600 hover:bg-brand-100">
                 {{ (user.role === 'admin' || user.email === 'admin@devidhaam.org') ? 'Admin' : 'User' }}
-              </button>
+              </router-link>
             </div>
 
             <!-- Dropdown -->
@@ -123,7 +124,7 @@
         <div v-if="userMenuOpen"
           @mouseenter="userMenuOpen = true"
           @mouseleave="userMenuOpen = false"
-          class="absolute left-0 right-0 md:left-auto md:right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50 ring-1 ring-black ring-opacity-5 w-auto sm:mx-4 md:mx-0"
+          class="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50 ring-1 ring-black ring-opacity-5 w-auto sm:left-0 sm:right-0 sm:mx-4 sm:rounded-md sm:py-3 md:mx-0"
           role="menu" aria-label="User menu">
                 <div class="flex items-center flex-col px-2 space-y-1">
                   <router-link :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
