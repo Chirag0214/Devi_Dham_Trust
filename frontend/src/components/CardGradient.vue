@@ -1,11 +1,11 @@
 <template>
   <component :is="to ? 'router-link' : 'div'" :to="to || undefined" class="block">
     <div class="rounded-lg shadow p-5 text-white hover:opacity-95 transition cursor-pointer" :style="cardStyle">
-      <div class="flex items-start justify-between">
-        <div>
-          <div class="text-sm opacity-90">{{ title }}</div>
-          <div class="text-2xl font-bold mt-2">{{ displayValue }}</div>
-          <div class="text-xs opacity-80 mt-1">{{ subtitle }}</div>
+      <div class="flex items-start justify-between min-w-0">
+        <div class="min-w-0">
+          <div class="text-sm opacity-90 truncate">{{ title }}</div>
+          <div class="text-2xl font-bold mt-2 truncate">{{ displayValue }}</div>
+          <div class="text-xs opacity-80 mt-1 truncate">{{ subtitle }}</div>
         </div>
         <div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center">
           <slot name="icon">

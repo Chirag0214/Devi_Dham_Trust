@@ -52,34 +52,34 @@
           <!-- center vertical timeline line: make it darker to match the dashed connectors -->
           <div class="absolute left-1/2 h-full border-l-2 border-gray-700 hidden md:block"></div>
 
-          <div class="mb-8 flex justify-between items-center w-full right-timeline animate-on-scroll stagger-parent">
-            <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-brand-600 shadow w-14 h-14 rounded-full ring-4 ring-brand-50 stagger-child">
+          <div class="mb-8 flex flex-col md:flex-row items-start md:items-center w-full right-timeline animate-on-scroll stagger-parent">
+            <div class="hidden md:block md:w-5/12"></div>
+            <div class="z-10 flex items-center bg-brand-600 shadow w-14 h-14 rounded-full ring-4 ring-brand-50 stagger-child mx-auto md:mx-0 mb-3 md:mb-0">
               <h1 class="mx-auto font-semibold text-lg text-white">2015</h1>
             </div>
-            <div class="order-1 bg-white rounded-lg shadow w-full md:w-5/12 px-6 py-4 border border-gray-100 stagger-child">
+            <div class="bg-white rounded-lg shadow w-full md:w-5/12 px-6 py-4 border border-gray-100 stagger-child">
               <h3 class="font-bold text-gray-800 text-xl">The Beginning</h3>
               <p class="text-sm leading-snug tracking-wide text-gray-600">Started by local volunteers, Devi Dhamm Trust began as a small education initiative to support children in our community.</p>
             </div>
           </div>
 
-          <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline animate-on-scroll stagger-parent">
-            <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-brand-600 shadow w-14 h-14 rounded-full ring-4 ring-brand-50 stagger-child">
+          <div class="mb-8 flex flex-col md:flex-row md:flex-row-reverse items-start md:items-center w-full left-timeline animate-on-scroll stagger-parent">
+            <div class="hidden md:block md:w-5/12"></div>
+            <div class="z-10 flex items-center bg-brand-600 shadow w-14 h-14 rounded-full ring-4 ring-brand-50 stagger-child mx-auto md:mx-0 mb-3 md:mb-0">
               <h1 class="mx-auto text-white font-semibold text-lg">2018</h1>
             </div>
-            <div class="order-1 bg-white rounded-lg shadow w-full md:w-5/12 px-6 py-4 border border-gray-100 stagger-child">
+            <div class="bg-white rounded-lg shadow w-full md:w-5/12 px-6 py-4 border border-gray-100 stagger-child">
               <h3 class="font-bold text-gray-800 text-xl">Expanding Horizons</h3>
               <p class="text-sm leading-snug tracking-wide text-gray-600">We expanded our programs to include health camps and environmental initiatives, reaching more families and creating a wider impact.</p>
             </div>
           </div>
 
-          <div class="mb-8 flex justify-between items-center w-full right-timeline animate-on-scroll stagger-parent">
-            <div class="order-1 md:w-5/12"></div>
-            <div class="z-10 flex items-center order-1 bg-brand-600 shadow w-14 h-14 rounded-full ring-4 ring-brand-50 stagger-child">
+          <div class="mb-8 flex flex-col md:flex-row items-start md:items-center w-full right-timeline animate-on-scroll stagger-parent">
+            <div class="hidden md:block md:w-5/12"></div>
+            <div class="z-10 flex items-center bg-brand-600 shadow w-14 h-14 rounded-full ring-4 ring-brand-50 stagger-child mx-auto md:mx-0 mb-3 md:mb-0">
               <h1 class="mx-auto font-semibold text-lg text-white">Today</h1>
             </div>
-            <div class="order-1 bg-white rounded-lg shadow w-full md:w-5/12 px-6 py-4 border border-gray-100 stagger-child">
+            <div class="bg-white rounded-lg shadow w-full md:w-5/12 px-6 py-4 border border-gray-100 stagger-child">
               <h3 class="font-bold text-gray-800 text-xl">A Growing Movement</h3>
               <p class="text-sm leading-snug tracking-wide text-gray-600">With the help of our donors and volunteers, we continue to scale our work, keeping the community at the heart of everything we do.</p>
             </div>
@@ -399,9 +399,18 @@ const handleEsc = (e: KeyboardEvent) => {
     width: 100%;
   }
 
+  /* On small screens keep the year badge visible but smaller and centered
+     so users still see the timeline years without layout overlap. */
   .right-timeline .z-10,
   .left-timeline .z-10 {
-    display: none;
+    display: flex;
+    width: 40px; /* slightly smaller */
+    height: 40px;
+    margin: 0 auto 0.75rem;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    box-shadow: none; /* reduce heavy shadow on small */
   }
 }
 

@@ -1,6 +1,7 @@
 <template>
   <aside v-if="isAdmin"
-    :class="[collapsed ? 'w-16' : 'w-64', 'h-80%', 'bg-[#2f4552] text-white flex flex-col transition-all duration-200 overflow-hidden']">
+    :class="[collapsed ? 'w-16' : 'w-64', 'bg-[#2f4552] text-white flex flex-col transition-all duration-200 overflow-hidden hidden md:flex']"
+    class="min-w-0 md:relative md:static">
     <div class="px-4 py-6 border-b border-black/10">
       <router-link :to="'/profile'" class="flex items-center gap-3 no-underline">
         <div v-show="!collapsed" class="text-sm font-semibold">Profile</div>
@@ -8,7 +9,7 @@
 
     </div>
 
-    <nav class="flex-1 overflow-auto py-4">
+  <nav class="flex-1 overflow-auto py-4 min-w-0">
       <!-- make ul fill nav height and distribute items according to sidebar height -->
       <ul class="flex flex-col justify-between h-full px-2">
         <!-- Admin menu (unchanged) -->
@@ -235,7 +236,7 @@
         </template>
       </ul>
     </nav>
-    <div class="p-3 border-t border-black/10 flex items-center justify-center">
+  <div class="p-3 border-t border-black/10 flex items-center justify-center">
       <button @click="collapsed = !collapsed"
         class="w-10 h-10 bg-[#2b3940] rounded flex items-center justify-center text-white">
         <svg v-if="!collapsed" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"

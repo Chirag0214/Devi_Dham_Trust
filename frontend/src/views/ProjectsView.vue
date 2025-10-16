@@ -12,22 +12,23 @@
       </div>
 
       <div v-else class="space-y-16"> 
-        <div v-for="(project, index) in projects" :key="project.id" 
-             class="flex flex-col md:flex-row bg-white rounded-xl shadow-2xl overflow-hidden"
-             :class="{'md:flex-row-reverse': index % 2 !== 0}"> <div class="md:w-1/2 h-64 md:h-auto overflow-hidden">
-            <img :src="project.full_image_src" :alt="project.title" 
-                 class="w-full h-full object-cover" 
-                 @error="handleImageError" 
-                 loading="lazy">
-          </div>
-          
-          <div class="md:w-1/2 p-8 flex flex-col justify-center">
+     <div v-for="(project, index) in projects" :key="project.id" 
+       class="flex flex-col md:flex-row bg-white rounded-xl shadow-2xl overflow-hidden min-w-0"
+       :class="{'md:flex-row-reverse': index % 2 !== 0}">
+    <div class="md:w-1/2 h-64 sm:h-72 md:h-auto overflow-hidden flex-shrink-0">
+      <img :src="project.full_image_src" :alt="project.title" 
+        class="w-full h-full object-cover block" 
+        @error="handleImageError" 
+        loading="lazy">
+    </div>
+
+    <div class="md:w-1/2 p-6 md:p-8 flex flex-col justify-center min-w-0">
             
             <span :class="getStatusClass(project.status)" class="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-3 self-start">
               {{ project.status }}
             </span>
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ project.title }}</h2>
-            <p class="text-gray-600 mb-6">{{ project.description }}</p>
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 truncate break-words">{{ project.title }}</h2>
+            <p class="text-gray-600 mb-6 line-clamp-3 break-words">{{ project.description }}</p>
 
             <router-link to="/donate" class="text-brand-500 font-semibold hover:text-brand-700 transition duration-150 self-start">
                Donate Now→

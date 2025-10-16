@@ -10,7 +10,7 @@
              target the element that has the dark background. This prevents the
              page background from showing during transforms. -->
         <Transition :name="transitionName" mode="out-in">
-          <div v-if="currentPhoto" :key="currentPhoto?.id ?? currentIndex" class="w-full h-[36rem] slide-wrapper">
+          <div v-if="currentPhoto" :key="currentPhoto?.id ?? currentIndex" class="w-full slide-wrapper h-72 sm:h-96 md:h-[36rem]">
             <img :src="currentPhoto.src" :alt="currentPhoto.caption" class="slide-image" />
 
             <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-4">
@@ -21,14 +21,14 @@
         </Transition>
 
         <button @click="prevPhoto"
-          class="absolute top-1/2 left-4 transform -translate-y-1/2 p-3 bg-white bg-opacity-70 rounded-full text-gray-800 hover:bg-white transition z-10">
+          class="hidden sm:flex absolute top-1/2 left-4 transform -translate-y-1/2 p-3 bg-white bg-opacity-70 rounded-full text-gray-800 hover:bg-white transition z-10">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
 
         <button @click="nextPhoto"
-          class="absolute top-1/2 right-4 transform -translate-y-1/2 p-3 bg-white bg-opacity-70 rounded-full text-gray-800 hover:bg-white transition z-10">
+          class="hidden sm:flex absolute top-1/2 right-4 transform -translate-y-1/2 p-3 bg-white bg-opacity-70 rounded-full text-gray-800 hover:bg-white transition z-10">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
@@ -185,9 +185,7 @@ const setIndex = (index: number) => {
 }
 
 /* Keep container height stable during transitions */
-.relative > .w-full.h-\[36rem\] {
-  position: relative;
-}
+.relative > .slide-wrapper { position: relative; }
 
 /* slide wrapper positioning and background to hide page color during transforms */
 .slide-wrapper {
@@ -207,5 +205,12 @@ const setIndex = (index: number) => {
   will-change: transform, opacity;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+/* Defensive small-screen cap: avoid extremely tall slides on tiny viewports */
+@media (max-width: 420px) {
+  .slide-wrapper { height: 220px !important; }
+  .slide-wrapper .absolute { padding-left: 0.5rem; padding-right: 0.5rem; }
+  .slide-wrapper p { word-break: break-word; }
 }
 </style>

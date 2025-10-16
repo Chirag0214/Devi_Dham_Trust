@@ -11,29 +11,28 @@
 
             <div v-else class="space-y-6">
                 <div v-for="project in projects" :key="project.id"
-                    class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col md:flex-row">
+                    class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col md:flex-row min-w-0">
 
-                    <div class="md:w-1/4 h-32 overflow-hidden">
-                        <img :src="project.full_image_src" :alt="project.title" class="w-full h-full object-cover">
+                    <div class="md:w-1/4 h-32 overflow-hidden flex-shrink-0 min-w-0">
+                        <img :src="project.full_image_src" :alt="project.title" class="w-full h-full object-cover max-w-full" />
                     </div>
 
-                    <div class="md:w-3/4 p-4 flex flex-col justify-between">
+                    <div class="md:w-3/4 p-4 flex flex-col justify-between min-w-0">
                         <div>
                             <span :class="getStatusClass(project.status)"
-                                class="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1">{{
-                                project.status }}</span>
-                            <h2 class="text-xl font-bold text-gray-900 truncate">{{ project.title }}</h2>
-                            <p class="text-sm text-gray-600 line-clamp-2">{{ project.description }}</p>
+                                class="inline-block text-xs font-semibold px-2 py-0.5 rounded-full mb-1">{{ project.status }}</span>
+                            <h2 class="text-xl font-bold text-gray-900 truncate break-words">{{ project.title }}</h2>
+                            <p class="text-sm text-gray-600 line-clamp-2 break-words">{{ project.description }}</p>
                             <p class="text-xs text-gray-400 mt-1">Created: {{ formatDate(project.created_at) }}</p>
                         </div>
 
-                        <div class="mt-3 flex space-x-3">
+                        <div class="mt-3 flex flex-col sm:flex-row sm:space-x-3 gap-2">
                             <router-link :to="`/admin/edit-project/${project.id}`"
-                                class="px-4 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-150">
+                                class="w-full sm:w-auto px-4 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-150 text-center">
                                 Edit
                             </router-link>
                             <button @click="deleteProject(project.id)"
-                                class="px-4 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition duration-150"
+                                class="w-full sm:w-auto px-4 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition duration-150 text-center"
                                 :disabled="isDeleting[project.id]">
                                 {{ isDeleting[project.id] ? 'Deleting...' : 'Delete Project' }}
                             </button>

@@ -2,7 +2,7 @@
   <div class="min-h-screen flex bg-gray-50">
     <Sidebar :user="user" :is-admin="isAdmin" />
 
-    <main class="flex-1 p-8">
+  <main class="flex-1 p-8 min-w-0">
       <div class="flex items-center justify-between mb-6">
         <div>
           <h1 class="text-3xl font-bold">Admin Dashboard</h1>

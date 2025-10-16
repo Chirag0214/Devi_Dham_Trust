@@ -80,3 +80,64 @@
 .input:focus{ outline: none; border-color: rgba(251,146,60,0.9); box-shadow: 0 6px 20px rgba(251,146,60,0.08); }
 
 /* Compatibility layer removed: codebase migrated to brand-* tokens. */
+
+/* Global responsive helpers to prevent overflow and image stretching */
+/* Make media elements scale down inside their containers */
+img, picture, video, svg { max-width: 100%; height: auto; display: block; }
+
+/* Ensure immediate children inside container/flex items can shrink properly */
+.container > * { min-width: 0; }
+
+/* Hide heavy decorative blobs on small screens to avoid visual overlap */
+@media (max-width: 640px) {
+	.bg-blob, .blob-1, .blob-2, .blob-3 { display: none !important; }
+}
+
+/* Global responsive helpers */
+img, picture, video, canvas {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Ensure flex children are allowed to shrink to avoid overflowing their containers */
+.container > * { min-width: 0; }
+
+/* Decorative background blobs can overlap on very small screens; hide them on small viewports */
+@media (max-width: 767px) {
+	.animated-bg .bg-blob, .bg-blob { display: none !important; }
+}
+
+/* Also hide other decorative absolute elements used across views (dashboard blobs, floating svgs)
+   on small viewports to avoid accidental overlap or visual clutter. */
+@media (max-width: 767px) {
+	.float-anim, .mission-pink-blob, .mission-right-accent, .mission-right-pink, .mission-right-pink, .mission-right-accent, .mission-right-pink {
+		display: none !important;
+	}
+	/* subtle floating badges and sheen overlays can sometimes push layout; disable on small */
+	.animate-float, .card-sheen::after, .pulse-cta::before {
+		display: none !important;
+	}
+}
+
+/* Ensure modal and fixed panels fit within small viewports and have side padding */
+.fixed .max-w-xs, .fixed .max-w-sm, .fixed .max-w-md, .fixed .max-w-lg, .fixed .max-w-xl, .fixed .max-w-2xl, .fixed .max-w-3xl {
+	max-width: calc(100% - 2rem) !important;
+}
+.fixed .relative, .fixed > .relative {
+	box-sizing: border-box;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+	/* restore natural widths on medium+ screens */
+	.fixed .max-w-md { max-width: 28rem !important; }
+	.fixed .max-w-xl { max-width: 36rem !important; }
+}
+
+/* Prevent accidental horizontal scrolling caused by small negative margins or absolute elements */
+html, body { overflow-x: hidden; }
+
+/* Make toasts and fixed notifications responsive */
+.toast-pop, .toast-slide, .action-toast { max-width: calc(100% - 2rem); box-sizing: border-box; }

@@ -56,14 +56,16 @@ import { QrCodeIcon, BuildingLibraryIcon, GlobeAltIcon } from '@heroicons/vue/24
             <p class="text-gray-700 mb-4">
               Donate instantly via UPI using your preferred app:
             </p>
-            <div class="flex flex-col md:flex-row items-center gap-6">
-              <div class="bg-white p-4 border border-gray-300 rounded-lg shadow-md">
-                <img src="/images/devidhaam_upi_qr.png" alt="Devi Dhaam Trust UPI QR Code" class="w-48 h-48" /> 
-                <p class="text-center text-sm text-gray-600 mt-2">Scan to Donate</p>
+            <div class="flex flex-col md:flex-row items-start gap-6 min-w-0">
+              <div class="bg-white p-4 border border-gray-300 rounded-lg shadow-md flex-shrink-0 flex items-center justify-center">
+                <img src="/images/devidhaam_upi_qr.png" alt="Devi Dhaam Trust UPI QR Code" class="max-w-[10rem] sm:max-w-[12rem] w-full h-auto object-contain" /> 
               </div>
-                <p class="text-xl font-semibold text-gray-800">
-                Or UPI ID: <span class="text-brand-600">devidhaamtrust@upi</span>
-              </p>
+              <div class="flex-1 min-w-0">
+                <p class="text-xl font-semibold text-gray-800 break-words text-center md:text-left">
+                  Or UPI ID: <span class="text-brand-600">devidhaamtrust@upi</span>
+                </p>
+                <p class="text-center text-sm text-gray-600 mt-2 md:text-left">Scan QR code above using your UPI app to donate instantly.</p>
+              </div>
             </div>
           </div>
           

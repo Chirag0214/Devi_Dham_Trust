@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8 p-10 bg-white rounded-2xl shadow-2xl">
+  <div class="max-w-md w-full space-y-8 p-10 bg-white rounded-2xl shadow-2xl min-w-0">
       <div class="flex justify-center">
         <div class="h-20 w-20 rounded-full bg-brand-50 flex items-center justify-center">
           <UserCircleIcon class="h-12 w-12 text-brand-500" />

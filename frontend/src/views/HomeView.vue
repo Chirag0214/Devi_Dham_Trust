@@ -33,7 +33,7 @@
                 :class="currentSlide === i ? 'opacity-100' : 'opacity-0'" />
             </div>
           </div>
-          <div class="absolute -bottom-8 left-6 right-6">
+          <div class="relative mt-6 md:mt-0 md:absolute md:-bottom-8 md:left-6 md:right-6">
             <div class="bg-white border rounded-xl p-4 shadow-md flex items-center gap-4">
               <div class="w-12 h-12 bg-brand-600 text-white rounded-lg flex items-center justify-center font-bold">25+</div>
               <div>

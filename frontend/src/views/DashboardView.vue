@@ -233,4 +233,11 @@ const isActive = (path: string) => {
 .card-action{ font-size:26px; color:rgba(15,23,42,0.36); font-weight:700; transform:translateX(2px); }
 .card-cta:hover .card-action{ color:rgba(15,23,42,0.7); transform:translateX(0); }
 
+/* Small-screen defensive rules: hide decorative hero/float elements to avoid overlap */
+@media (max-width: 767px) {
+  .page-hero { display: none !important; }
+  .float-anim { display: none !important; }
+  .hero-bg { filter: none; }
+}
+
 </style>

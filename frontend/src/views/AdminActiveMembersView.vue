@@ -28,7 +28,8 @@
           </div>
         </div>
 
-        <table class="w-full text-left border-collapse">
+  <div class="overflow-x-auto">
+  <table class="w-full text-left border-collapse">
           <thead>
             <tr class="text-sm text-gray-600 bg-gray-100">
               <th class="py-2 px-2">Sr.No.</th>
@@ -59,7 +60,8 @@
               <td colspan="5" class="py-6 text-center text-gray-500">No active members found.</td>
             </tr>
           </tbody>
-        </table>
+  </table>
+  </div>
 
         <div class="mt-4 flex items-center justify-between">
           <div class="text-sm text-gray-600">Showing {{ paged.length }} of {{ filtered.length }} entries</div>
@@ -71,8 +73,8 @@
         </div>
 
         <!-- View Modal -->
-        <div v-if="showView" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div class="bg-white rounded-lg p-6 w-11/12 md:w-1/2">
+        <div v-if="showView" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
+          <div class="bg-white rounded-lg p-6 w-full max-w-xl mx-4">
             <h3 class="text-lg font-semibold mb-3">Member Details</h3>
             <div class="grid grid-cols-1 gap-2">
               <div><strong>Name:</strong> {{ viewItem.name || '-' }}</div>

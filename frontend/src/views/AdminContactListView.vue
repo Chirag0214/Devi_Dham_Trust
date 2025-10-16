@@ -157,8 +157,9 @@ const formatDate = (dateString: string) => {
                 <p>{{ error }}</p>
             </div>
 
-            <div v-else class="bg-white shadow-xl rounded-lg overflow-hidden">
-                <table class="min-w-full divide-y divide-gray-200">
+            <div v-else class="bg-white shadow-xl rounded-lg">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-brand-600 text-white">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">S.No.</th>
@@ -183,27 +184,29 @@ const formatDate = (dateString: string) => {
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ submission.name }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 break-words max-w-[12rem]">
                                 {{ submission.email }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-xs">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-[12rem]">
                                 {{ submission.subject }}
                             </td>
                             <!-- Message is truncated for brevity -->
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-xs">
-                                {{ submission.message.substring(0, 50) + (submission.message.length > 50 ? '...' : '')
-                                }}
+                            <td class="px-6 py-4 text-sm text-gray-500 break-words max-w-[16rem]">
+                                {{ submission.message.substring(0, 80) + (submission.message.length > 80 ? '...' : '') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ formatDate(submission.created_at || submission.date) }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 space-x-2">
-                                <button @click.prevent="openMailClient(submission)" class="bg-brand-600 text-white px-3 py-1 rounded hover:bg-brand-700">Reply</button>
-                                <button @click.prevent="deleteSubmission(submission.id)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Remove</button>
+                            <td class="px-6 py-4 text-sm text-gray-500 min-w-0">
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
+                                    <button @click.prevent="openMailClient(submission)" class="w-full sm:w-auto bg-brand-600 text-white px-3 py-1 rounded hover:bg-brand-700 mb-2 sm:mb-0 text-center">Reply</button>
+                                    <button @click.prevent="deleteSubmission(submission.id)" class="w-full sm:w-auto bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-center">Remove</button>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                    </table>
+                </div>
             </div>
 
             

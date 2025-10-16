@@ -7,8 +7,8 @@
 
       <div v-if="loading" class="text-gray-500">Loading donations...</div>
 
-      <div v-else>
-        <table class="min-w-full bg-white border">
+      <div v-else class="overflow-x-auto">
+        <table class="min-w-full bg-white border min-w-[720px]">
           <thead>
             <tr class="bg-gray-100 text-left">
               <th class="px-4 py-2">#</th>
@@ -45,10 +45,10 @@
       </div>
 
       <!-- Modal -->
-      <div v-if="selected" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white p-6 rounded w-3/4 max-w-2xl">
+      <div v-if="selected" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white p-6 rounded w-full max-w-2xl min-w-0">
           <h2 class="text-xl font-bold mb-4">Donation Details</h2>
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div><strong>Name:</strong> {{ selected.name || selected.email }}</div>
             <div><strong>Receipt:</strong> {{ selected.receipt_id || selected.receiptId || '-' }}</div>
             <div><strong>Amount:</strong> {{ formatCurrency(selected.amount) }}</div>

@@ -3,9 +3,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
 
       <router-link to="/"
-        class="flex items-center pr-3 text-2xl font-bold text-brand-600 hover:text-brand-700 transition duration-150 -ml-2 cursor-pointer">
-        <img src="/images/temple.jpg" alt="logo" class="h-9 w-9 rounded-md object-cover shadow-elevate mr-2" />
-        <span class="leading-tight">Devi Dhaam Trust</span>
+        class="flex items-center pr-3 text-lg sm:text-2xl font-bold text-brand-600 hover:text-brand-700 transition duration-150 -ml-2 cursor-pointer min-w-0">
+        <img src="/images/temple.jpg" alt="logo" class="h-8 w-8 sm:h-9 sm:w-9 rounded-md object-cover shadow-elevate mr-2 flex-shrink-0" />
+        <span class="leading-tight truncate max-w-[8rem] sm:max-w-xs">Devi Dhaam Trust</span>
       </router-link>
 
       <nav class="hidden md:flex items-center space-x-6 md:space-x-7">
@@ -36,7 +36,7 @@
             <div v-if="aboutOpen"
               @mouseenter="aboutOpen = true"
               @mouseleave="aboutOpen = false"
-              class="absolute left-0 mt-2 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50 ring-1 ring-black ring-opacity-5"
+              class="absolute left-0 mt-2 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50 ring-1 ring-black ring-opacity-5 w-auto md:w-auto sm:left-0 sm:right-0 sm:mx-4 sm:rounded-md sm:py-3 md:mx-0 md:rounded-md"
               role="menu" aria-label="About menu">
               <div class="flex items-center space-x-1 px-2 whitespace-nowrap">
                 <router-link
@@ -108,11 +108,11 @@
 
             <!-- Dropdown -->
             <transition name="dropdown">
-              <div v-if="userMenuOpen"
-                @mouseenter="userMenuOpen = true"
-                @mouseleave="userMenuOpen = false"
-                class="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50 ring-1 ring-black ring-opacity-5"
-                role="menu" aria-label="User menu">
+        <div v-if="userMenuOpen"
+          @mouseenter="userMenuOpen = true"
+          @mouseleave="userMenuOpen = false"
+          class="absolute right-0 mt-2 bg-white border border-gray-200 rounded-md shadow-xl py-2 z-50 ring-1 ring-black ring-opacity-5 w-auto sm:left-0 sm:right-0 sm:mx-4 sm:rounded-md sm:py-3 md:mx-0"
+          role="menu" aria-label="User menu">
                 <div class="flex items-center flex-col px-2 space-y-1">
                   <router-link :to="(user.role === 'admin' || user.email === 'admin@devidhaam.org') ? '/admin' : '/dashboard'"
                     @click="userMenuOpen = false"

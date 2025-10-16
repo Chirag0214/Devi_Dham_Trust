@@ -48,9 +48,9 @@
             </div>
           </div>
 
-          <div class="mt-6 flex gap-3">
+          <div class="mt-6 flex flex-col sm:flex-row gap-3">
             <button type="submit" :disabled="isLoading"
-                    :class="['flex-1 py-2 px-4 text-white rounded-md focus:outline-none transform transition', isLoading ? 'bg-green-500 cursor-wait' : 'bg-green-600 hover:bg-green-700 active:scale-95']">
+                    :class="['w-full sm:flex-1 py-2 px-4 text-white rounded-md focus:outline-none transform transition text-center', isLoading ? 'bg-green-500 cursor-wait' : 'bg-green-600 hover:bg-green-700 active:scale-95']">
               <span v-if="!isLoading">Create Project</span>
               <span v-else class="inline-flex items-center gap-2">
                 <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -61,7 +61,7 @@
               </span>
             </button>
 
-            <button type="button" @click="resetForm" class="py-2 px-4 border rounded-md hover:bg-gray-100 active:scale-95 transition">Reset</button>
+            <button type="button" @click="resetForm" class="w-full sm:w-auto py-2 px-4 border rounded-md hover:bg-gray-100 active:scale-95 transition">Reset</button>
           </div>
         </form>
 
