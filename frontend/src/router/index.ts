@@ -25,6 +25,14 @@ const router = createRouter({
       name: 'donate',
       component: () => import('../views/DonateView.vue')
     },
+    // --- CASHFREE PAYMENT SUCCESS ROUTE ADDED ---
+    {
+      path: '/payment/success',
+      name: 'PaymentSuccess',
+      // Assuming PaymentSuccess.vue is located in src/views/
+      component: () => import('../components/PaymentSuccess.vue') 
+    },
+    // -------------------------------------------
     {
       path: '/my-donations',
       name: 'my-donations',
@@ -91,83 +99,81 @@ const router = createRouter({
 
     // src/router/index.ts ke 'routes' array mein
 
-{
-    path: '/admin',
-    name: 'admin-overview',
-    component: () => import('@/views/AdminOverviewView.vue'), // Ya jo bhi aapka overview view hai
-},
-{
-    path: '/admin/users', // Users ka path
-    name: 'admin-users',
-    component: () => import('@/views/AdminUsersView.vue'), // Yeh component file aapko banani padegi
-},
+    {
+      path: '/admin',
+      name: 'admin-overview',
+      component: () => import('@/views/AdminOverviewView.vue'), // Ya jo bhi aapka overview view hai
+    },
+    {
+      path: '/admin/users', // Users ka path
+      name: 'admin-users',
+      component: () => import('@/views/AdminUsersView.vue'), // Yeh component file aapko banani padegi
+    },
 
-{
-  path: '/admin/new-members',
-  name: 'admin-new-members',
-  component: () => import('@/views/NewMemberView.vue'),
-},
+    {
+      path: '/admin/new-members',
+      name: 'admin-new-members',
+      component: () => import('@/views/NewMemberView.vue'),
+    },
 
-{
-  path: '/admin/all-users',
-  name: 'admin-all-users',
-  component: () => import('@/views/AllUserView.vue'),
-},
+    {
+      path: '/admin/all-users',
+      name: 'admin-all-users',
+      component: () => import('@/views/AllUserView.vue'),
+    },
 
-{
-  path: '/admin/blocked-users',
-  name: 'admin-blocked-users',
-  component: () => import('@/views/BlockedUsersView.vue'),
-},
-{
-  path: '/admin/all-receipts',
-  name: 'admin-all-receipts',
-  component: () => import('@/views/AllReceiptsView.vue'),
-},
+    {
+      path: '/admin/blocked-users',
+      name: 'admin-blocked-users',
+      component: () => import('@/views/BlockedUsersView.vue'),
+    },
+    {
+      path: '/admin/all-receipts',
+      name: 'admin-all-receipts',
+      component: () => import('@/views/AllReceiptsView.vue'),
+    },
 
-{
-  path: '/admin/donations', // Donations ka path
-  name: 'admin-donations',
-  component: () => import('@/views/TotalDonationView.vue'),
-},
+    {
+      path: '/admin/donations', // Donations ka path
+      name: 'admin-donations',
+      component: () => import('@/views/TotalDonationView.vue'),
+    },
 
-   // src/router/index.ts ke 'routes' array mein
+    {
+      path: '/admin/add-gallery', // Yehi woh URL hoga jahan admin jaayega
+      name: 'admin-add-gallery',
+      component: () => import('../views/AddGalleryView.vue'), // Naya view file import
+      // Yahan par aapko admin authentication guard lagana chahiye future mein.
+    }, 
+    {
+      path: '/admin/manage-gallery', // Naya path
+      name: 'AdminManageGallery',
+      component: () => import('../views/ManageGalleryView.vue'),
+    },
+    {
+      path: '/admin/submissions', // Naya path
+      name: 'AdminContactSubmissions',
+      component: () => import('../views/AdminContactListView.vue'),
+    },
+    {
+      path: '/admin/add-project', 
+      name: 'AdminAddProject',
+      component: () => import('../views/AdminAddProjectView.vue'),
+    },
 
-{
-    path: '/admin/add-gallery', // Yehi woh URL hoga jahan admin jaayega
-    name: 'admin-add-gallery',
-    component: () => import('../views/AddGalleryView.vue'), // Naya view file import
-    // Yahan par aapko admin authentication guard lagana chahiye future mein.
-}, 
-{
-    path: '/admin/manage-gallery', // Naya path
-    name: 'AdminManageGallery',
-  component: () => import('../views/ManageGalleryView.vue'),
-},
-{
-    path: '/admin/submissions', // Naya path
-    name: 'AdminContactSubmissions',
-    component: () => import('../views/AdminContactListView.vue'),
-},
-{
-    path: '/admin/add-project', 
-    name: 'AdminAddProject',
-    component: () => import('../views/AdminAddProjectView.vue'),
-},
+    {
+      path: '/admin/manage-projects', 
+      name: 'AdminManageProjects',
+      component: () => import('../views/AdminManageProjectsView.vue'),
+    },
 
-{
-    path: '/admin/manage-projects', 
-    name: 'AdminManageProjects',
-    component: () => import('../views/AdminManageProjectsView.vue'),
-},
-
-{
-    // :id dynamic parameter hai
-    path: '/admin/edit-project/:id', 
-    name: 'AdminEditProject',
-    component: () => import('../views/AdminEditProjectView.vue'),
-},
-   
+    {
+      // :id dynamic parameter hai
+      path: '/admin/edit-project/:id', 
+      name: 'AdminEditProject',
+      component: () => import('../views/AdminEditProjectView.vue'),
+    },
+    
   ],
   // Scroll to top on route change
   scrollBehavior(to, from, savedPosition) {

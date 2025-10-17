@@ -1,4 +1,105 @@
+<script setup lang="ts">
+import { reactive, ref } from 'vue'; // ref ko upar import kiya
+import SectionTitle from '@/components/SectionTitle.vue';
 import { QrCodeIcon, BuildingLibraryIcon, GlobeAltIcon } from '@heroicons/vue/24/solid';
+
+// Reactive state for donor form
+const donor = reactive({
+    name: '',
+    email: '',
+    pan: '',
+    mobile: '',
+    amount: 500 // Default amount
+});
+
+// CHANGES START HERE ------------------------------------------
+// Error and Loading state for Cashfree Payment
+const payError = ref<string | null>(null);
+const isLoading = ref(false);
+
+// Function to handle payment initiation via backend API
+async function handlePayment() {
+    payError.value = null; // Clear previous errors
+    
+    // Client-side validation
+    if (!donor.name || !donor.email || !donor.pan || !donor.mobile || donor.amount < 100) {
+        payError.value = 'Please complete all donor details correctly. Minimum amount is ₹100.';
+        return;
+    }
+    if (String(donor.mobile).length !== 10) {
+        payError.value = 'Mobile number must be 10 digits.';
+        return;
+    }
+
+    isLoading.value = true;
+
+    try {
+        // Backend API ko call karna jo Cashfree order banayega
+        const response = await fetch('/api/create-cashfree-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                amount: donor.amount,
+                name: donor.name,
+                email: donor.email,
+                mobile: donor.mobile,
+                pan: donor.pan // PAN detail backend ko bhejein
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success && data.paymentLink) {
+            // Success: User ko Cashfree payment page par redirect karna
+            window.location.href = data.paymentLink;
+            // NOTE: Iske baad control Cashfree ke paas chala jayega.
+            // Verification aapke backend ke /api/verify-cashfree-order route par hoga.
+
+        } else {
+            // Failure: Server se error message display karna
+            payError.value = data.message || 'Payment initiation failed due to an unknown error. Please try again.';
+        }
+
+    } catch (error) {
+        console.error('Frontend Payment Error:', error);
+        payError.value = 'Network error: Could not connect to the payment server.';
+    } finally {
+        isLoading.value = false;
+    }
+}
+// CHANGES END HERE --------------------------------------------
+
+// Mock function for submitting form details (Replaced by handlePayment)
+function submitDetails() {
+    // Yeh function ab zaroori nahi hai kyunki payment button hi saara kaam karega.
+    // Aap isse remove kar sakte hain ya sirf basic validation ke liye rakh sakte hain.
+    handlePayment();
+}
+
+
+// Function to copy text to clipboard (remains the same)
+function copyToClipboard(text: string, fieldName: string) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert(`${fieldName} has been copied to your clipboard: ${text}`);
+    }).catch(err => {
+        console.error('Could not copy text: ', err);
+    });
+}
+
+// Dummy pay function is REMOVED. Use handlePayment now.
+// function pay() { ... }
+
+// Ensure PAN input is uppercased and trimmed (remains the same)
+function onPanInput(e: Event) {
+    const target = e.target as HTMLInputElement;
+    // PAN ko sirf uppercase letters aur numbers tak limit karein
+    target.value = target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    donor.pan = target.value;
+}
+</script>
+
 <template>
   <div class="page-section bg-brand-50">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,8 +111,14 @@ import { QrCodeIcon, BuildingLibraryIcon, GlobeAltIcon } from '@heroicons/vue/24
         </p>
 
         <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-10 shadow">
-          <h2 class="text-xl font-bold text-gray-900 mb-4">1. Share Your Details (For Receipt)</h2>
-          <form @submit.prevent="submitDetails" class="space-y-4">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">1. Share Your Details & Pay Online</h2>
+          
+          <div v-if="payError" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <p class="font-bold">Payment Error</p>
+            <p class="text-sm">{{ payError }}</p>
+          </div>
+
+          <form @submit.prevent="handlePayment" class="space-y-4">
             <div>
               <label for="donor-name" class="block text-sm font-medium text-gray-700">Full Name</label>
               <input v-model="donor.name" type="text" id="donor-name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="As on PAN / Receipt">
@@ -32,7 +139,7 @@ import { QrCodeIcon, BuildingLibraryIcon, GlobeAltIcon } from '@heroicons/vue/24
               <div>
                 <label for="donor-pan" class="block text-sm font-medium text-gray-700">PAN Number</label>
                 <input v-model="donor.pan" @input="onPanInput" type="text" id="donor-pan" required maxlength="10" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 uppercase" placeholder="ABCDE1234F">
-                <p class="text-xs text-gray-500 mt-1">PAN will be saved/displayed in UPPERCASE.</p>
+                <p class="text-xs text-gray-500 mt-1">PAN will be saved/displayed in UPPERCASE. Required for 80G receipt.</p>
               </div>
               <div>
                 <label for="donation-amount" class="block text-sm font-medium text-gray-700">Donation Amount (₹)</label>
@@ -41,12 +148,18 @@ import { QrCodeIcon, BuildingLibraryIcon, GlobeAltIcon } from '@heroicons/vue/24
             </div>
 
             <div>
-              <button type="button" @click="pay" class="w-full px-4 py-2 bg-brand-600 text-white font-medium rounded-md hover:bg-brand-700 transition">Pay ₹{{ donor.amount }}</button>
+              <button 
+                type="submit" 
+                :disabled="isLoading"
+                class="w-full px-4 py-2 bg-brand-600 text-white font-medium rounded-md transition"
+                :class="{'hover:bg-brand-700': !isLoading, 'opacity-50 cursor-not-allowed': isLoading}"
+              >
+                <span v-if="isLoading">Processing Payment...</span>
+                <span v-else>Pay Online ₹{{ donor.amount || '0' }}</span>
+              </button>
             </div>
           </form>
         </div>
-
-
         <div class="space-y-8">
           
           <div>
@@ -97,15 +210,13 @@ import { QrCodeIcon, BuildingLibraryIcon, GlobeAltIcon } from '@heroicons/vue/24
           
           <div>
             <h3 class="text-2xl font-bold text-gray-900 mb-4 flex items-center">
-              <GlobeAltIcon class="inline-block h-5 w-5 text-brand-600 mr-3" /> 4. Online Payment Gateway
+              <GlobeAltIcon class="inline-block h-5 w-5 text-brand-600 mr-3" /> 4. Online Payment Gateway (Integrated Above)
             </h3>
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
-              <p class="font-bold">Coming Soon!</p>
-              <p>Our secure online payment gateway will be available soon. For immediate support, please use the UPI or Bank Transfer options above.</p>
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+              <p class="font-bold">Payment Gateway Active!</p>
+              <p>The secure online payment gateway has been integrated into **Step 1** above. You can now use the "Share Your Details & Pay Online" form to make an instant donation.</p>
             </div>
           </div>
-          
-
           <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mt-8" role="alert">
             <p class="font-bold">Tax Exemption (80G)</p>
             <p>
@@ -119,64 +230,6 @@ import { QrCodeIcon, BuildingLibraryIcon, GlobeAltIcon } from '@heroicons/vue/24
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { reactive } from 'vue';
-import SectionTitle from '@/components/SectionTitle.vue';
-// FontAwesome icons will need a CDN or package installation
-import { ref } from 'vue';
-
-// Reactive state for donor form
-const donor = reactive({
-  name: '',
-  email: '',
-  pan: '',
-  mobile: '',
-  amount: 500 // Default amount
-});
-
-// Error state for payment
-const payError = ref('');
-
-// Mock function for submitting form details
-function submitDetails() {
-  if (donor.name && donor.email && donor.amount >= 100 && donor.pan && donor.mobile && String(donor.mobile).length === 10) {
-    alert(`Thank you ${donor.name}! Please proceed to step 2 or 3 to complete your donation of ₹${donor.amount}.`);
-        // **********************************************
-        // TODO: Iske baad user ko payment steps par le jaana hai.
-        // Ya toh form ko hide karke payment method ko highlight karein,
-        // ya is data ko backend API mein save karein.
-        // **********************************************
-    } else {
-        alert('Please fill in all details correctly. Minimum donation is ₹100.');
-    }
-}
-
-// Function to copy text to clipboard
-function copyToClipboard(text: string, fieldName: string) {
-    navigator.clipboard.writeText(text).then(() => {
-        alert(`${fieldName} has been copied to your clipboard: ${text}`);
-    }).catch(err => {
-        console.error('Could not copy text: ', err);
-    });
-}
-
-// Dummy pay function for test payment button
-function pay() {
-  if (!donor.name || !donor.email || !donor.pan || !donor.mobile || donor.amount < 100) {
-    alert('Please complete the donor details correctly before proceeding to payment.');
-    return;
-  }
-  alert(`Test payment of ₹${donor.amount} initiated! (No real transaction will occur.)`);
-}
-
-// Ensure PAN input is uppercased and trimmed
-function onPanInput(e: Event) {
-  const target = e.target as HTMLInputElement;
-  target.value = target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  donor.pan = target.value;
-}
-</script>
 
 <style scoped>
 /* Optional: Add custom styles here if needed */
