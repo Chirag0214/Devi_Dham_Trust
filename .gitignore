@@ -1,0 +1,13 @@
+# Node / editor
+node_modules/
+.env
+.env.local
+.env.*.local
+
+# Backend env
+Backend/.env
+
+# Vite / dist
+dist/
+.vscode/
+.DS_Store
