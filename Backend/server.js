@@ -109,106 +109,109 @@ const authenticateToken = async (req, res, next) => {
 // ==========================================================
 
 // ... (start of server.js)
-
-// 14. POST Create Cashfree Order
-//  POST /api/create-cashfree-order
+// ==========================================================
+// 14. POST Create Cashfree Order (FIXED for payment_session_id)
+// ==========================================================
 
 app.post('/api/create-cashfree-order', async (req, res) => {
-    // Ensure all Cashfree credentials are available
-    if (!CASHFREE_CLIENT_ID || !CASHFREE_CLIENT_SECRET) {
-        return res.status(500).json({ success: false, message: 'Cashfree credentials not set.' });
-    }
-    
-    try {
-        const { amount, name, email, mobile, pan } = req.body; 
-        
-        // Input validation
-        if (!amount || !name || !email || !mobile) {
-            return res.status(400).json({ success: false, message: 'Required donor details are missing.' });
-        }
+    // Ensure all Cashfree credentials are available
+    if (!CASHFREE_CLIENT_ID || !CASHFREE_CLIENT_SECRET) {
+        return res.status(500).json({ success: false, message: 'Cashfree credentials not set.' });
+    }
+    
+    try {
+        const { amount, name, email, mobile, pan } = req.body; 
+        
+        // Input validation
+        if (!amount || !name || !email || !mobile) {
+            return res.status(400).json({ success: false, message: 'Required donor details are missing.' });
+        }
 
-        const orderId = `order_${uuidv4()}`; // Unique Order ID generate karna
-        const amountInRupees = parseFloat(amount).toFixed(2);
-        
-        // 1. MySQL mein PENDING record save karna
-        try {
-            const sqlInsert = `
-                INSERT INTO donations (order_id, name, email, mobile, pan, amount, status) 
-                VALUES (?, ?, ?, ?, ?, ?, 'PENDING')
-            `;
-            await dbPool.query(sqlInsert, [orderId, name, email, mobile, pan || null, amountInRupees]);
-        } catch (dbError) {
-            console.error("❌ DB Error saving PENDING donation:", dbError);
-            // Agar DB save fail hota hai, to payment initiate nahi karenge
-            return res.status(500).json({ success: false, message: 'Failed to record donation attempt in database.' });
-        }
+        const orderId = `order_${uuidv4()}`; // Unique Order ID generate karna
+        const amountInRupees = parseFloat(amount).toFixed(2);
+        
+        // 1. MySQL mein PENDING record save karna
+        try {
+            const sqlInsert = `INSERT INTO donations (order_id, name, email, mobile, pan, amount, status) VALUES (?, ?, ?, ?, ?, ?, 'PENDING')`;
+            await dbPool.query(sqlInsert, [orderId, name, email, mobile, pan || null, amountInRupees]);
+        } catch (dbError) {
+            console.error("❌ DB Error saving PENDING donation:", dbError);
+            // Agar DB save fail hota hai, to payment initiate nahi karenge
+            return res.status(500).json({ success: false, message: 'Failed to record donation attempt in database.' });
+        }
 
 
-        // 2. Cashfree API ke liye data structure
-        const RETURN_URL = `${DOMAIN_URL}/payment/success?order_id={order_id}&order_token={order_token}`; 
-        const NOTIFY_URL = `${DOMAIN_URL}/api/cashfree-webhook`; // Webhook for server-to-server updates
-        
-        const orderPayload = {
-            order_id: orderId,
-            order_amount: amountInRupees,
-            order_currency: "INR",
-            customer_details: {
-                // 💡 FIX: customer_id required by Cashfree. Using mobile number as ID.
-                customer_id: mobile, 
-                customer_phone: mobile,
-                customer_email: email,
-                customer_name: name,
-            },
-            order_meta: {
-                return_url: RETURN_URL,
-                notify_url: NOTIFY_URL, 
-            },
-        };
-        
-        const fetchURL = `${CASHFREE_BASE_URL}/orders`;
+        // 2. Cashfree API ke liye data structure
+        // FIX: return_url no longer supports order_token
+        const RETURN_URL = `${DOMAIN_URL}/payment/success?order_id={order_id}`;
+        const NOTIFY_URL = `${DOMAIN_URL}/api/cashfree-webhook`; // Webhook for server-to-server updates
+        
+        const orderPayload = {
+            order_id: orderId,
+            order_amount: amountInRupees,
+            order_currency: "INR",
+            customer_details: {
+                customer_id: mobile, 
+                customer_phone: mobile,
+                customer_email: email,
+                customer_name: name,
+            },
+            order_meta: {
+                return_url: RETURN_URL,
+                notify_url: NOTIFY_URL, 
+            },
+            // Note: Cashfree API version '2023-08-01' use ho raha hai
+        };
+        
+        const fetchURL = `${CASHFREE_BASE_URL}/orders`;
 
-        // 3. Cashfree API Call karna using fetch
-        const response = await fetch(fetchURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-client-id': CASHFREE_CLIENT_ID,
-                'x-client-secret': CASHFREE_CLIENT_SECRET,
-                'x-api-version': '2023-08-01', 
-            },
-            body: JSON.stringify(orderPayload),
-        });
-        
-        const cashfreeResponse = await response.json();
+        // 3. Cashfree API Call karna using fetch
+        const response = await fetch(fetchURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-client-id': CASHFREE_CLIENT_ID,
+                'x-client-secret': CASHFREE_CLIENT_SECRET,
+                'x-api-version': '2023-08-01', 
+            },
+            body: JSON.stringify(orderPayload),
+        });
+        
+        const cashfreeResponse = await response.json();
 
-        if (response.ok && cashfreeResponse.payment_link) {
-            res.status(200).json({
-                success: true,
-                paymentLink: cashfreeResponse.payment_link, // Frontend will redirect to this
-                orderId: orderId,
-            });
-        } else {
-            // Agar Cashfree order creation fail ho jaye to DB record ko FAILED mark kar dein
-            await dbPool.query("UPDATE donations SET status = 'FAILED' WHERE order_id = ?", [orderId]);
-            console.error("Cashfree API Error:", cashfreeResponse);
-            res.status(response.status || 500).json({ 
-                success: false, 
-                message: cashfreeResponse.message || 'Cashfree order creation failed' 
-            });
-        }
+        // 🛑 FIX YAHAN THA: payment_link ki jagah payment_session_id check kiya 🛑
+        if (response.ok && cashfreeResponse.payment_session_id) {
+            
+            res.status(200).json({
+                success: true,
+                // Frontend ko session ID भेजो, जisse वह SDK initialize करेगा
+                paymentSessionId: cashfreeResponse.payment_session_id, 
+                orderId: orderId,
+            });
+        } else {
+            // Agar order creation fail ho jaye (e.g., galat keys) toh DB ko FAILED mark karein
+            await dbPool.query("UPDATE donations SET status = 'FAILED' WHERE order_id = ?", [orderId]);
+            console.error("Cashfree API Error:", cashfreeResponse);
+            
+            res.status(response.status || 500).json({ 
+                success: false, 
+                message: cashfreeResponse.message || 'Cashfree order creation failed' 
+            });
+        }
 
-    } catch (error) {
-        console.error("Error creating Cashfree order:", error.message);
-        res.status(500).json({
-            success: false,
-            message: 'Server error during order creation',
-            error: error.message
-        });
-    }
+    } catch (error) {
+        console.error("Error creating Cashfree order:", error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Server error during order creation',
+            error: error.message
+        });
+    }
 });
 
-
+// ==========================================================
 // 15. GET Verify Cashfree Order Status (After Redirect)
+// ==========================================================
 app.get('/api/verify-cashfree-order/:orderId', async (req, res) => {
     if (!CASHFREE_CLIENT_ID || !CASHFREE_CLIENT_SECRET) {
         return res.status(500).json({ success: false, message: 'Cashfree credentials not set.' });
@@ -239,32 +242,29 @@ app.get('/api/verify-cashfree-order/:orderId', async (req, res) => {
         
         const orderStatus = verificationResponse.order_status;
         
-        if (orderStatus === 'PAID') {
-            // ✅ CRITICAL: Yahaan MySQL mein transaction status update karein.
-            // Aur, agar donation ka record pending mein nahi hai toh naya record insert karein.
+       if (orderStatus === 'PAID') {
+            // ON DUPLICATE KEY UPDATE logic (safeguard for idempotency)
             const { customer_details, order_amount, cf_order_id, payment_details } = verificationResponse;
             
-            // Example MySQL Update/Insert logic
+            // Note: Assumed 'order_id' is UNIQUE/PRIMARY KEY in 'donations' table.
             const [updateResult] = await dbPool.query(
                 `INSERT INTO donations (order_id, name, email, amount, transaction_id, cf_order_id, mode, status, created_at) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, 'COMPLETED', NOW())
-                 ON DUPLICATE KEY UPDATE status = 'COMPLETED', transaction_id = ?, cf_order_id = ?`,
+                 ON DUPLICATE KEY UPDATE status = 'COMPLETED', transaction_id = VALUES(transaction_id), cf_order_id = VALUES(cf_order_id)`,
                 [
                     orderId, 
-                    customer_details.customer_name, 
+                    customer_details.customer_name || customer_details.customer_id, // Safety check
                     customer_details.customer_email, 
                     order_amount, 
-                    payment_details.payment_gateway_details?.txn_id || 'N/A', // transaction_id
+                    payment_details?.payment_gateway_details?.txn_id || 'N/A', 
                     cf_order_id,
-                    payment_details.payment_method || 'Online',
-                    payment_details.payment_gateway_details?.txn_id || 'N/A', // Update values
-                    cf_order_id 
+                    payment_details?.payment_method || 'Online'
                 ]
             );
 
             res.status(200).json({ success: true, status: orderStatus, message: 'Payment successful!', details: verificationResponse });
         } else {
-            // TODO: Agar status FAILED/PENDING hai, toh DB record update karein.
+            // TODO: Agar status FAILED/PENDING है, तो DB record update करें (अगर ज़रूरी हो)।
             res.status(200).json({ success: false, status: orderStatus, message: 'Payment failed or pending.' });
         }
 
@@ -275,7 +275,6 @@ app.get('/api/verify-cashfree-order/:orderId', async (req, res) => {
 });
 
 
-// ... Rest of the old routes (Gallery, Contact, Projects, Donations) remains the same ...
 
 // Server ko start karna (JWT_SECRET ab process.env se aayega)
 app.listen(PORT, () => {

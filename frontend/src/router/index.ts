@@ -23,58 +23,58 @@ const router = createRouter({
     {
       path: '/donate',
       name: 'donate',
-      component: () => import('../views/DonateView.vue')
+      component: () => import('@/views/DonateView.vue')
     },
-    // --- CASHFREE PAYMENT SUCCESS ROUTE ADDED ---
+    // --- CASHFREE PAYMENT SUCCESS ROUTE FIXED ---
     {
       path: '/payment/success',
       name: 'PaymentSuccess',
-      // Assuming PaymentSuccess.vue is located in src/views/
-      component: () => import('../components/PaymentSuccess.vue') 
+      // FIX: Assuming PaymentSuccess is a dedicated View, changing path from components to views
+      component: () => import('@/views/PaymentSuccessView.vue') 
     },
     // -------------------------------------------
     {
       path: '/my-donations',
       name: 'my-donations',
-      component: () => import('../views/MyDonationsView.vue')
+      component: () => import('@/views/MyDonationsView.vue')
     },
     {
       path: '/receipts',
       name: 'receipts',
-      component: () => import('../views/ReceiptsView.vue')
+      component: () => import('@/views/ReceiptsView.vue')
     },
     {
       path: '/contact',
       name: 'contact',
-      component: () => import('../views/ContactView.vue')
+      component: () => import('@/views/ContactView.vue')
     },
     
     
     {
       path: '/gallery',
       name: 'gallery',
-      component: () => import('../views/GalleryView.vue') // Lazy load your Gallery View
+      component: () => import('@/views/GalleryView.vue') // Lazy load your Gallery View
     },
     
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue') 
+      component: () => import('@/views/LoginView.vue') 
     },
     {
       path: '/signup',
       name: 'signup',
-      component: () => import('../views/SignupView.vue')
+      component: () => import('@/views/SignupView.vue')
     },
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/DashboardView.vue')
+      component: () => import('@/views/DashboardView.vue')
     },
     {
       path: '/admin',
       name: 'admin',
-      component: () => import('../views/AdminDashboardView.vue')
+      component: () => import('@/views/AdminDashboardView.vue')
     },
     {
       path: '/admin/active-members',
@@ -84,17 +84,17 @@ const router = createRouter({
     {
       path: '/certifications',
       name: 'certifications',
-      component: () => import('../views/CertificateView.vue')
+      component: () => import('@/views/CertificateView.vue')
     },
     {
       path: '/my-certificates',
       name: 'my-certificates',
-      component: () => import('../views/MyCertificatesView.vue')
+      component: () => import('@/views/MyCertificatesView.vue')
     },
     {
       path: '/profile',
       name: 'profile',
-      component: () => import('../views/ProfileView.vue')
+      component: () => import('@/views/ProfileView.vue')
     },
 
     // src/router/index.ts ke 'routes' array mein
