@@ -36,31 +36,31 @@
             <div v-if="aboutOpen"
               @mouseenter="aboutOpen = true"
               @mouseleave="aboutOpen = false"
-              class="absolute left-0 mt-2 bg-white border border-gray-200 rounded-md shadow-xl z-50 ring-1 ring-black ring-opacity-5 w-auto min-w-[12rem] md:min-w-[20rem]"
+              class="absolute left-0 top-full mt-2 bg-white border border-gray-200 rounded-md shadow-xl z-50 ring-1 ring-black ring-opacity-5 w-auto"
               role="menu" aria-label="About menu">
-              <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-gray-100">
+              <div class="flex flex-col divide-y divide-gray-100">
                 <router-link
                   to="/about"
                   @click="aboutOpen = false"
-                  :class="[ 'block md:inline-flex md:items-center px-4 py-2 text-sm transition-colors duration-150', isActive('/about') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50 hover:text-brand-700']"
+                  :class="[ 'block items-center px-4 py-2 text-sm transition-colors duration-150', isActive('/about') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50 hover:text-brand-700']"
                   role="menuitem">About</router-link>
 
                 <router-link
                   to="/projects"
                   @click="aboutOpen = false"
-                  :class="[ 'block md:inline-flex md:items-center px-4 py-2 text-sm transition-colors duration-150', isActive('/projects') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50 hover:text-brand-700']"
+                  :class="[ 'block items-center px-4 py-2 text-sm transition-colors duration-150', isActive('/projects') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50 hover:text-brand-700']"
                   role="menuitem">Our Work</router-link>
 
                 <router-link
                   to="/certifications"
                   @click="aboutOpen = false"
-                  :class="[ 'block md:inline-flex md:items-center px-4 py-2 text-sm transition-colors duration-150', isActive('/certifications') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50 hover:text-brand-700']"
+                  :class="[ 'block items-center px-4 py-2 text-sm transition-colors duration-150', isActive('/certifications') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50 hover:text-brand-700']"
                   role="menuitem">Certificates</router-link>
 
                 <router-link
                   to="/gallery"
                   @click="aboutOpen = false"
-                  :class="[ 'block md:inline-flex md:items-center px-4 py-2 text-sm transition-colors duration-150', isActive('/gallery') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50 hover:text-brand-700']"
+                  :class="[ 'block items-center px-4 py-2 text-sm transition-colors duration-150', isActive('/gallery') ? 'bg-brand-50 text-brand-700' : 'text-gray-700 hover:bg-gray-50 hover:text-brand-700']"
                   role="menuitem">Gallery</router-link>
               </div>
             </div>
