@@ -114,7 +114,8 @@ const submitUpdate = async () => {
 
         if (response.ok) {
             alert('Project details updated successfully!');
-            router.push({ name: 'AdminManageProjects' }); // Update ke baad Manage page par wapas jaao
+            // After editing, send admin to the public Projects page so it refetches and shows updates
+            router.push('/projects');
         } else {
             const errorData = await response.json();
             alert(`Update failed: ${errorData.message}`);

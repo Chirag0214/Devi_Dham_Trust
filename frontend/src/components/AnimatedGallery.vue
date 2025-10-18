@@ -65,7 +65,12 @@ const isLoading = ref(true); // Loading state
 const fetchGalleryPhotos = async () => {
   isLoading.value = true;
   try {
-    const response = await fetch('http://localhost:3000/api/gallery');
+    // Determine backend origin like ProjectsView (avoid hardcoded URL)
+    const defaultBackend = 'http://localhost:3000';
+    const currentOrigin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : '';
+    const backendOrigin = currentOrigin.includes(':3000') ? currentOrigin : defaultBackend;
+
+    const response = await fetch(`${backendOrigin}/api/gallery`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -77,7 +82,7 @@ const fetchGalleryPhotos = async () => {
     photos.value = data.map((item: any) => ({
       ...item,
       // Ensure the URL is correctly prefixed for the backend server
-      src: item.src.startsWith('http') ? item.src : `http://localhost:3000${item.src}`,
+      src: item.src && item.src.toString().startsWith('http') ? item.src : `${backendOrigin}${item.src}`,
     }));
 
     if (photos.value.length === 0) {

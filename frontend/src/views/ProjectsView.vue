@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 
 // --- Interface for Projects (Optional but good practice) ---
 interface Project {
@@ -104,4 +105,11 @@ const handleImageError = (event: Event) => {
 };
 
 onMounted(fetchProjects);
+
+// Refetch when route changes (so navigating to /projects after edit refreshes list)
+const route = useRoute();
+onBeforeRouteUpdate((to, from, next) => {
+  // simple refetch when coming to this route
+  fetchProjects().then(() => next()).catch(() => next());
+});
 </script>

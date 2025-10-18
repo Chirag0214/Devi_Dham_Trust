@@ -41,14 +41,44 @@ const DOMAIN_URL = process.env.DOMAIN_URL || 'http://localhost:3000'; // Fronten
 
 
 // --- DATABASE CONNECTION POOL ---
-let dbPool;
+let dbPool = null;
 try {
     dbPool = mysql.createPool(dbConfig);
     console.log('✅ MySQL Pool created successfully.');
 } catch (error) {
-    console.error('❌ Failed to create MySQL Pool. Check XAMPP/MySQL status:', error);
-    process.exit(1);
+    // Don't exit the process: allow server to start for static and test endpoints
+    console.warn('⚠️ Failed to create MySQL Pool. DB unavailable for now. Continuing without DB. Error:', error && error.message ? error.message : error);
+    dbPool = null; // routes must check for dbPool before using it
 }
+
+// In-memory cache for projects so admin edit/delete works during development
+let projectsCache = null;
+
+// --- In-memory users fallback (development) ---
+// If the MySQL DB is not available, this array stores users for login/register so frontend still works.
+const inMemoryUsers = [];
+const findInMemoryUserByEmail = (email) => inMemoryUsers.find(u => u.email === String(email).toLowerCase());
+const addInMemoryUser = async (name, email, password, role = 'user') => {
+    const id = inMemoryUsers.length ? (inMemoryUsers[inMemoryUsers.length - 1].id + 1) : 1;
+    const password_hash = await bcrypt.hash(String(password), saltRounds);
+    const user = { id, name: name || email, email: String(email).toLowerCase(), password_hash, role };
+    inMemoryUsers.push(user);
+    return user;
+};
+
+// Seed a development admin account if none provided
+(async () => {
+    try {
+        const adminEmail = (process.env.ADMIN_EMAIL || 'admin@devidhaam.org').toLowerCase();
+        const adminPassword = process.env.ADMIN_PASSWORD || '123';
+        if (!findInMemoryUserByEmail(adminEmail)) {
+            await addInMemoryUser('Admin', adminEmail, adminPassword, 'admin');
+            console.log(`ℹ️ Seeded fallback admin account: ${adminEmail} (use env ADMIN_PASSWORD to change)`);
+        }
+    } catch (e) {
+        // ignore seeding errors
+    }
+})();
 
 // ==========================================================
 //                 SETUP & MIDDLEWARE (CRITICAL: Order Matters!)
@@ -56,6 +86,145 @@ try {
 app.use(cors()); 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
+
+// Simple request logger to help debug routing issues
+app.use((req, res, next) => {
+    try {
+        console.log(`[REQ] ${req.method} ${req.path}`);
+    } catch (e) { /* ignore logging errors */ }
+    next();
+});
+
+// Serve static files (images) from Backend/public
+const staticDir = path.join(__dirname, 'public');
+if (fs.existsSync(staticDir)) {
+    app.use('/public', express.static(staticDir));
+}
+
+// --- Simple API endpoints for frontend gallery/projects ---
+// These will read images from Backend/public/images/gallery and /projects
+// and return a JSON array that the frontend expects. If folders are
+// missing, return a small fallback sample so frontend doesn't show empty pages.
+app.get('/api/gallery', async (req, res) => {
+    try {
+        const galleryDir = path.join(__dirname, 'public', 'images', 'gallery');
+        let items = [];
+
+        if (fs.existsSync(galleryDir)) {
+            const files = fs.readdirSync(galleryDir).filter(f => /\.(jpe?g|png|avif|webp)$/i.test(f));
+            items = files.map((file, idx) => ({
+                id: idx + 1,
+                src: `/public/images/gallery/${file}`,
+                caption: `Gallery photo ${idx + 1}`,
+                category: 'Event',
+                date: new Date().toISOString(),
+            }));
+        }
+
+        // Fallback: if no files found, return a few images from frontend public folder
+        if (items.length === 0) {
+            items = [
+                { id: 1, src: '/images/plantation.avif', caption: 'Plantation', category: 'Environment', date: new Date().toISOString() },
+                { id: 2, src: '/images/plantation1.avif', caption: 'Volunteers', category: 'Community', date: new Date().toISOString() },
+            ];
+        }
+
+        return res.json(items);
+    } catch (err) {
+        console.error('Error serving /api/gallery:', err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+});
+
+app.get('/api/projects', async (req, res) => {
+    try {
+        const projectsDir = path.join(__dirname, 'public', 'images', 'projects');
+        let items = [];
+
+        if (fs.existsSync(projectsDir)) {
+            const files = fs.readdirSync(projectsDir).filter(f => /\.(jpe?g|png|avif|webp)$/i.test(f));
+            items = files.map((file, idx) => ({
+                id: idx + 1,
+                title: `Project ${idx + 1}`,
+                description: `Description for project ${idx + 1}`,
+                image_src: `/public/images/projects/${file}`,
+            }));
+        }
+
+        if (items.length === 0) {
+            // Fallback sample projects
+            items = [
+                { id: 1, title: 'Plantation Drive', description: 'Tree plantation in local community', image_src: '/images/plantation.avif', status: 'Active' },
+                { id: 2, title: 'Health Camp', description: 'Free health screening', image_src: '/images/plantation1.avif', status: 'Completed' },
+            ];
+        }
+
+        // Add full_image_src to match frontend expectation
+        const backendOrigin = `${req.protocol}://${req.get('host')}`;
+        const result = items.map((it, i) => ({
+            ...it,
+            full_image_src: it.image_src && it.image_src.startsWith('http') ? it.image_src : `${backendOrigin}${it.image_src}`,
+        }));
+
+        // Initialize projectsCache for admin operations if not set
+        if (!projectsCache) projectsCache = result.map(r => ({ ...r }));
+
+        return res.json(result);
+    } catch (err) {
+        console.error('Error serving /api/projects:', err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Admin: Update project (PUT)
+app.put('/api/admin/projects/:id', async (req, res) => {
+    const id = Number(req.params.id);
+    const { title, description, status } = req.body;
+
+    try {
+        // If DB available, update DB; otherwise update in-memory cache
+        if (dbPool) {
+            const sql = `UPDATE projects SET title = ?, description = ?, status = ? WHERE id = ?`;
+            await dbPool.query(sql, [title, description, status, id]);
+            return res.json({ success: true });
+        }
+
+        if (!projectsCache) return res.status(404).json({ message: 'Project not found' });
+        const idx = projectsCache.findIndex(p => p.id == id);
+        if (idx === -1) return res.status(404).json({ message: 'Project not found' });
+
+        projectsCache[idx].title = title;
+        projectsCache[idx].description = description;
+        projectsCache[idx].status = status;
+
+        return res.json({ success: true, project: projectsCache[idx] });
+    } catch (err) {
+        console.error('Error updating project:', err);
+        return res.status(500).json({ message: 'Failed to update project' });
+    }
+});
+
+// Admin: Delete project (DELETE)
+app.delete('/api/admin/projects/:id', async (req, res) => {
+    const id = Number(req.params.id);
+    try {
+        if (dbPool) {
+            const sql = `DELETE FROM projects WHERE id = ?`;
+            await dbPool.query(sql, [id]);
+            return res.json({ success: true });
+        }
+
+        if (!projectsCache) return res.status(404).json({ message: 'Project not found' });
+        const idx = projectsCache.findIndex(p => p.id == id);
+        if (idx === -1) return res.status(404).json({ message: 'Project not found' });
+
+        projectsCache.splice(idx, 1);
+        return res.json({ success: true });
+    } catch (err) {
+        console.error('Error deleting project:', err);
+        return res.status(500).json({ message: 'Failed to delete project' });
+    }
+});
 
 // ... rest of the setup and logging middleware remains the same ...
 
@@ -103,12 +272,79 @@ const authenticateToken = async (req, res, next) => {
     }
 };
 
+    // --- AUTH ROUTES: Register and Login (DB if available, else in-memory fallback) ---
+    app.post('/api/register', async (req, res) => {
+        const { name, email, password } = req.body || {};
+        if (!email || !password) return res.status(400).json({ message: 'Email and password are required.' });
+        const normalizedEmail = String(email).toLowerCase();
+
+        try {
+            if (dbPool) {
+                // Check if user exists
+                const [rows] = await dbPool.query('SELECT id, name, email, password_hash, role FROM users WHERE email = ?', [normalizedEmail]);
+                if (rows && rows.length) return res.status(409).json({ message: 'User already exists.' });
+
+                const password_hash = await bcrypt.hash(String(password), saltRounds);
+                const [result] = await dbPool.query('INSERT INTO users (name, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, NOW())', [name || normalizedEmail, normalizedEmail, password_hash, 'user']);
+                const user = { id: result.insertId, name: name || normalizedEmail, email: normalizedEmail, role: 'user' };
+                const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+                return res.status(201).json({ user, token });
+            }
+
+            // In-memory fallback
+            if (findInMemoryUserByEmail(normalizedEmail)) return res.status(409).json({ message: 'User already exists.' });
+            const user = await addInMemoryUser(name || normalizedEmail, normalizedEmail, password, 'user');
+            const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+            return res.status(201).json({ user: { id: user.id, name: user.name, email: user.email, role: user.role }, token });
+        } catch (err) {
+            console.error('Registration error:', err && err.message ? err.message : err);
+            return res.status(500).json({ message: 'Server error during registration.' });
+        }
+    });
+
+    app.post('/api/login', async (req, res) => {
+        const { email, password } = req.body || {};
+        if (!email || !password) return res.status(400).json({ message: 'Email and password are required.' });
+        const normalizedEmail = String(email).toLowerCase();
+
+        try {
+            if (dbPool) {
+                try {
+                    const [rows] = await dbPool.query('SELECT id, name, email, password_hash, role FROM users WHERE email = ?', [normalizedEmail]);
+                    if (rows && rows.length) {
+                        const userRow = rows[0];
+                        const ok = await bcrypt.compare(String(password), userRow.password_hash);
+                        if (ok) {
+                            const user = { id: userRow.id, name: userRow.name, email: userRow.email, role: userRow.role };
+                            const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+                            return res.json({ user, token });
+                        }
+                        return res.status(401).json({ message: 'Invalid credentials.' });
+                    }
+                    // if no user found in DB, continue to fallback below
+                } catch (dbErr) {
+                    console.warn('DB lookup failed for /api/login, falling back to in-memory users. Error:', dbErr && dbErr.message ? dbErr.message : dbErr);
+                    // fall through to in-memory fallback
+                }
+            }
+
+            // In-memory fallback (or DB didn't find user)
+            const user = findInMemoryUserByEmail(normalizedEmail);
+            if (!user) return res.status(401).json({ message: 'Invalid credentials.' });
+            const ok = await bcrypt.compare(String(password), user.password_hash);
+            if (!ok) return res.status(401).json({ message: 'Invalid credentials.' });
+            const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
+            return res.json({ user: { id: user.id, name: user.name, email: user.email, role: user.role }, token });
+        } catch (err) {
+            console.error('Login error:', err && err.message ? err.message : err);
+            return res.status(500).json({ message: 'Server error during login.' });
+        }
+    });
+
 
 // ==========================================================
 //                     CASHFREE PAYMENT ROUTES (New)
 // ==========================================================
-
-// ... (start of server.js)
 // ==========================================================
 // 14. POST Create Cashfree Order (FIXED for payment_session_id)
 // ==========================================================
