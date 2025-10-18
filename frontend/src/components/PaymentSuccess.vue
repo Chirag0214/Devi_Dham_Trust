@@ -57,27 +57,13 @@ const verificationMessage = ref<string | null>(null);
 const orderId = ref<string | null>(null);
 const cfOrderId = ref<string | null>(null);
 
+// Cashfree removed in rollback: show a friendly message instead of remote verification
 const verifyPayment = async (id: string) => {
-  try {
-    const response = await fetch(`/api/verify-cashfree-order/${id}`);
-    const data = await response.json();
-
-    if (response.ok && data.success) {
-      paymentStatus.value = data.status; // Should be 'PAID'
-      cfOrderId.value = data.details?.cf_order_id; // Cashfree response se ID milega
-    } else {
-      // Handles FAILED, PENDING, or backend validation errors
-      paymentStatus.value = data.status || 'FAILED';
-      verificationMessage.value = data.message || 'Payment verification failed.';
-    }
-
-  } catch (error) {
-    console.error('Verification Network Error:', error);
-    paymentStatus.value = 'FAILED';
-    verificationMessage.value = 'A network error occurred while verifying the payment.';
-  } finally {
-    isLoading.value = false;
-  }
+  // Without a payment gateway, we cannot verify remote transaction status here.
+  // Show a neutral message instructing the donor to check their email or contact support.
+  paymentStatus.value = 'PENDING';
+  verificationMessage.value = 'Payment gateway integration has been removed. If you completed a payment, please contact receipts@devidhaamtrust.org with your transaction details.';
+  isLoading.value = false;
 };
 
 onMounted(() => {

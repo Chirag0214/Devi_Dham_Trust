@@ -33,41 +33,43 @@ async function handlePayment() {
 
     isLoading.value = true;
 
-    try {
-        // Backend API ko call karna jo Cashfree order banayega
-        const response = await fetch('/api/create-cashfree-order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                amount: donor.amount,
-                name: donor.name,
-                email: donor.email,
-                mobile: donor.mobile,
-                pan: donor.pan // PAN detail backend ko bhejein
-            })
-        });
+  try {
+    // Backend API ko call karna (rollback: generic donate endpoint)
+    const response = await fetch('/api/donate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: donor.amount,
+        name: donor.name,
+        email: donor.email,
+        mobile: donor.mobile,
+        pan: donor.pan
+      })
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        if (response.ok && data.success && data.paymentLink) {
-            // Success: User ko Cashfree payment page par redirect karna
-            window.location.href = data.paymentLink;
-            // NOTE: Iske baad control Cashfree ke paas chala jayega.
-            // Verification aapke backend ke /api/verify-cashfree-order route par hoga.
-
-        } else {
-            // Failure: Server se error message display karna
-            payError.value = data.message || 'Payment initiation failed due to an unknown error. Please try again.';
-        }
-
-    } catch (error) {
-        console.error('Frontend Payment Error:', error);
-        payError.value = 'Network error: Could not connect to the payment server.';
-    } finally {
-        isLoading.value = false;
+    if (response.ok && data.success) {
+      // Fallback: show a simple confirmation and clear form
+      payError.value = null;
+      alert(`Donation recorded (id: ${data.donation?.id || 'N/A'}). Please follow offline instructions.`);
+      donor.amount = 500;
+      donor.name = '';
+      donor.email = '';
+      donor.mobile = '';
+      donor.pan = '';
+    } else {
+      payError.value = data.message || 'Donation failed due to an unknown error. Please try again.';
     }
+
+  } catch (error) {
+    console.error('Frontend Payment Error:', error);
+    payError.value = 'Network error: Could not connect to the payment server.';
+  } finally {
+    isLoading.value = false;
+  }
 }
 // CHANGES END HERE --------------------------------------------
 

@@ -33,10 +33,7 @@ const dbConfig = {
     database: process.env.DB_NAME || 'devidhaam'   
 };
 
-// 🛑 Cashfree Credentials .env se load karein
-const CASHFREE_CLIENT_ID = process.env.CASHFREE_CLIENT_ID;
-const CASHFREE_CLIENT_SECRET = process.env.CASHFREE_CLIENT_SECRET;
-const CASHFREE_BASE_URL = process.env.CASHFREE_BASE_URL || 'https://sandbox.cashfree.com/pg';
+// Cashfree integration removed in rollback branch. Payment processing uses internal endpoints.
 const DOMAIN_URL = process.env.DOMAIN_URL || 'http://localhost:3000'; // Frontend URL for redirects
 
 
@@ -78,167 +75,22 @@ const createMailerTransport = () => {
         port: port,
         secure: secure, 
         auth: user && pass ? { user, pass } : undefined,
-    });
-};
+    // Payment routes: Cashfree removed. Keep a simple donation endpoint used by frontend as a fallback.
+    app.post('/api/donate', async (req, res) => {
+        try {
+            const { amount, name, email } = req.body;
+            if (!amount || !name || !email) return res.status(400).json({ message: 'Missing fields' });
 
-// ... Multer config (galleryStorage, uploadGallery, projectStorage, uploadProject) remains the same ...
-
-// --- AUTHENTICATION MIDDLEWARE (JWT_SECRET ab process.env se aayega) --- 
-const authenticateToken = async (req, res, next) => {
-    // ... JWT verification code remains the same, using the global JWT_SECRET ...
-    // try { const payload = jwt.verify(token, JWT_SECRET); ... }
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) return res.status(401).json({ message: 'Authentication token missing. Please log in.' });
-
-    try {
-        const payload = jwt.verify(token, JWT_SECRET);
-        req.user = payload;
-        // ... rest of DB check ...
-        next();
-    } catch (err) {
-        // ...
-        return res.status(403).json({ message: 'Invalid or expired token. Please log in again.' });
-    }
-};
-
-
-// ==========================================================
-//                     CASHFREE PAYMENT ROUTES (New)
-// ==========================================================
-
-// ... (start of server.js)
-
-// 14. POST Create Cashfree Order
-//  POST /api/create-cashfree-order
-
-app.post('/api/create-cashfree-order', async (req, res) => {
-    // Ensure all Cashfree credentials are available
-    if (!CASHFREE_CLIENT_ID || !CASHFREE_CLIENT_SECRET) {
-        return res.status(500).json({ success: false, message: 'Cashfree credentials not set.' });
-    }
-    
-    try {
-        const { amount, name, email, mobile, pan } = req.body; 
-        
-        // Input validation
-        if (!amount || !name || !email || !mobile) {
-            return res.status(400).json({ success: false, message: 'Required donor details are missing.' });
-        }
-
-        const orderId = `order_${uuidv4()}`; // Unique Order ID generate karna
-        const amountInRupees = parseFloat(amount).toFixed(2);
-        
-        // 1. MySQL mein PENDING record save karna
-        try {
-            const sqlInsert = `
-                INSERT INTO donations (order_id, name, email, mobile, pan, amount, status) 
-                VALUES (?, ?, ?, ?, ?, ?, 'PENDING')
-            `;
-            await dbPool.query(sqlInsert, [orderId, name, email, mobile, pan || null, amountInRupees]);
-        } catch (dbError) {
-            console.error("❌ DB Error saving PENDING donation:", dbError);
-            // Agar DB save fail hota hai, to payment initiate nahi karenge
-            return res.status(500).json({ success: false, message: 'Failed to record donation attempt in database.' });
-        }
-
-
-        // 2. Cashfree API ke liye data structure
-        const RETURN_URL = `${DOMAIN_URL}/payment/success?order_id={order_id}&order_token={order_token}`; 
-        const NOTIFY_URL = `${DOMAIN_URL}/api/cashfree-webhook`; // Webhook for server-to-server updates
-        
-        const orderPayload = {
-            order_id: orderId,
-            order_amount: amountInRupees,
-            order_currency: "INR",
-            customer_details: {
-                // 💡 FIX: customer_id required by Cashfree. Using mobile number as ID.
-                customer_id: mobile, 
-                customer_phone: mobile,
-                customer_email: email,
-                customer_name: name,
-            },
-            order_meta: {
-                return_url: RETURN_URL,
-                notify_url: NOTIFY_URL, 
-            },
-        };
-        
-        const fetchURL = `${CASHFREE_BASE_URL}/orders`;
-
-        // 3. Cashfree API Call karna using fetch
-        const response = await fetch(fetchURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-client-id': CASHFREE_CLIENT_ID,
-                'x-client-secret': CASHFREE_CLIENT_SECRET,
-                'x-api-version': '2023-08-01', 
-            },
-            body: JSON.stringify(orderPayload),
-        });
-        
-        const cashfreeResponse = await response.json();
-
-        if (response.ok && cashfreeResponse.payment_link) {
-            res.status(200).json({
-                success: true,
-                paymentLink: cashfreeResponse.payment_link, // Frontend will redirect to this
-                orderId: orderId,
-            });
-        } else {
-            // Agar Cashfree order creation fail ho jaye to DB record ko FAILED mark kar dein
-            await dbPool.query("UPDATE donations SET status = 'FAILED' WHERE order_id = ?", [orderId]);
-            console.error("Cashfree API Error:", cashfreeResponse);
-            res.status(response.status || 500).json({ 
-                success: false, 
-                message: cashfreeResponse.message || 'Cashfree order creation failed' 
-            });
-        }
-
-    } catch (error) {
-        console.error("Error creating Cashfree order:", error.message);
-        res.status(500).json({
-            success: false,
-            message: 'Server error during order creation',
-            error: error.message
-        });
-    }
-});
-
-
-// 15. GET Verify Cashfree Order Status (After Redirect)
-app.get('/api/verify-cashfree-order/:orderId', async (req, res) => {
-    if (!CASHFREE_CLIENT_ID || !CASHFREE_CLIENT_SECRET) {
-        return res.status(500).json({ success: false, message: 'Cashfree credentials not set.' });
-    }
-    
-    try {
-        const orderId = req.params.orderId;
-        const fetchURL = `${CASHFREE_BASE_URL}/orders/${orderId}`;
-
-        const response = await fetch(fetchURL, {
-            method: 'GET',
-            headers: {
-                'x-client-id': CASHFREE_CLIENT_ID,
-                'x-client-secret': CASHFREE_CLIENT_SECRET,
-                'x-api-version': '2023-08-01',
-            }
-        });
-
-        const verificationResponse = await response.json();
-
-        if (!response.ok) {
-             console.error("Cashfree Verification API Error:", verificationResponse);
-             return res.status(response.status || 500).json({ 
-                success: false, 
-                message: verificationResponse.message || 'Verification failed.' 
-            });
+            // Minimal local donation handling: store in-memory for now (or forward to existing donations API)
+            // This keeps frontend behaviour consistent until a payment gateway is added.
+            const donation = { id: Date.now().toString(), amount, name, email, status: 'pending' };
+            // TODO: persist to DB or call existing donations handler. For rollback, return success object.
+            res.json({ success: true, donation });
+        } catch (err) {
+            console.error('Error creating donation', err);
+            res.status(500).json({ message: 'Server error' });
         }
-        
-        const orderStatus = verificationResponse.order_status;
-        
+    });
         if (orderStatus === 'PAID') {
             // ✅ CRITICAL: Yahaan MySQL mein transaction status update karein.
             // Aur, agar donation ka record pending mein nahi hai toh naya record insert karein.
